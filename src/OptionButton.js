@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-function OptionButton(props){
+const OptionButton = (props) => {
   const style = {
     margin: "5px",
     width: "55px"
@@ -15,6 +16,12 @@ function OptionButton(props){
       {props.id}
     </button>
   )
-}
+};
+
+OptionButton.propTypes = {
+  buttonClassName: PropTypes.string.isRequired,
+  handleOnClick: PropTypes.func.isRequired,
+  id: PropTypes.number.isRequired
+};
 
 export default OptionButton;

@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-function RangeButton(props){
+const RangeButton = (props) => {
   return (
     <button
       className={props.buttonClassName}
@@ -10,6 +11,12 @@ function RangeButton(props){
       {props.id}
     </button>
   )
-}
+};
+
+RangeButton.propTypes = {
+  buttonClassName: PropTypes.string.isRequired,
+  handleOnClick: PropTypes.func.isRequired,
+  id: PropTypes.number.isRequired
+};
 
 export default RangeButton;

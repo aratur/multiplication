@@ -1,13 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Equation from './Equation';
 import OptionButton from './OptionButton';
-import Progress from './Progress';
 import happyFaceImg from './img/happyFace.png';
 import sadFaceImg from './img/sadFace.png';
 import shallowequal from 'shallowequal';
 
 class QuestionForm extends React.Component {
-  possibleAnswers = 6;
+  possibleAnswers = 5;
+
+  static propTypes = {
+    minValue: PropTypes.number.isRequired,
+    maxValue: PropTypes.number.isRequired,
+    fromValue: PropTypes.number.isRequired,
+    toValue: PropTypes.number.isRequired
+  };
+
   constructor(props){
     super(props);
     const getNewResultsList = (from, to) => {
@@ -20,7 +28,8 @@ class QuestionForm extends React.Component {
         result[i] = sub;
       }
       return result;
-    }
+    };
+
     this.state = {
       resultsArray: getNewResultsList(props.minValue, props.maxValue),
       xValue: 0,
@@ -32,15 +41,14 @@ class QuestionForm extends React.Component {
         isSad: false,
         isWinner: false
       }
-    }
-    this.onOptionSelected = this.onOptionSelected.bind(this);
+    };
   }
 
   getRandomIntInclusive = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  };
 
-  getOptionsValues(xValue, yValue, fromValue, toValue) {
+  getOptionsValues = (xValue, yValue, fromValue, toValue) => {
     let results = [xValue * yValue];
     const maxValue = toValue*toValue;
     const minValue = fromValue*toValue;
@@ -52,14 +60,14 @@ class QuestionForm extends React.Component {
       }
     }
     return results.sort((a,b) => a-b);
-  }
+  };
 
-  onOptionSelected(e){
+  onOptionSelected = (e) => {
     const answer = Number(e.target.innerText);
     const correctAnswer = this.state.xValue * this.state.yValue;
+    const newResults = this.state.resultsArray;
     if(answer === correctAnswer){
-      const newResults = this.state.resultsArray;
-      newResults[this.state.xValue][this.state.yValue] = 1;
+      newResults[this.state.xValue][this.state.yValue] += 1;
       this.setState({
         correctAnswer: correctAnswer,
         resultsArray: newResults,
@@ -71,8 +79,10 @@ class QuestionForm extends React.Component {
         },
       });
     } else {
+      newResults[this.state.xValue][this.state.yValue] -= 1;
       this.setState({
         correctAnswer: correctAnswer,
+        resultsArray: newResults,
         innerState: {
           isAsking: false,
           isHappy: false,
@@ -81,6 +91,10 @@ class QuestionForm extends React.Component {
         }
       });
     }
+    this.resetStateAfter(2000);
+  };
+
+  resetStateAfter = (miliseconds) => {
     setTimeout(() => {
       this.setState({
         xValue: this.getRandomIntInclusive(this.props.fromValue,
@@ -95,13 +109,14 @@ class QuestionForm extends React.Component {
           isWinner: false
         }
       });
-    }, 2000);
-  }
+    }, miliseconds);
+  };
+
   getRandomIntInclusive = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  };
 
-  shouldComponentUpdate(nextProps, nextState){
+  shouldComponentUpdate = (nextProps, nextState) => {
     if(nextProps.fromValue !== this.props.fromValue
       || nextProps.toValue !== this.props.toValue
       || nextState.xValue !== this.state.xValue
@@ -112,7 +127,7 @@ class QuestionForm extends React.Component {
       console.log("Component shall not update")
       return false;
     }
-  }
+  };
 
   componentDidMount(){
     this.setState({
@@ -135,7 +150,7 @@ class QuestionForm extends React.Component {
       }
   }
 
-  renderInnerState(){
+  renderInnerState = () => {
     if(this.state.innerState.isAsking) {
       return this.getOptionsValues(this.state.xValue, this.state.yValue
       , this.props.fromValue, this.props.toValue)
@@ -151,10 +166,9 @@ class QuestionForm extends React.Component {
     } else if (this.state.innerState.isSad){
       return <img src={sadFaceImg} alt="Ohh no!" height="200" />;
     }
-  }
+  };
 
   render(){
-
     return (
       <div className="row">
         <Equation
@@ -165,11 +179,6 @@ class QuestionForm extends React.Component {
         <div className="button-group">
           {this.renderInnerState()}
         </div>
-        <Progress
-          results={this.state.resultsArray}
-          minValue={this.props.minValue}
-          maxValue={this.props.maxValue}
-        />
       </div>
     );
   }

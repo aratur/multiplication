@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-function EquationSignButton(props){
+const EquationSignButton = (props) => {
   const marginStyle = {
     margin: "5px",
     position: "relative",
@@ -13,6 +14,10 @@ function EquationSignButton(props){
       style={marginStyle}>{props.value}
     </button>
   );
-}
+};
+
+EquationSignButton.propTypes = {
+  value: PropTypes.string.isRequired
+};
 
 export default EquationSignButton;

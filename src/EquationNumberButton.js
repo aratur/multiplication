@@ -15,7 +15,7 @@ const EquationNumberButton = (props) => {
       style={marginStyle}>{props.value}
     </button>
   );
-}
+};
 
 EquationNumberButton.propTypes = {
   value: PropTypes.any.isRequired
