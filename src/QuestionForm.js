@@ -94,7 +94,7 @@ class QuestionForm extends React.Component {
     this.resetStateAfter(2000);
   };
 
-  resetStateAfter = (miliseconds) => {
+  resetStateAfter = (milliseconds) => {
     setTimeout(() => {
       this.setState({
         xValue: this.getRandomIntInclusive(this.props.fromValue,
@@ -109,7 +109,7 @@ class QuestionForm extends React.Component {
           isWinner: false
         }
       });
-    }, miliseconds);
+    }, milliseconds);
   };
 
   getRandomIntInclusive = (min, max) => {
@@ -164,13 +164,13 @@ class QuestionForm extends React.Component {
     } else if (this.state.innerState.isHappy){
       return <img src={happyFaceImg} alt="Good job!" height="200" />;
     } else if (this.state.innerState.isSad){
-      return <img src={sadFaceImg} alt="Ohh no!" height="200" />;
+      return <img src={sadFaceImg} alt="Oh no!" height="200" />;
     }
   };
 
   render(){
     return (
-      <div className="row">
+      <div className="row" >
         <Equation
           xValue = {this.state.xValue}
           yValue = {this.state.yValue}

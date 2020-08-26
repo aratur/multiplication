@@ -90,11 +90,11 @@ class MultiplicationTable extends React.Component {
         <div className="row" >
           <WarningAlert
             warningVisible={this.state.pickerWarningVisible}
-            warnigCloseEventHandler={this.onHideWarningMessage}
+            warningCloseEventHandler={this.onHideWarningMessage}
             warningHeader="Wybierz inny zakres"
             warningMessage="Liczba Od musi być mniejsza od liczby Do"/>
           <RangePicker
-            label="Od"
+            label="From"
             selectedValue={this.state.fromValue}
             handleOnClick={this.onFromButtonClicked.bind(this)}
             range={this.range}

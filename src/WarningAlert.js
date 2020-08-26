@@ -16,7 +16,7 @@ const WarningAlert = (props) => {
         <button
           type="button"
           className="close"
-          onClick={props.warnigCloseEventHandler}
+          onClick={props.warningCloseEventHandler}
         >×</button>
         <h4>{props.warningHeader}</h4>
         <p>{props.warningMessage}</p>
@@ -25,7 +25,7 @@ const WarningAlert = (props) => {
 };
 
 WarningAlert.propTypes = {
-  warnigCloseEventHandler: PropTypes.func.isRequired,
+  warningCloseEventHandler: PropTypes.func.isRequired,
   warningHeader: PropTypes.string.isRequired,
   warningMessage: PropTypes.string.isRequired
 };

@@ -9,7 +9,6 @@ const RangePicker = (props) => {
   }
   // display: "flex" no wrapping of btn-group
   return (
-      <div className="row text-center">
         <div className="btn-group" role="group" style={({marginTop:"5px", marginBottom: "5px"})} >
           {props.range.map( (id) =>
             <RangeButton
@@ -20,7 +19,6 @@ const RangePicker = (props) => {
             />)
           }
         </div>
-      </div>
     );
 };
 
