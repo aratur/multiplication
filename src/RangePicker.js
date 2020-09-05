@@ -1,5 +1,4 @@
 import React from 'react';
-import RangeButton from './RangeButton';
 import PropTypes from 'prop-types';
 
 const RangePicker = (props) => {
@@ -11,12 +10,11 @@ const RangePicker = (props) => {
   return (
         <div className="btn-group" role="group" style={({marginTop:"5px", marginBottom: "5px"})} >
           {props.range.map( (id) =>
-            <RangeButton
-              buttonClassName={getButtonClass(id)}
-              handleOnClick={props.handleOnClick}
+            <button
+              className={getButtonClass(id)}
+              onClick={props.handleOnClick}
               key={id}
-              id={id}
-            />)
+            >{id}</button>)
           }
         </div>
     );

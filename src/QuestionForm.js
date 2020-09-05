@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Equation from './Equation';
-import OptionButton from './OptionButton';
 import happyFaceImg from './img/happyFace.png';
 import sadFaceImg from './img/sadFace.png';
 import shallowequal from 'shallowequal';
@@ -150,17 +149,23 @@ class QuestionForm extends React.Component {
       }
   }
 
+  optionButtonStyle = {
+    margin: "5px",
+    width: "55px"
+  }
+
   renderInnerState = () => {
     if(this.state.innerState.isAsking) {
       return this.getOptionsValues(this.state.xValue, this.state.yValue
       , this.props.fromValue, this.props.toValue)
       .map( item =>
-        <OptionButton
-          buttonClassName="btn btn-info btn-lg"
-          handleOnClick={this.onOptionSelected}
+        <button
+          type = "button"
+          className="btn btn-info btn-lg"
+          style = {this.optionButtonStyle}
+          onClick={this.onOptionSelected}
           key={item}
-          id={item}
-        />);
+        >{item}</button>);
     } else if (this.state.innerState.isHappy){
       return <img src={happyFaceImg} alt="Good job!" height="200" />;
     } else if (this.state.innerState.isSad){
