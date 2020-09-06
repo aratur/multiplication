@@ -67,22 +67,13 @@ class MultiplicationTable extends React.Component {
   }
 
   onHideWarningMessage(){
-    if (this.state.pickerWarningVisible){
-      this.setState({ pickerWarningVisible: false });
-    }
+    this.setState({ pickerWarningVisible: false });
   }
 
   showWarning() {
-    if (!this.state.pickerWarningVisible) {
-      this.setState({
-        pickerWarningVisible: true
-      });
-      setTimeout(() => {
-        this.setState({
-          pickerWarningVisible: false
-        })
-      }, 4000);
-    }
+    this.setState({
+      pickerWarningVisible: true
+    });
   }
 
   render() {

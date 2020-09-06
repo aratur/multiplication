@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
 const WarningAlert = (props) => {
@@ -7,7 +7,29 @@ const WarningAlert = (props) => {
     marginBottom: "5px"
   };
 
-  if (props.warningVisible) {
+  const [visible, setVisible] = useState(props.warningVisible);
+  const [cleanup, setCleanup] = useState(undefined);
+
+  useEffect(() => {
+    if (visible !== props.warningVisible) {
+      setVisible(props.warningVisible);
+    }
+
+    if (visible === true && typeof cleanup === "undefined"){
+      setCleanup(setTimeout(() => {
+        props.warningCloseEventHandler()
+        }, 4000)
+      )
+    }
+    return () => {
+      if(typeof cleanup !== "undefined" ){
+        clearTimeout(cleanup);
+        setCleanup(undefined);
+      }
+    }
+  }, [visible, props, cleanup]);
+
+  if (visible) {
     return (
       <div
         className="alert alert-dismissable alert-info"
@@ -15,9 +37,10 @@ const WarningAlert = (props) => {
       >
         <button
           type="button"
+          aria-label="close alert"
           className="close"
           onClick={props.warningCloseEventHandler}
-        >×</button>
+        >x</button>
         <h4>{props.warningHeader}</h4>
         <p>{props.warningMessage}</p>
       </div>);
