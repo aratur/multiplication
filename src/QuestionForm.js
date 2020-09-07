@@ -6,7 +6,6 @@ import sadFaceImg from './img/sadFace.png';
 import shallowequal from 'shallowequal';
 
 class QuestionForm extends React.Component {
-  possibleAnswers = 5;
 
   static propTypes = {
     minValue: PropTypes.number.isRequired,
@@ -22,6 +21,7 @@ class QuestionForm extends React.Component {
 
 
   constructor(props){
+    this.possibleAnswers = 5;
     super(props);
     const getNewResultsList = (from, to) => {
       const result = {};
