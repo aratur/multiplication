@@ -1,8 +1,6 @@
 import React from 'react';
-import {render, cleanup, screen, act, fireEvent} from '@testing-library/react';
+import {render, act, fireEvent} from '@testing-library/react';
 import WarningAlert from '../WarningAlert';
-
-afterEach(cleanup);
 
 const renderAlert = (visible, callback = () => {}) => {
   return render(

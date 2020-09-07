@@ -15,6 +15,12 @@ class QuestionForm extends React.Component {
     toValue: PropTypes.number.isRequired
   };
 
+  componentDidCatch(error, errorInfo) {
+     // You can also log the error to an error reporting service
+    console.error(error, errorInfo);
+  }
+
+
   constructor(props){
     super(props);
     const getNewResultsList = (from, to) => {

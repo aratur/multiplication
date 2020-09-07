@@ -1,8 +1,9 @@
 import React from 'react';
 import MultiplicationTable from './MultiplicationTable';
 
-function App() {
-  return (
+class App extends React.Component {
+  render() {
+    return (
     <div className="container-fluid" align="center">
 
         <div className="col"  style={{width: "302px"}}>
@@ -13,7 +14,13 @@ function App() {
         </div>
 
     </div>
-  );
+  )};
+
+  componentDidCatch(error, errorInfo) {
+     // You can also log the error to an error reporting service
+    console.error(error, errorInfo);
+  }
+
 }
 
 export default App;

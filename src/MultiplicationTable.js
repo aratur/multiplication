@@ -9,71 +9,44 @@ class MultiplicationTable extends React.Component {
   rangePickerIncrement = 1;
   range = [];
 
+  componentDidCatch(error, errorInfo) {
+     // You can also log the error to an error reporting service
+    console.error(error, errorInfo);
+  }
+
+
   constructor(props){
     super(props);
     this.state = {
-      fromValue: this.minValue,
-      toValue: this.maxValue,
+      rangeValues: Array(10).fill(true),
       canEdit: true,
       pickerWarningVisible: false
     }
-
-    this.range = [];
-    for(let i=this.state.fromValue;
-            i<=this.state.toValue;
-            i=i+this.rangePickerIncrement){
-      this.range.push(i || 1);
-    }
-
     this.onHideWarningMessage = this.onHideWarningMessage.bind(this);
+    this.onRangeButtonClicked = this.onRangeButtonClicked.bind(this)
   }
 
-  onFromButtonClicked(e) {
+  onRangeButtonClicked(e) {
     e.preventDefault();
-    const selectedOption = Number(e.target.textContent);
-    if (selectedOption < this.state.toValue){
+    const selectedRangeValueIndex = Number(e.target.textContent) - 1;
+    const newRangeValues = this.state.rangeValues.slice();
+    newRangeValues[selectedRangeValueIndex]
+      = !newRangeValues[selectedRangeValueIndex];
+    if (newRangeValues
+        .reduce((reducer, value) => reducer += Number(value))
+        > 0){
       this.setState({
-        fromValue: selectedOption
-      });
-    } else if (selectedOption < this.maxValue)
-    {
-      this.setState({
-        fromValue: selectedOption,
-        toValue: this.range.find(item => item > selectedOption)
+        rangeValues: newRangeValues
       });
     } else {
-      this.showWarning();
-    }
-  }
-
-  onToButtonClicked(e) {
-    e.preventDefault();
-    const selectedOption = Number(e.target.textContent);
-    if (selectedOption > this.state.fromValue){
       this.setState({
-        toValue: selectedOption
+        pickerWarningVisible: true
       });
-    } else if (selectedOption > this.minValue)
-    {
-      this.setState({
-        fromValue: [...this.range]
-          .sort((a,b) => b-a)
-          .find(item => item < selectedOption),
-        toValue: selectedOption
-      });
-    } else {
-      this.showWarning();
     }
   }
 
   onHideWarningMessage(){
     this.setState({ pickerWarningVisible: false });
-  }
-
-  showWarning() {
-    this.setState({
-      pickerWarningVisible: true
-    });
   }
 
   render() {
@@ -85,23 +58,10 @@ class MultiplicationTable extends React.Component {
             warningHeader="Wybierz inny zakres"
             warningMessage="Liczba Od musi być mniejsza od liczby Do"/>
           <RangePicker
-            label="From"
-            selectedValue={this.state.fromValue}
-            handleOnClick={this.onFromButtonClicked.bind(this)}
-            range={this.range}
+            rangeValues={this.state.rangeValues}
+            handleOnClick={this.onRangeButtonClicked}
           />
-          <RangePicker
-            label="Do"
-            selectedValue={this.state.toValue}
-            handleOnClick={this.onToButtonClicked.bind(this)}
-            range={this.range}
-          />
-          <QuestionForm
-            fromValue={this.state.fromValue}
-            toValue={this.state.toValue}
-            minValue={this.minValue}
-            maxValue={this.maxValue}
-          />
+
         </div>
     );
   }
