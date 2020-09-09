@@ -1,198 +1,183 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import shallowequal from 'shallowequal';
 import Equation from './Equation';
 import happyFaceImg from './img/happyFace.png';
 import sadFaceImg from './img/sadFace.png';
-import shallowequal from 'shallowequal';
 
 class QuestionForm extends React.Component {
-
-  static propTypes = {
-    minValue: PropTypes.number.isRequired,
-    maxValue: PropTypes.number.isRequired,
-    fromValue: PropTypes.number.isRequired,
-    toValue: PropTypes.number.isRequired
-  };
-
-  componentDidCatch(error, errorInfo) {
-     // You can also log the error to an error reporting service
-    console.error(error, errorInfo);
-  }
-
-
-  constructor(props){
-    this.possibleAnswers = 5;
+  constructor(props) {
     super(props);
-    const getNewResultsList = (from, to) => {
-      const result = {};
-      for(let i=from;i<=to;i++){
-        const sub = {};
-        for(let j=from;j<=to;j++){
-          sub[j] = 0;
-        }
-        result[i] = sub;
-      }
-      return result;
+    this.optionButtonStyle = {
+      margin: '5px',
+      width: '55px',
     };
-
     this.state = {
-      resultsArray: getNewResultsList(props.minValue, props.maxValue),
       xValue: 0,
       yValue: 0,
-      correctAnswer: "?",
+      correctAnswer: '?',
+      randomValues: [],
       innerState: {
-        isAsking: true,
         isHappy: false,
         isSad: false,
-        isWinner: false
-      }
+        isWinner: false,
+      },
     };
+    this.onOptionSelected = this.onOptionSelected.bind(this);
   }
 
-  getRandomIntInclusive = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-
-  getOptionsValues = (xValue, yValue, fromValue, toValue) => {
-    let results = [xValue * yValue];
-    const maxValue = toValue*toValue;
-    const minValue = fromValue*toValue;
-    while(results.length < this.possibleAnswers
-      && results.length < (maxValue - minValue + 1)){
-      const randomValue = this.getRandomIntInclusive(minValue, maxValue);
-      if (results.findIndex(item => item === randomValue) === -1){
-        results.push(randomValue);
-      }
+  componentDidMount() {
+    this.initializeValues();
+    // compute no of unique values
+    for (let i = 1; i < 11; i++) {
+      this.computeUnique(i);
     }
-    return results.sort((a,b) => a-b);
-  };
+  }
 
-  onOptionSelected = (e) => {
+  componentDidUpdate(prevProps) {
+    const prevRange = prevProps.range;
+    const { range } = this.props;
+    if (!shallowequal(prevRange, range)) {
+      this.initializeValues();
+    }
+  }
+
+  onOptionSelected(e) {
+    const { xValue, yValue } = this.state;
     const answer = Number(e.target.innerText);
-    const correctAnswer = this.state.xValue * this.state.yValue;
-    const newResults = this.state.resultsArray;
-    if(answer === correctAnswer){
-      newResults[this.state.xValue][this.state.yValue] += 1;
+    const correctAnswer = xValue * yValue;
+    // const newResults = this.state.resultsArray;
+    if (answer === correctAnswer) {
+      // newResults[xValue][yValue] += 1;
       this.setState({
-        correctAnswer: correctAnswer,
-        resultsArray: newResults,
+        correctAnswer,
         innerState: {
-          isAsking: false,
           isHappy: true,
           isSad: false,
-          isWinner: false
+          isWinner: false,
         },
       });
     } else {
-      newResults[this.state.xValue][this.state.yValue] -= 1;
+      // newResults[xValue][yValue] -= 1;
       this.setState({
-        correctAnswer: correctAnswer,
-        resultsArray: newResults,
+        correctAnswer,
         innerState: {
-          isAsking: false,
           isHappy: false,
           isSad: true,
-          isWinner: false
-        }
+          isWinner: false,
+        },
       });
     }
-    this.resetStateAfter(2000);
-  };
-
-  resetStateAfter = (milliseconds) => {
     setTimeout(() => {
-      this.setState({
-        xValue: this.getRandomIntInclusive(this.props.fromValue,
-          this.props.toValue),
-        yValue: this.getRandomIntInclusive(this.props.fromValue,
-          this.props.toValue),
-        correctAnswer: "?",
-        innerState: {
-          isAsking: true,
-          isHappy: false,
-          isSad: false,
-          isWinner: false
-        }
-      });
-    }, milliseconds);
-  };
+      this.initializeValues();
+    }, 2000);
+  }
 
-  getRandomIntInclusive = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+  getNumRange() {
+    const { range } = this.props;
+    const numRange = [];
+    range.forEach((value, index) => {
+      if (value) { numRange.push(index + 1); }
+    });
+    return numRange;
+  }
 
-  shouldComponentUpdate = (nextProps, nextState) => {
-    if(nextProps.fromValue !== this.props.fromValue
-      || nextProps.toValue !== this.props.toValue
-      || nextState.xValue !== this.state.xValue
-      || nextState.yValue !== this.state.yValue
-      || !shallowequal(nextState.innerState, this.state.innerState) ){
-        return true;
-    } else {
-      console.log("Component shall not update")
-      return false;
+  getRandomIntInclusive() {
+    const numRange = this.getNumRange();
+    const min = 0;
+    const max = numRange.length - 1;
+    const randomIndex = Math.floor(Math.random() * (max - min + 1)) + min;
+    return numRange[randomIndex];
+  }
+
+  getOptionsValues(xValue, yValue) {
+    const { possibleAnswers } = this.props;
+    const results = [xValue * yValue];
+    while (results.length < possibleAnswers) {
+      const randomValue = this.getRandomIntInclusive() * this.getRandomIntInclusive();
+      if (results.findIndex((item) => item === randomValue) === -1) {
+        results.push(randomValue);
+      }
     }
-  };
+    return results.sort((a, b) => a - b);
+  }
 
-  componentDidMount(){
+  computeUnique(vars) {
+    const { range } = this.props;
+    //console.log(range);
+    const unique = [];
+    const liczby = Array(vars).fill(0).map((x, index) => index + 1);
+    for (let l1 of liczby) {
+      for (let l2 of liczby) {
+        if(!unique || unique.indexOf(l1*l2) === -1){
+          unique.push(l1*l2);
+        }
+      }
+    }
+    console.log(`Vars ${vars} return count ${unique.length} and values ${unique}`);
+  }
+
+  initializeValues() {
+    const { range } = this.props;
+    const xValue = this.getRandomIntInclusive(range);
+    const yValue = this.getRandomIntInclusive(range);
     this.setState({
-      xValue: this.getRandomIntInclusive(this.props.fromValue,
-        this.props.toValue),
-      yValue: this.getRandomIntInclusive(this.props.fromValue,
-        this.props.toValue)
+      xValue,
+      yValue,
+      randomValues: this.getOptionsValues(xValue, yValue),
+      correctAnswer: '?',
+      innerState: {
+        isHappy: false,
+        isSad: false,
+        isWinner: false,
+      },
     });
   }
 
-  componentDidUpdate(prevProps){
-    if(prevProps.fromValue !== this.props.fromValue
-      || prevProps.toValue !== this.props.toValue){
-        this.setState({
-          xValue: this.getRandomIntInclusive(this.props.fromValue,
-            this.props.toValue),
-          yValue: this.getRandomIntInclusive(this.props.fromValue,
-            this.props.toValue)
-        });
-      }
-  }
-
-  optionButtonStyle = {
-    margin: "5px",
-    width: "55px"
-  }
-
-  renderInnerState = () => {
-    if(this.state.innerState.isAsking) {
-      return this.getOptionsValues(this.state.xValue, this.state.yValue
-      , this.props.fromValue, this.props.toValue)
-      .map( item =>
-        <button
-          type = "button"
-          className="btn btn-info btn-lg"
-          style = {this.optionButtonStyle}
-          onClick={this.onOptionSelected}
-          key={item}
-        >{item}</button>);
-    } else if (this.state.innerState.isHappy){
+  renderInnerState() {
+    const { innerState } = this.state;
+    if (innerState.isHappy) {
       return <img src={happyFaceImg} alt="Good job!" height="200" />;
-    } else if (this.state.innerState.isSad){
+    } if (innerState.isSad) {
       return <img src={sadFaceImg} alt="Oh no!" height="200" />;
     }
-  };
+    return null;
+  }
 
-  render(){
+  render() {
+    const {
+      xValue, yValue, randomValues, correctAnswer,
+    } = this.state;
     return (
-      <div className="row" >
+      <div className="row">
         <Equation
-          xValue = {this.state.xValue}
-          yValue = {this.state.yValue}
-          correctAnswer = {this.state.correctAnswer}
+          xValue={xValue}
+          yValue={yValue}
+          correctAnswer={correctAnswer}
         />
         <div className="button-group">
-          {this.renderInnerState()}
+          {randomValues
+            .map((item) => (
+              <button
+                type="button"
+                className="btn btn-info btn-lg"
+                style={this.optionButtonStyle}
+                onClick={this.onOptionSelected}
+                key={item}
+              >
+                {item}
+              </button>
+            ))}
         </div>
+        {this.renderInnerState()}
       </div>
     );
   }
 }
+
+QuestionForm.propTypes = {
+  range: PropTypes.arrayOf(PropTypes.bool).isRequired,
+  possibleAnswers: PropTypes.number.isRequired,
+};
 
 export default QuestionForm;

@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true,
+    es2020: true,
     jest: true,
   },
   extends: [
@@ -15,7 +15,7 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 12,
+    ecmaVersion: 11,
     sourceType: 'module',
   },
   plugins: [
@@ -26,6 +26,6 @@ module.exports = {
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'no-console': 'off',
-    'react/destructuring-assignment': [0, 'always', { ignoreClassFields: false }],
+    'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
   },
 };

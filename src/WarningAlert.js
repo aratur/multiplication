@@ -1,28 +1,28 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const WarningAlert = (props) => {
   const warningStyle = {
-    marginTop:"5px",
-    marginBottom: "5px"
+    marginTop: '5px',
+    marginBottom: '5px',
   };
-  const {warningVisible, warningCloseEventHandler} = props;
+  const { warningVisible, warningCloseEventHandler } = props;
 
   useEffect(() => {
     let cleanup;
-    if (warningVisible){
+    if (warningVisible) {
       cleanup = setTimeout(() => {
-        warningCloseEventHandler()
+        warningCloseEventHandler();
       }, 4000);
     }
     return () => {
-      if(cleanup){
+      if (cleanup) {
         clearTimeout(cleanup);
       }
-    }
+    };
   }, [warningVisible, warningCloseEventHandler]);
 
-  if (props.warningVisible) {
+  if (warningVisible) {
     return (
       <div
         className="alert alert-dismissable alert-info"
@@ -33,17 +33,21 @@ const WarningAlert = (props) => {
           aria-label="close alert"
           className="close"
           onClick={warningCloseEventHandler}
-        >x</button>
+        >
+          x
+        </button>
         <h4>{props.warningHeader}</h4>
         <p>{props.warningMessage}</p>
-      </div>);
-  } else return null;
+      </div>
+    );
+  } return null;
 };
 
 WarningAlert.propTypes = {
   warningCloseEventHandler: PropTypes.func.isRequired,
   warningHeader: PropTypes.string.isRequired,
-  warningMessage: PropTypes.string.isRequired
+  warningMessage: PropTypes.string.isRequired,
+  warningVisible: PropTypes.bool.isRequired,
 };
 
 export default WarningAlert;
