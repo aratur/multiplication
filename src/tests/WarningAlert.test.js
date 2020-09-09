@@ -5,13 +5,6 @@ import {
 } from '@testing-library/react';
 import WarningAlert from '../WarningAlert';
 
-// import {
-//   toBeInTheDocument,
-//   toHaveClass,
-// } from '@testing-library/jest-dom/matchers'
-//
-// expect.extend({toBeInTheDocument, toHaveClass})
-
 const renderAlert = (visible, callback = () => {}) => render(
   <WarningAlert
     warningVisible={visible}

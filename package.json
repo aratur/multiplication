@@ -15,8 +15,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test-cover": "react-scripts test --coverage --watchAll",
+    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
+    "test-cover": "react-scripts test --coverage --watchAll --env=jest-environment-jsdom-sixteen",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "@testing-library/dom": "^7.24.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.0.2",
+    "@testing-library/user-event": "^12.1.4",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest-dom": "^3.2.2",
@@ -46,6 +46,7 @@
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.1.0",
     "eslint-plugin-testing-library": "^3.8.0",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
     "react-scripts": "3.4.0"
   }
 }

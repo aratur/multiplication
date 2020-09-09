@@ -11,6 +11,8 @@ class QuestionForm extends React.Component {
     this.optionButtonStyle = {
       margin: '5px',
       width: '55px',
+      height: '55px',
+      padding: '0px',
     };
     this.state = {
       xValue: 0,
@@ -28,10 +30,6 @@ class QuestionForm extends React.Component {
 
   componentDidMount() {
     this.initializeValues();
-    // compute no of unique values
-    for (let i = 1; i < 11; i++) {
-      this.computeUnique(i);
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -91,9 +89,11 @@ class QuestionForm extends React.Component {
   }
 
   getOptionsValues(xValue, yValue) {
-    const { possibleAnswers } = this.props;
+    const { noOfAnswers } = this.props;
     const results = [xValue * yValue];
-    while (results.length < possibleAnswers) {
+    const allUniqueValues = this.getAllUniqueValues();
+    while (results.length < noOfAnswers
+        && results.length < allUniqueValues.length) {
       const randomValue = this.getRandomIntInclusive() * this.getRandomIntInclusive();
       if (results.findIndex((item) => item === randomValue) === -1) {
         results.push(randomValue);
@@ -102,19 +102,13 @@ class QuestionForm extends React.Component {
     return results.sort((a, b) => a - b);
   }
 
-  computeUnique(vars) {
-    const { range } = this.props;
-    //console.log(range);
+  getAllUniqueValues() {
     const unique = [];
-    const liczby = Array(vars).fill(0).map((x, index) => index + 1);
-    for (let l1 of liczby) {
-      for (let l2 of liczby) {
-        if(!unique || unique.indexOf(l1*l2) === -1){
-          unique.push(l1*l2);
-        }
-      }
-    }
-    console.log(`Vars ${vars} return count ${unique.length} and values ${unique}`);
+    const liczby = this.getNumRange();
+    liczby.forEach((first) => liczby.forEach((second) => {
+      if (unique.indexOf(first * second) === -1) unique.push(first * second);
+    }));
+    return unique;
   }
 
   initializeValues() {
@@ -149,35 +143,41 @@ class QuestionForm extends React.Component {
       xValue, yValue, randomValues, correctAnswer,
     } = this.state;
     return (
-      <div className="row">
+      <>
         <Equation
           xValue={xValue}
           yValue={yValue}
           correctAnswer={correctAnswer}
+          optionButtonStyle
         />
-        <div className="button-group">
-          {randomValues
-            .map((item) => (
-              <button
-                type="button"
-                className="btn btn-info btn-lg"
-                style={this.optionButtonStyle}
-                onClick={this.onOptionSelected}
-                key={item}
-              >
-                {item}
-              </button>
-            ))}
+        <div className="well" style={{ padding: '10px' }}>
+          <label htmlFor="answers">
+            Wybierz poprawny wynik
+            <div id="answers">
+              {randomValues
+                .map((item) => (
+                  <button
+                    type="button"
+                    className="btn btn-info btn-lg"
+                    style={this.optionButtonStyle}
+                    onClick={this.onOptionSelected}
+                    key={item}
+                  >
+                    {item}
+                  </button>
+                ))}
+            </div>
+          </label>
         </div>
         {this.renderInnerState()}
-      </div>
+      </>
     );
   }
 }
 
 QuestionForm.propTypes = {
   range: PropTypes.arrayOf(PropTypes.bool).isRequired,
-  possibleAnswers: PropTypes.number.isRequired,
+  noOfAnswers: PropTypes.number.isRequired,
 };
 
 export default QuestionForm;

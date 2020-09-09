@@ -41,7 +41,7 @@ function Progress(props) {
 }
 
 Progress.propTypes = {
-  results: PropTypes.array.isRequired,
-}
+  results: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+};
 
 export default Progress;

@@ -1,28 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import WarningAlert from './WarningAlert';
 
 const RangePicker = (props) => {
-  // display: "flex" no wrapping of btn-group
+  const { rangeValues, minimumNoOfSelectedValues, setNewRangeValueAt } = props;
+  const [warningVisible, setWarningVisibility] = useState(false);
+
+  const onRangeButtonClicked = (e) => {
+    const selectedRangeValueIndex = Number(e.target.textContent) - 1;
+    const newRangeValues = rangeValues.slice();
+    newRangeValues[selectedRangeValueIndex] = !newRangeValues[selectedRangeValueIndex];
+    if (newRangeValues
+      .reduce((reducer, value) => reducer + Number(value)) >= minimumNoOfSelectedValues) {
+      setNewRangeValueAt(newRangeValues[selectedRangeValueIndex], selectedRangeValueIndex);
+    } else {
+      setWarningVisibility(true);
+    }
+  };
+
+  const onHideWarningMessage = () => {
+    setWarningVisibility(false);
+  };
+
   return (
-        <div
-          className="btn-group" role="group"
-          style={({marginTop:"5px", marginBottom: "5px"})}
-        >
-          {props.rangeValues.map( (value, index) =>
-            <button
-              role="checkbox" aria-checked={value}
-              className={value ? "btn btn-success" : "btn btn-info"}
-              onClick={props.handleOnClick}
-              key={index}
-            >{index + 1}</button>)
-          }
-        </div>
-    );
+    <>
+      <div className="well" style={{ padding: '10px' }}>
+        <label htmlFor="range">
+          Wybrany zakres liczb do nauki
+          <div
+            className="btn-group"
+            role="group"
+            style={({ marginTop: '5px', marginBottom: '5px' })}
+            id="range"
+          >
+            {rangeValues.map((value, index) => (
+              <button
+                type="button"
+                role="checkbox"
+                aria-checked={value}
+                name={`range option ${index + 1}`}
+                className={value ? 'btn btn-success' : 'btn btn-info'}
+                onClick={onRangeButtonClicked}
+                key={String(index)}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        </label>
+      </div>
+      <WarningAlert
+        warningVisible={warningVisible}
+        warningCloseEventHandler={onHideWarningMessage}
+        warningHeader="Nie tak szybko"
+        warningMessage={`Zaznacz nie mniej liczb niż ${minimumNoOfSelectedValues}.`}
+      />
+    </>
+  );
 };
 
 RangePicker.propTypes = {
-  handleOnClick: PropTypes.func.isRequired,
-  rangeValues: PropTypes.array.isRequired
+  setNewRangeValueAt: PropTypes.func.isRequired,
+  rangeValues: PropTypes.arrayOf(PropTypes.bool).isRequired,
+  minimumNoOfSelectedValues: PropTypes.number,
+};
+
+RangePicker.defaultProps = {
+  minimumNoOfSelectedValues: 1,
 };
 
 export default RangePicker;
