@@ -5,26 +5,21 @@ import Equation from './Equation';
 import happyFaceImg from './img/happyFace.png';
 import sadFaceImg from './img/sadFace.png';
 import { answerStatus } from './model/results';
+import SelectAnswer from './SelectAnswer';
 
 class QuestionForm extends React.Component {
   constructor(props) {
     super(props);
-    this.optionButtonStyle = {
-      margin: '5px',
-      width: '55px',
-      height: '55px',
-      padding: '0px',
-    };
     this.state = {
       xValue: 0,
       yValue: 0,
       correctAnswer: '?',
-      randomValues: [],
+      questionValues: [],
       isHappy: false,
       isSad: false,
-      disableSelectAnswer: false,
     };
-    this.onOptionSelected = this.onOptionSelected.bind(this);
+    this.onAnswerSelected = this.onAnswerSelected.bind(this);
+    this.handleImageClick = this.handleImageClick.bind(this);
   }
 
   componentDidMount() {
@@ -39,10 +34,9 @@ class QuestionForm extends React.Component {
     }
   }
 
-  onOptionSelected(e) {
+  onAnswerSelected(answer) {
     const { xValue, yValue, startTime } = this.state;
     const { setResultValueAt } = this.props;
-    const answer = Number(e.target.innerText);
     const correctAnswer = xValue * yValue;
     if (answer === correctAnswer) {
       const answerState = { status: answerStatus.success, duration: Date.now() - startTime };
@@ -52,7 +46,6 @@ class QuestionForm extends React.Component {
         startTime: Date.now(),
         isHappy: true,
         isSad: false,
-        disableSelectAnswer: true,
       });
     } else {
       const answerState = { status: answerStatus.failure, duration: 0 };
@@ -62,12 +55,11 @@ class QuestionForm extends React.Component {
         startTime: Date.now(),
         isHappy: false,
         isSad: true,
-        disableSelectAnswer: true,
       });
     }
-    setTimeout(() => {
+    this.timeoutCallback = setTimeout(() => {
       this.initializeValues();
-    }, 2000);
+    }, 3000);
   }
 
   getNumRange() {
@@ -96,7 +88,7 @@ class QuestionForm extends React.Component {
     return unique.length;
   }
 
-  getOptionsValues(xValue, yValue) {
+  getQuestionValues(xValue, yValue) {
     const { noOfAnswers } = this.props;
     const results = [xValue * yValue];
     const numberOfUniqueValues = this.getNumberOfUniqueValues();
@@ -118,27 +110,21 @@ class QuestionForm extends React.Component {
       xValue,
       yValue,
       startTime: Date.now(),
-      randomValues: this.getOptionsValues(xValue, yValue),
+      questionValues: this.getQuestionValues(xValue, yValue),
       correctAnswer: '?',
       isHappy: false,
       isSad: false,
-      disableSelectAnswer: false,
     });
   }
 
-  renderInnerState() {
-    const { isHappy, isSad } = this.state;
-    if (isHappy) {
-      return <img src={happyFaceImg} alt="Good job!" height="200" />;
-    } if (isSad) {
-      return <img src={sadFaceImg} alt="Oh no!" height="200" />;
-    }
-    return null;
+  handleImageClick() {
+    if (this.timeoutCallback) clearTimeout(this.timeoutCallback);
+    this.initializeValues();
   }
 
   render() {
     const {
-      xValue, yValue, randomValues, correctAnswer, disableSelectAnswer,
+      xValue, yValue, questionValues, correctAnswer, isHappy, isSad,
     } = this.state;
     return (
       <>
@@ -147,24 +133,39 @@ class QuestionForm extends React.Component {
           yValue={yValue}
           correctAnswer={correctAnswer}
         />
-        <div className="well" style={{ padding: '10px' }}>
-          <b>Wybierz poprawny wynik</b>
-          <br />
-          {randomValues
-            .map((item) => (
-              <button
-                type="button"
-                className="btn btn-info btn-lg"
-                style={this.optionButtonStyle}
-                onClick={this.onOptionSelected}
-                key={item}
-                disabled={disableSelectAnswer}
-              >
-                {item}
-              </button>
-            ))}
-        </div>
-        {this.renderInnerState()}
+        <SelectAnswer
+          questionValues={questionValues}
+          correctAnswer={xValue * yValue}
+          onAnswerSelected={this.onAnswerSelected}
+        />
+        {isHappy && (
+          <div
+            onClick={this.handleImageClick}
+            onKeyPress={this.handleImageClick}
+            tabIndex="0"
+            role="button"
+          >
+            <img
+              src={happyFaceImg}
+              alt="Good job!"
+              height="150"
+            />
+          </div>
+        )}
+        {isSad && (
+          <div
+            onClick={this.handleImageClick}
+            onKeyPress={this.handleImageClick}
+            tabIndex="0"
+            role="button"
+          >
+            <img
+              src={sadFaceImg}
+              alt="Oh no!"
+              height="150"
+            />
+          </div>
+        )}
       </>
     );
   }
