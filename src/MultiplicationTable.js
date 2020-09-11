@@ -28,7 +28,6 @@ class MultiplicationTable extends React.Component {
   setResultValueAt(value, row, column) {
     const { resultsArray } = this.state;
     // setValueAtRowCol returns a new instance of a resultsArray object
-    console.log(value, row, column);
     const newResultsArray = resultsArray.setValueAtRowCol(value, row, column);
     this.setState({
       resultsArray: newResultsArray,

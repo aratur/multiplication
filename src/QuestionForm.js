@@ -20,11 +20,9 @@ class QuestionForm extends React.Component {
       yValue: 0,
       correctAnswer: '?',
       randomValues: [],
-      innerState: {
-        isHappy: false,
-        isSad: false,
-        isWinner: false,
-      },
+      isHappy: false,
+      isSad: false,
+      disableSelectAnswer: false,
     };
     this.onOptionSelected = this.onOptionSelected.bind(this);
   }
@@ -52,11 +50,9 @@ class QuestionForm extends React.Component {
       this.setState({
         correctAnswer,
         startTime: Date.now(),
-        innerState: {
-          isHappy: true,
-          isSad: false,
-          isWinner: false,
-        },
+        isHappy: true,
+        isSad: false,
+        disableSelectAnswer: true,
       });
     } else {
       const answerState = { status: answerStatus.failure, duration: 0 };
@@ -64,11 +60,9 @@ class QuestionForm extends React.Component {
       this.setState({
         correctAnswer,
         startTime: Date.now(),
-        innerState: {
-          isHappy: false,
-          isSad: true,
-          isWinner: false,
-        },
+        isHappy: false,
+        isSad: true,
+        disableSelectAnswer: true,
       });
     }
     setTimeout(() => {
@@ -126,19 +120,17 @@ class QuestionForm extends React.Component {
       startTime: Date.now(),
       randomValues: this.getOptionsValues(xValue, yValue),
       correctAnswer: '?',
-      innerState: {
-        isHappy: false,
-        isSad: false,
-        isWinner: false,
-      },
+      isHappy: false,
+      isSad: false,
+      disableSelectAnswer: false,
     });
   }
 
   renderInnerState() {
-    const { innerState } = this.state;
-    if (innerState.isHappy) {
+    const { isHappy, isSad } = this.state;
+    if (isHappy) {
       return <img src={happyFaceImg} alt="Good job!" height="200" />;
-    } if (innerState.isSad) {
+    } if (isSad) {
       return <img src={sadFaceImg} alt="Oh no!" height="200" />;
     }
     return null;
@@ -146,7 +138,7 @@ class QuestionForm extends React.Component {
 
   render() {
     const {
-      xValue, yValue, randomValues, correctAnswer,
+      xValue, yValue, randomValues, correctAnswer, disableSelectAnswer,
     } = this.state;
     return (
       <>
@@ -156,23 +148,21 @@ class QuestionForm extends React.Component {
           correctAnswer={correctAnswer}
         />
         <div className="well" style={{ padding: '10px' }}>
-          <label htmlFor="answers">
-            Wybierz poprawny wynik
-            <div id="answers">
-              {randomValues
-                .map((item) => (
-                  <button
-                    type="button"
-                    className="btn btn-info btn-lg"
-                    style={this.optionButtonStyle}
-                    onClick={this.onOptionSelected}
-                    key={item}
-                  >
-                    {item}
-                  </button>
-                ))}
-            </div>
-          </label>
+          <b>Wybierz poprawny wynik</b>
+          <br />
+          {randomValues
+            .map((item) => (
+              <button
+                type="button"
+                className="btn btn-info btn-lg"
+                style={this.optionButtonStyle}
+                onClick={this.onOptionSelected}
+                key={item}
+                disabled={disableSelectAnswer}
+              >
+                {item}
+              </button>
+            ))}
         </div>
         {this.renderInnerState()}
       </>

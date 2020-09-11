@@ -8,9 +8,9 @@ const ResultsTable = (props) => {
   const [showIncorrect, setShowIncorrect] = useState(false);
   const [showSlowest, setShowSlowest] = useState(false);
 
-  // needed to make it look the same as labels
-  const styleCaption = { fontWeight: '700', color: '#fff' };
   const styleButtons = { margin: '5px' };
+  const styleWell = { padding: '10px' };
+
   const getClassName = (col, row) => {
     const answerState = resultsArray.getValueAtRowCol(row, col);
     let result = null;
@@ -23,34 +23,40 @@ const ResultsTable = (props) => {
     if (row === col) return result || 'active';
     return result;
   };
+
   return (
     <>
-      <button
-        className="btn btn-success"
-        type="button"
-        style={styleButtons}
-        onClick={() => setShowCorrect(!showCorrect)}
-      >
-        Poprawne
-      </button>
-      <button
-        className="btn btn-danger"
-        type="button"
-        style={styleButtons}
-        onClick={() => setShowIncorrect(!showIncorrect)}
-      >
-        Błędne
-      </button>
-      <button
-        className="btn btn-warning"
-        type="button"
-        style={styleButtons}
-        onClick={() => setShowSlowest(!showSlowest)}
-      >
-        Najwolniejsze
-      </button>
+      <div className="well" style={styleWell}>
+        <b>Wybierz, które wyniki chcesz zobaczyć w tabeli</b>
+        <div id="table-buttons-group">
+          <button
+            className="btn btn-success"
+            type="button"
+            style={styleButtons}
+            onClick={() => setShowCorrect(!showCorrect)}
+          >
+            Poprawne
+          </button>
+          <button
+            className="btn btn-danger"
+            type="button"
+            style={styleButtons}
+            onClick={() => setShowIncorrect(!showIncorrect)}
+          >
+            Błędne
+          </button>
+          <button
+            className="btn btn-warning"
+            type="button"
+            style={styleButtons}
+            onClick={() => setShowSlowest(!showSlowest)}
+          >
+            Najwolniejsze
+          </button>
+        </div>
+      </div>
       <table className="table table-striped table-hover text-center">
-        <caption style={styleCaption}>Tabliczka mnożenia</caption>
+        <caption>Tabliczka mnożenia</caption>
         <thead>
           <tr>
             <th className="active text-center" key="X">X</th>
