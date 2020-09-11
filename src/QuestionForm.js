@@ -59,7 +59,7 @@ class QuestionForm extends React.Component {
     }
     this.timeoutCallback = setTimeout(() => {
       this.initializeValues();
-    }, 3000);
+    }, 2500);
   }
 
   getNumRange() {

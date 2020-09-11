@@ -23,7 +23,7 @@ const SelectAnswer = (props) => {
   };
 
   const handleAnswerSelected = (e) => {
-    const answer = Number(e.target.innerText);
+    const answer = Number(e.target.textContent);
     setUserAnswer(answer);
     setWasAnswered(true);
     onAnswerSelected(answer);

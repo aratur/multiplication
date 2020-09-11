@@ -15,7 +15,7 @@ const Equation = (props) => {
     },
     type: 'button',
     tabIndex: '-1',
-    role: 'contentinfo',
+    role: 'option',
     className: 'btn btn-success btn-lg',
   };
   const signProps = {
