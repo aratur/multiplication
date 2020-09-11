@@ -1,27 +1,19 @@
 import React from 'react';
 import RangePicker from './RangePicker';
 import QuestionForm from './QuestionForm';
+import ResultsTable from './ResultsTable';
+import { results } from './model/results';
 
 class MultiplicationTable extends React.Component {
   constructor(props) {
     super(props);
     Object.assign(this, { ...props });
-    // const getNewResultsList = (from, to) => {
-    //   const result = {};
-    //   for (let i = from; i <= to; i++) {
-    //     const sub = {};
-    //     for (let j = from; j <= to; j++) {
-    //       sub[j] = 0;
-    //     }
-    //     result[i] = sub;
-    //   }
-    //   return result;
-    // };
     this.state = {
       rangeValues: Array(this.size).fill(true),
-      // resultsArray: getNewResultsList(1, this.size),
+      resultsArray: results(this.size),
     };
     this.setNewRangeValueAt = this.setNewRangeValueAt.bind(this);
+    this.setResultValueAt = this.setResultValueAt.bind(this);
   }
 
   setNewRangeValueAt(value, at) {
@@ -33,18 +25,32 @@ class MultiplicationTable extends React.Component {
     });
   }
 
+  setResultValueAt(value, row, column) {
+    const { resultsArray } = this.state;
+    // setValueAtRowCol returns a new instance of a resultsArray object
+    console.log(value, row, column);
+    const newResultsArray = resultsArray.setValueAtRowCol(value, row, column);
+    this.setState({
+      resultsArray: newResultsArray,
+    });
+  }
+
   render() {
-    const { rangeValues } = this.state;
+    const { rangeValues, resultsArray } = this.state;
     return (
       <div className="row">
         <QuestionForm
           range={rangeValues}
           noOfAnswers={this.noOfAnswers}
+          setResultValueAt={this.setResultValueAt}
         />
         <RangePicker
           rangeValues={rangeValues}
           setNewRangeValueAt={this.setNewRangeValueAt}
           minimumNoOfSelectedValues={this.minimumNoOfSelectedValues}
+        />
+        <ResultsTable
+          resultsArray={resultsArray}
         />
       </div>
     );

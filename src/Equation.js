@@ -14,6 +14,7 @@ const Equation = (props) => {
       padding: '0px',
     },
     type: 'button',
+    tabIndex: '-1',
     role: 'contentinfo',
     className: 'btn btn-success btn-lg',
   };

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import WarningAlert from './WarningAlert';
 
 const RangePicker = (props) => {
+  const styleButtonGroup = { marginTop: '5px', marginBottom: '5px' };
+  const styleWell = { padding: '10px' };
   const { rangeValues, minimumNoOfSelectedValues, setNewRangeValueAt } = props;
   const [warningVisible, setWarningVisibility] = useState(false);
 
@@ -24,13 +26,13 @@ const RangePicker = (props) => {
 
   return (
     <>
-      <div className="well" style={{ padding: '10px' }}>
+      <div className="well" style={styleWell}>
         <label htmlFor="range">
           Wybrany zakres liczb do nauki
           <div
             className="btn-group"
             role="group"
-            style={({ marginTop: '5px', marginBottom: '5px' })}
+            style={styleButtonGroup}
             id="range"
           >
             {rangeValues.map((value, index) => (

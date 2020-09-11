@@ -4,6 +4,7 @@ import shallowequal from 'shallowequal';
 import Equation from './Equation';
 import happyFaceImg from './img/happyFace.png';
 import sadFaceImg from './img/sadFace.png';
+import { answerStatus } from './model/results';
 
 class QuestionForm extends React.Component {
   constructor(props) {
@@ -41,14 +42,16 @@ class QuestionForm extends React.Component {
   }
 
   onOptionSelected(e) {
-    const { xValue, yValue } = this.state;
+    const { xValue, yValue, startTime } = this.state;
+    const { setResultValueAt } = this.props;
     const answer = Number(e.target.innerText);
     const correctAnswer = xValue * yValue;
-    // const newResults = this.state.resultsArray;
     if (answer === correctAnswer) {
-      // newResults[xValue][yValue] += 1;
+      const answerState = { status: answerStatus.success, duration: Date.now() - startTime };
+      setResultValueAt(answerState, xValue, yValue);
       this.setState({
         correctAnswer,
+        startTime: Date.now(),
         innerState: {
           isHappy: true,
           isSad: false,
@@ -56,9 +59,11 @@ class QuestionForm extends React.Component {
         },
       });
     } else {
-      // newResults[xValue][yValue] -= 1;
+      const answerState = { status: answerStatus.failure, duration: 0 };
+      setResultValueAt(answerState, xValue, yValue);
       this.setState({
         correctAnswer,
+        startTime: Date.now(),
         innerState: {
           isHappy: false,
           isSad: true,
@@ -88,27 +93,27 @@ class QuestionForm extends React.Component {
     return numRange[randomIndex];
   }
 
+  getNumberOfUniqueValues() {
+    const unique = [];
+    const liczby = this.getNumRange();
+    liczby.forEach((first) => liczby.forEach((second) => {
+      if (unique.indexOf(first * second) === -1) unique.push(first * second);
+    }));
+    return unique.length;
+  }
+
   getOptionsValues(xValue, yValue) {
     const { noOfAnswers } = this.props;
     const results = [xValue * yValue];
-    const allUniqueValues = this.getAllUniqueValues();
+    const numberOfUniqueValues = this.getNumberOfUniqueValues();
     while (results.length < noOfAnswers
-        && results.length < allUniqueValues.length) {
+        && results.length < numberOfUniqueValues) {
       const randomValue = this.getRandomIntInclusive() * this.getRandomIntInclusive();
       if (results.findIndex((item) => item === randomValue) === -1) {
         results.push(randomValue);
       }
     }
     return results.sort((a, b) => a - b);
-  }
-
-  getAllUniqueValues() {
-    const unique = [];
-    const liczby = this.getNumRange();
-    liczby.forEach((first) => liczby.forEach((second) => {
-      if (unique.indexOf(first * second) === -1) unique.push(first * second);
-    }));
-    return unique;
   }
 
   initializeValues() {
@@ -118,6 +123,7 @@ class QuestionForm extends React.Component {
     this.setState({
       xValue,
       yValue,
+      startTime: Date.now(),
       randomValues: this.getOptionsValues(xValue, yValue),
       correctAnswer: '?',
       innerState: {
@@ -148,7 +154,6 @@ class QuestionForm extends React.Component {
           xValue={xValue}
           yValue={yValue}
           correctAnswer={correctAnswer}
-          optionButtonStyle
         />
         <div className="well" style={{ padding: '10px' }}>
           <label htmlFor="answers">
@@ -178,6 +183,7 @@ class QuestionForm extends React.Component {
 QuestionForm.propTypes = {
   range: PropTypes.arrayOf(PropTypes.bool).isRequired,
   noOfAnswers: PropTypes.number.isRequired,
+  setResultValueAt: PropTypes.func.isRequired,
 };
 
 export default QuestionForm;
