@@ -17,20 +17,20 @@ class MultiplicationTable extends React.Component {
   }
 
   setNewRangeValueAt(value, at) {
-    const { rangeValues } = this.state;
-    const newRangeValues = rangeValues.slice();
-    newRangeValues[at] = value;
-    this.setState({
-      rangeValues: newRangeValues,
+    this.setState((state) => {
+      const { rangeValues } = state;
+      const newRangeValues = rangeValues.slice();
+      newRangeValues[at] = value;
+      return { rangeValues: newRangeValues };
     });
   }
 
   setResultValueAt(value, row, column) {
-    const { resultsArray } = this.state;
-    // setValueAtRowCol returns a new instance of a resultsArray object
-    const newResultsArray = resultsArray.setValueAtRowCol(value, row, column);
-    this.setState({
-      resultsArray: newResultsArray,
+    this.setState((state) => {
+      const { resultsArray } = state;
+      // setValueAtRowCol returns a new instance of a resultsArray object
+      const newResultsArray = resultsArray.setValueAtRowCol(value, row, column);
+      return { resultsArray: newResultsArray };
     });
   }
 

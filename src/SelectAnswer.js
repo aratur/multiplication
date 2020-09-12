@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const SelectAnswer = (props) => {
-  const { onAnswerSelected, questionValues, correctAnswer } = props;
+  const { onAnswerSelected, possibleAnswers, correctAnswer } = props;
   const [wasAnswered, setWasAnswered] = useState(false);
   const [userAnswer, setUserAnswer] = useState(Infinity);
   const optionButtonStyle = {
@@ -31,13 +31,13 @@ const SelectAnswer = (props) => {
 
   useEffect(() => {
     setWasAnswered(false);
-  }, [questionValues]);
+  }, [possibleAnswers]);
 
   return (
     <div className="well" style={{ padding: '10px' }}>
       <b>Wybierz poprawny wynik</b>
       <br />
-      {questionValues
+      {possibleAnswers
         .map((item) => (
           <button
             type="button"
@@ -55,7 +55,7 @@ const SelectAnswer = (props) => {
 };
 
 SelectAnswer.propTypes = {
-  questionValues: PropTypes.arrayOf(PropTypes.number).isRequired,
+  possibleAnswers: PropTypes.arrayOf(PropTypes.number).isRequired,
   onAnswerSelected: PropTypes.func.isRequired,
   correctAnswer: PropTypes.number.isRequired,
 };

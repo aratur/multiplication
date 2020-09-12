@@ -14,7 +14,7 @@ class QuestionForm extends React.Component {
       xValue: 0,
       yValue: 0,
       correctAnswer: '?',
-      questionValues: [],
+      possibleAnswers: [],
       isHappy: false,
       isSad: false,
     };
@@ -35,28 +35,29 @@ class QuestionForm extends React.Component {
   }
 
   onAnswerSelected(answer) {
-    const { xValue, yValue, startTime } = this.state;
-    const { setResultValueAt } = this.props;
-    const correctAnswer = xValue * yValue;
-    if (answer === correctAnswer) {
-      const answerState = { status: answerStatus.success, duration: Date.now() - startTime };
-      setResultValueAt(answerState, xValue, yValue);
-      this.setState({
-        correctAnswer,
-        startTime: Date.now(),
-        isHappy: true,
-        isSad: false,
-      });
-    } else {
+    this.setState((state) => {
+      const { xValue, yValue, startTime } = state;
+      const { setResultValueAt } = this.props;
+      const correctAnswer = xValue * yValue;
+      if (answer === correctAnswer) {
+        const answerState = { status: answerStatus.success, duration: Date.now() - startTime };
+        setResultValueAt(answerState, xValue, yValue);
+        return {
+          correctAnswer,
+          startTime: Date.now(),
+          isHappy: true,
+          isSad: false,
+        };
+      }
       const answerState = { status: answerStatus.failure, duration: 0 };
       setResultValueAt(answerState, xValue, yValue);
-      this.setState({
+      return {
         correctAnswer,
         startTime: Date.now(),
         isHappy: false,
         isSad: true,
-      });
-    }
+      };
+    });
     this.timeoutCallback = setTimeout(() => {
       this.initializeValues();
     }, 2500);
@@ -88,7 +89,7 @@ class QuestionForm extends React.Component {
     return unique.length;
   }
 
-  getQuestionValues(xValue, yValue) {
+  getPossibleAnswers(xValue, yValue) {
     const { noOfAnswers } = this.props;
     const results = [xValue * yValue];
     const numberOfUniqueValues = this.getNumberOfUniqueValues();
@@ -103,28 +104,30 @@ class QuestionForm extends React.Component {
   }
 
   initializeValues() {
-    const { range } = this.props;
-    const xValue = this.getRandomIntInclusive(range);
-    const yValue = this.getRandomIntInclusive(range);
-    this.setState({
-      xValue,
-      yValue,
-      startTime: Date.now(),
-      questionValues: this.getQuestionValues(xValue, yValue),
-      correctAnswer: '?',
-      isHappy: false,
-      isSad: false,
+    this.setState((state, props) => {
+      const { range } = props;
+      const xValue = this.getRandomIntInclusive(range);
+      const yValue = this.getRandomIntInclusive(range);
+      return {
+        xValue,
+        yValue,
+        startTime: Date.now(),
+        possibleAnswers: this.getPossibleAnswers(xValue, yValue),
+        correctAnswer: '?',
+        isHappy: false,
+        isSad: false,
+      };
     });
   }
 
   handleImageClick() {
-    if (this.timeoutCallback) clearTimeout(this.timeoutCallback);
+    clearTimeout(this.timeoutCallback);
     this.initializeValues();
   }
 
   render() {
     const {
-      xValue, yValue, questionValues, correctAnswer, isHappy, isSad,
+      xValue, yValue, possibleAnswers, correctAnswer, isHappy, isSad,
     } = this.state;
     return (
       <>
@@ -134,7 +137,7 @@ class QuestionForm extends React.Component {
           correctAnswer={correctAnswer}
         />
         <SelectAnswer
-          questionValues={questionValues}
+          possibleAnswers={possibleAnswers}
           correctAnswer={xValue * yValue}
           onAnswerSelected={this.onAnswerSelected}
         />
