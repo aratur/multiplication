@@ -6,6 +6,7 @@ const answerStatus = {
 
 const results = (size, newResultsArray, newSlowestValues) => {
   const defaultValue = { status: answerStatus.pending, duration: 0 };
+
   const getNewResultsList = () => {
     const result = {};
     for (let i = 1; i <= size; i++) {
@@ -20,29 +21,37 @@ const results = (size, newResultsArray, newSlowestValues) => {
   const resultsArray = newResultsArray || getNewResultsList();
   let slowestValues = newSlowestValues || undefined;
 
-  const areRowAndColNumbers = (row, col) => (
-    typeof row === 'number' && typeof col === 'number'
-  );
-  const isRowAndColValid = (row, col) => (
-    row > 0 && row <= size
-    && col > 0 && col <= size);
+  const areRowAndColNumbers = (row, col) => {
+    if (typeof row === 'number' && typeof col === 'number') return true;
+    throw new Error(`row (${row}) & col (${col}) must be numbers.`);
+  };
+
+  const isRowAndColValid = (row, col) => {
+    if (row > 0 && row <= size && col > 0 && col <= size) return true;
+    throw new Error(`row (${row}) & col (${col}) must be between 1 and size (${size}).`);
+  };
 
   const getValueAtRowCol = (row, col) => {
-    if (!areRowAndColNumbers(row, col)) throw new Error(`row (${row}) & col (${col}) must be numbers.`);
-    if (!isRowAndColValid(row, col)) throw new Error(`row (${row}) & col (${col}) must be between 1 and size (${size}).`);
+    areRowAndColNumbers(row, col);
+    isRowAndColValid(row, col);
     return resultsArray[row][col];
   };
 
-  const isDurationNumberAndGreaterThanZero = (duration) => typeof duration === 'number'
-    && duration > 0;
-
-  const isInputCorrect = ({ status, duration }, row, col) => {
-    if (typeof status === 'undefined') return false;
-    if (!isDurationNumberAndGreaterThanZero(duration)) return false;
-    if (!areRowAndColNumbers(row, col)) return false;
-    if (!isRowAndColValid(row, col)) return false;
-    return true;
+  const isDurationGreaterThanZero = (duration) => {
+    if (typeof duration === 'number' && duration > 0) return true;
+    throw new Error(`Duration (${duration}) must be a number greater than 0`);
   };
+
+  const isStatusCorrect = (status) => {
+    if (typeof status !== 'undefined') return true;
+    throw new Error('status can\'t be undefined.');
+  };
+
+  const isInputCorrect = ({ status, duration }, row, col) => areRowAndColNumbers(row, col)
+      && isRowAndColValid(row, col)
+      && isStatusCorrect(status)
+      && isDurationGreaterThanZero(duration);
+
   const setSlowestValue = (newDuration) => {
     if (!slowestValues) slowestValues = [];
     // first x elements added one by one, any logic goes only afterwards
@@ -52,7 +61,7 @@ const results = (size, newResultsArray, newSlowestValues) => {
       // sort descending
       slowestValues.sort((a, b) => b - a);
       // if new duration is slower that an existing record
-      if (slowestValues.finIndex((a) => a < newDuration) > -1) {
+      if (slowestValues.findIndex((a) => a < newDuration) > -1) {
         // remove the fastest
         slowestValues.pop();
         // add at the end - it will be sorted at the next check
@@ -60,18 +69,17 @@ const results = (size, newResultsArray, newSlowestValues) => {
       }
     }
   };
+
   const setValueAtRowCol = (value, row, col) => {
-    if (isInputCorrect(value, row, col)) {
-      resultsArray[row][col] = value;
-      setSlowestValue(value.duration);
-      return results(size, resultsArray, slowestValues);
-    }
-    console.error('Incorrect input for results.setValueAtRowCol');
-    return this;
+    isInputCorrect(value, row, col);
+    resultsArray[row][col] = value;
+    setSlowestValue(value.duration);
+    return results(size, resultsArray, slowestValues);
   };
 
   const isSlowestValue = (checkDuration) => (slowestValues || [])
     .findIndex((a) => checkDuration >= a) > -1;
+
   return {
     getValueAtRowCol, setValueAtRowCol, isSlowestValue,
   };
