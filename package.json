@@ -53,6 +53,7 @@
     "eslint-plugin-react-hooks": "^4.1.0",
     "eslint-plugin-testing-library": "^3.8.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
+    "pretty": "^2.0.0",
     "react-scripts": "3.4.0"
   }
 }

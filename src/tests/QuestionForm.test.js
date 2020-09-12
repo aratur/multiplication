@@ -18,18 +18,13 @@ const renderQuestionForm = (noOfAnswers = 5,
     />,
 );
 
-const getCorrectAndPossibleAnswers = () => {
-  const numberButtons = screen.getAllByRole('option');
-  const firstNumber = Number(numberButtons[0].textContent);
-  const secondNumber = Number(numberButtons[1].textContent);
-  const equationResult = firstNumber * secondNumber;
-  const answerButtons = screen.getAllByRole('button');
-  const possibleAnswers = [];
-  for (let i = 0; i < answerButtons.length; i++) {
-    possibleAnswers.push(Number(answerButtons[i].textContent));
-  }
-  return { equationResult, possibleAnswers };
-};
+const getEquationResult = () => screen
+  .getAllByRole('option', { name: /[0-9]/i })
+  .map((element) => Number(element.textContent))
+  .reduce((results, value) => value * results, 1);
+const getPossibleAnswers = () => screen
+  .getAllByRole('button')
+  .map((element) => Number(element.textContent));
 
 describe('QuestionForm', () => {
   it('shows correct number of possible answers', () => {
@@ -41,9 +36,9 @@ describe('QuestionForm', () => {
     const numberOfAnswers = 2;
     const callback = jest.fn();
     renderQuestionForm(numberOfAnswers, [true, true, true], callback);
-    const numberButtons = screen.getAllByRole('option');
-    const firstNumber = Number(numberButtons[0].textContent);
-    const secondNumber = Number(numberButtons[1].textContent);
+    const [firstNumber, secondNumber] = screen
+      .getAllByRole('option', { name: /[0-9]/i })
+      .map((element) => Number(element.textContent));
     const equationResult = firstNumber * secondNumber;
     const correctAnswerButton = screen
       .getByRole('button', { name: String(equationResult) });
@@ -66,13 +61,15 @@ describe('QuestionForm', () => {
   });
   it('shows equation result in possible answers', () => {
     renderQuestionForm();
-    const { equationResult, possibleAnswers } = getCorrectAndPossibleAnswers();
-    expect(possibleAnswers.indexOf(equationResult)).toBeGreaterThan(-1);
+    const equationResult = getEquationResult();
+    const possibleAnswers = getPossibleAnswers();
+    expect(possibleAnswers.indexOf(equationResult))
+      .toBeGreaterThan(-1);
   });
   it('displays success image after selecting correct answer and auto-hides it', () => {
     jest.useFakeTimers();
     renderQuestionForm();
-    const { equationResult } = getCorrectAndPossibleAnswers();
+    const equationResult = getEquationResult();
     const correctAnswerButton = screen
       .getByRole('button', { name: String(equationResult) });
     userEvent.click(correctAnswerButton);
@@ -91,51 +88,51 @@ describe('QuestionForm', () => {
   });
   it('should disable/re-enable answer buttons after answering', () => {
     renderQuestionForm();
-    const { equationResult } = getCorrectAndPossibleAnswers();
+    const equationResult = getEquationResult();
     const correctAnswerButton = screen
       .getByRole('button', { name: String(equationResult) });
     userEvent.click(correctAnswerButton);
-    const buttonsVisible = screen.getAllByRole('button');
-    // all should be disabled but last one (with image)
-    for (let i = 0; i < buttonsVisible.length - 1; i++) {
+    const buttonsVisible = screen
+      .getAllByRole('button', { name: /[0-9]/i });
+    for (let i = 0; i < buttonsVisible.length; i++) {
       expect(buttonsVisible[i]).toBeDisabled();
     }
     // last button is an image which allows resetting the equation
-    userEvent.click(buttonsVisible[buttonsVisible.length - 1]);
+    userEvent.click(screen.getByRole('img', { name: 'Good job!' }));
     const buttonsVisibleAfterReset = screen.getAllByRole('button');
-    // all should be enabled
     for (let i = 0; i < buttonsVisibleAfterReset.length; i++) {
       expect(buttonsVisibleAfterReset[i]).toBeEnabled();
     }
   });
-  it('displays failure image after selecting wrong answer and allows hiding it', () => {
+  it('failure after selecting wrong answer, hiding is possible', () => {
     renderQuestionForm();
-    const { equationResult, possibleAnswers } = getCorrectAndPossibleAnswers();
-    const wrongAnswer = possibleAnswers.find((value) => value !== equationResult);
+    const equationResult = getEquationResult();
+    const possibleAnswers = getPossibleAnswers();
+    const wrongAnswer = possibleAnswers
+      .find((value) => value !== equationResult);
     const wrongAnswerButton = screen
       .getByRole('button', { name: String(wrongAnswer) });
     userEvent.click(wrongAnswerButton);
     const isSadImg = screen.getByRole('img', { name: 'Oh no!' });
     expect(isSadImg).toBeInTheDocument();
     userEvent.click(isSadImg);
-    expect(screen.queryByRole('img', { name: 'Oh no!' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('img', { name: 'Oh no!' }))
+      .not.toBeInTheDocument();
   });
   it('displays load new question after selecting answer', () => {
     jest.useFakeTimers();
     renderQuestionForm();
     for (let i = 0; i < 10; i++) {
-      const { equationResult, possibleAnswers } = getCorrectAndPossibleAnswers();
+      const equationResult = getEquationResult();
+      const possibleAnswers = getPossibleAnswers();
       const correctAnswerButton = screen
         .getByRole('button', { name: String(equationResult) });
       userEvent.click(correctAnswerButton);
       act(() => {
-        jest.advanceTimersByTime(3500);
+        jest.advanceTimersByTime(2500);
       });
-
-      const {
-        equationResult: newEquationResult,
-        answerValues: newPossibleAnswers,
-      } = getCorrectAndPossibleAnswers();
+      const newEquationResult = getEquationResult();
+      const newPossibleAnswers = getPossibleAnswers();
       if (equationResult === newEquationResult
         && shallowequal(possibleAnswers, newPossibleAnswers)) {
         console.log(`i${i}`,
@@ -157,16 +154,15 @@ describe('QuestionForm', () => {
         setResultValueAt={() => {}}
       />,
     );
-    const { equationResult, possibleAnswers } = getCorrectAndPossibleAnswers();
+    const equationResult = getEquationResult();
+    const possibleAnswers = getPossibleAnswers();
     rerender(<QuestionForm
       noOfAnswers={noOfAnswers}
       range={[false, false, false, false, true, true, true, true]}
       setResultValueAt={() => {}}
     />);
-    const {
-      equationResult: newEquationResult,
-      possibleAnswers: newPossibleAnswers,
-    } = getCorrectAndPossibleAnswers();
+    const newEquationResult = getEquationResult();
+    const newPossibleAnswers = getPossibleAnswers();
     expect(equationResult === newEquationResult
         && shallowequal(possibleAnswers, newPossibleAnswers)).toBe(false);
   });
