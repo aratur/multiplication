@@ -15,6 +15,5 @@ describe('Equation', () => {
       />, container,
     );
     expect(pretty(container.innerHTML)).toMatchSnapshot();
-    // expect(container.toJSON()).toMatchSnapshot();
   });
 });

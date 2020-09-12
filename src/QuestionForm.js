@@ -40,7 +40,10 @@ class QuestionForm extends React.Component {
       const { setResultValueAt } = this.props;
       const correctAnswer = xValue * yValue;
       if (answer === correctAnswer) {
-        const answerState = { status: answerStatus.success, duration: Date.now() - startTime };
+        const answerState = {
+          status: answerStatus.success,
+          duration: Date.now() - startTime,
+        };
         setResultValueAt(answerState, xValue, yValue);
         return {
           correctAnswer,
@@ -49,7 +52,10 @@ class QuestionForm extends React.Component {
           isSad: false,
         };
       }
-      const answerState = { status: answerStatus.failure, duration: 0 };
+      const answerState = {
+        status: answerStatus.failure,
+        duration: Date.now() - startTime,
+      };
       setResultValueAt(answerState, xValue, yValue);
       return {
         correctAnswer,

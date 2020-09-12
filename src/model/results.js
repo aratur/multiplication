@@ -5,12 +5,13 @@ const answerStatus = {
 };
 
 const results = (size, newResultsArray, newSlowestValues) => {
+  const defaultValue = { status: answerStatus.pending, duration: 0 };
   const getNewResultsList = () => {
     const result = {};
     for (let i = 1; i <= size; i++) {
       const sub = {};
       for (let j = 1; j <= size; j++) {
-        sub[j] = { status: answerStatus.pending, duration: 0 };
+        sub[j] = defaultValue;
       }
       result[i] = sub;
     }
@@ -18,13 +19,28 @@ const results = (size, newResultsArray, newSlowestValues) => {
   };
   const resultsArray = newResultsArray || getNewResultsList();
   let slowestValues = newSlowestValues || undefined;
-  const getValueAtRowCol = (row, col) => resultsArray[row][col];
+
+  const areRowAndColNumbers = (row, col) => (
+    typeof row === 'number' && typeof col === 'number'
+  );
+  const isRowAndColValid = (row, col) => (
+    row > 0 && row <= size
+    && col > 0 && col <= size);
+
+  const getValueAtRowCol = (row, col) => {
+    if (!areRowAndColNumbers(row, col)) throw new Error(`row (${row}) & col (${col}) must be numbers.`);
+    if (!isRowAndColValid(row, col)) throw new Error(`row (${row}) & col (${col}) must be between 1 and size (${size}).`);
+    return resultsArray[row][col];
+  };
+
+  const isDurationNumberAndGreaterThanZero = (duration) => typeof duration === 'number'
+    && duration > 0;
 
   const isInputCorrect = ({ status, duration }, row, col) => {
     if (typeof status === 'undefined') return false;
-    if (typeof duration !== 'number') return false;
-    if (typeof row !== 'number' || typeof col !== 'number') return false;
-    if (row < 0 || row > size || col < 0 || col > size) return false;
+    if (!isDurationNumberAndGreaterThanZero(duration)) return false;
+    if (!areRowAndColNumbers(row, col)) return false;
+    if (!isRowAndColValid(row, col)) return false;
     return true;
   };
   const setSlowestValue = (newDuration) => {
@@ -47,7 +63,7 @@ const results = (size, newResultsArray, newSlowestValues) => {
   const setValueAtRowCol = (value, row, col) => {
     if (isInputCorrect(value, row, col)) {
       resultsArray[row][col] = value;
-      if (value.status === answerStatus.success) setSlowestValue(value.duration);
+      setSlowestValue(value.duration);
       return results(size, resultsArray, slowestValues);
     }
     console.error('Incorrect input for results.setValueAtRowCol');

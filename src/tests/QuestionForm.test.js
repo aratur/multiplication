@@ -32,7 +32,7 @@ describe('QuestionForm', () => {
     renderQuestionForm(numberOfAnswers);
     expect(screen.getAllByRole('button')).toHaveLength(numberOfAnswers);
   });
-  it('use callback function with selected answer', () => {
+  it('use callback function with correct answer', () => {
     const numberOfAnswers = 2;
     const callback = jest.fn();
     renderQuestionForm(numberOfAnswers, [true, true, true], callback);
@@ -46,6 +46,27 @@ describe('QuestionForm', () => {
     expect(callback).toHaveBeenCalledTimes(1);
     const calledWith = callback.mock.calls[0];
     expect(calledWith[0].status).toBe(answerStatus.success);
+    expect(calledWith[0].duration).toBeGreaterThan(0);
+    expect(calledWith[1]).toBe(firstNumber);
+    expect(calledWith[2]).toBe(secondNumber);
+  });
+  it('use callback function with wrong answer', () => {
+    const numberOfAnswers = 2;
+    const callback = jest.fn();
+    renderQuestionForm(numberOfAnswers, [true, true, true], callback);
+    const [firstNumber, secondNumber] = screen
+      .getAllByRole('option', { name: /[0-9]/i })
+      .map((element) => Number(element.textContent));
+    const equationResult = firstNumber * secondNumber;
+    const possibleAnswers = getPossibleAnswers();
+    const wrongAnswer = possibleAnswers
+      .find((value) => value !== equationResult);
+    const wrongAnswerButton = screen
+      .getByRole('button', { name: String(wrongAnswer) });
+    userEvent.click(wrongAnswerButton);
+    expect(callback).toHaveBeenCalledTimes(1);
+    const calledWith = callback.mock.calls[0];
+    expect(calledWith[0].status).toBe(answerStatus.failure);
     expect(calledWith[0].duration).toBeGreaterThan(0);
     expect(calledWith[1]).toBe(firstNumber);
     expect(calledWith[2]).toBe(secondNumber);
