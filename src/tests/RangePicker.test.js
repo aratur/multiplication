@@ -57,9 +57,9 @@ describe('RangePicker', () => {
     const { getAllByRole } = renderRangePicker(values);
     getAllByRole('checkbox').forEach((x) => {
       if (x.getAttribute('aria-checked') === 'true') {
-        expect(x).toHaveAttribute('class', 'btn btn-success');
+        expect(x).toHaveClass('btn btn-success');
       } else {
-        expect(x).toHaveAttribute('class', 'btn btn-info');
+        expect(x).toHaveClass('btn btn-info');
       }
     });
   });

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { resultStatus } from './model/results';
+import TableCell from './TableCell';
 
 const ResultsTable = (props) => {
   const { size, resultsArray } = props;
@@ -11,7 +12,7 @@ const ResultsTable = (props) => {
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
 
-  let getClassName = (col, row) => {
+  const getClassName = (row, col) => {
     const answerState = resultsArray.getValueAtRowCol(row, col);
     let result = null;
     if (showCorrect
@@ -27,8 +28,8 @@ const ResultsTable = (props) => {
   try {
     resultsArray.getValueAtRowCol(size, size);
   } catch (error) {
-    console.error(error);
-    getClassName = () => null;
+    // when resultsArray is smaller that table size
+    return <div>Failed to render table with results</div>;
   }
 
   return (
@@ -40,7 +41,11 @@ const ResultsTable = (props) => {
             className="btn btn-success"
             type="button"
             style={styleButtons}
-            onClick={() => setShowCorrect(!showCorrect)}
+            onClick={() => {
+              setShowCorrect(!showCorrect);
+              setShowIncorrect(false);
+              setShowSlowest(false);
+            }}
           >
             Poprawne
           </button>
@@ -48,7 +53,11 @@ const ResultsTable = (props) => {
             className="btn btn-danger"
             type="button"
             style={styleButtons}
-            onClick={() => setShowIncorrect(!showIncorrect)}
+            onClick={() => {
+              setShowIncorrect(!showIncorrect);
+              setShowCorrect(false);
+              setShowSlowest(false);
+            }}
           >
             Błędne
           </button>
@@ -56,7 +65,11 @@ const ResultsTable = (props) => {
             className="btn btn-warning"
             type="button"
             style={styleButtons}
-            onClick={() => setShowSlowest(!showSlowest)}
+            onClick={() => {
+              setShowSlowest(!showSlowest);
+              setShowCorrect(false);
+              setShowIncorrect(false);
+            }}
           >
             Najwolniejsze
           </button>
@@ -83,29 +96,14 @@ const ResultsTable = (props) => {
             .map((row) => (
               <tr key={`row${String(row)}`}>
                 {Array(size).fill(0).map((__, colIndex) => colIndex + 1)
-                  .map((col) => (col === 1 ? (
-                    <React.Fragment key={`fragment${String(col)}`}>
-                      <td
-                        className="info"
-                        key={`firstCol${String(row)}`}
-                      >
-                        {row}
-                      </td>
-                      <td
-                        className={getClassName(row, col)}
-                        key={`data${String(row)}.0`}
-                      >
-                        {row}
-                      </td>
-                    </React.Fragment>
-                  ) : (
-                    <td
-                      className={getClassName(row, col)}
-                      key={`data${String(row)}.${String(col)}`}
-                    >
-                      {row * col}
-                    </td>
-                  )))}
+                  .map((col) => (
+                    <TableCell
+                      row={row}
+                      col={col}
+                      getClassName={getClassName}
+                      key={String(`cell${row}.${col}`)}
+                    />
+                  ))}
               </tr>
             ))}
         </tbody>
