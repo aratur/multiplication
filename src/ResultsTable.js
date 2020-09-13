@@ -12,6 +12,13 @@ const ResultsTable = (props) => {
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
 
+  try {
+    resultsData.getValueAtRowCol(size, size);
+  } catch (error) {
+    // when resultsData is smaller that table size
+    return <div>Failed to render table with results</div>;
+  }
+
   const getClassName = (row, col) => {
     const answerState = resultsData.getValueAtRowCol(row, col);
     let result = null;
@@ -25,12 +32,14 @@ const ResultsTable = (props) => {
     return result;
   };
 
-  try {
-    resultsData.getValueAtRowCol(size, size);
-  } catch (error) {
-    // when resultsData is smaller that table size
-    return <div>Failed to render table with results</div>;
-  }
+  const handleShowClick = (event) => {
+    setShowCorrect(event.target.className === 'btn btn-success'
+      ? !showCorrect : false);
+    setShowIncorrect(event.target.className === 'btn btn-danger'
+      ? !showIncorrect : false);
+    setShowSlowest(event.target.className === 'btn btn-warning'
+      ? !showSlowest : false);
+  };
 
   return (
     <>
@@ -41,11 +50,7 @@ const ResultsTable = (props) => {
             className="btn btn-success"
             type="button"
             style={styleButtons}
-            onClick={() => {
-              setShowCorrect(!showCorrect);
-              setShowIncorrect(false);
-              setShowSlowest(false);
-            }}
+            onClick={handleShowClick}
           >
             Poprawne
           </button>
@@ -53,11 +58,7 @@ const ResultsTable = (props) => {
             className="btn btn-danger"
             type="button"
             style={styleButtons}
-            onClick={() => {
-              setShowIncorrect(!showIncorrect);
-              setShowCorrect(false);
-              setShowSlowest(false);
-            }}
+            onClick={handleShowClick}
           >
             Błędne
           </button>
@@ -65,11 +66,7 @@ const ResultsTable = (props) => {
             className="btn btn-warning"
             type="button"
             style={styleButtons}
-            onClick={() => {
-              setShowSlowest(!showSlowest);
-              setShowCorrect(false);
-              setShowIncorrect(false);
-            }}
+            onClick={handleShowClick}
           >
             Najwolniejsze
           </button>
