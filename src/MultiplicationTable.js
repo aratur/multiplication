@@ -50,6 +50,7 @@ class MultiplicationTable extends React.Component {
         />
         <ResultsTable
           resultsArray={resultsArray}
+          size={this.size}
         />
       </div>
     );

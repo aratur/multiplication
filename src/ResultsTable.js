@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { answerStatus } from './model/results';
+import { resultStatus } from './model/results';
 
 const ResultsTable = (props) => {
   const { size, resultsArray } = props;
@@ -11,18 +11,25 @@ const ResultsTable = (props) => {
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
 
-  const getClassName = (col, row) => {
+  let getClassName = (col, row) => {
     const answerState = resultsArray.getValueAtRowCol(row, col);
     let result = null;
     if (showCorrect
-      && answerState.status === answerStatus.success) result = 'success';
+      && answerState.status === resultStatus.success) result = 'success';
     if (showIncorrect
-      && answerState.status === answerStatus.failure) result = 'danger';
+      && answerState.status === resultStatus.failure) result = 'danger';
     if (showSlowest
       && resultsArray.isSlowestValue(answerState.duration)) result = 'warning';
     if (row === col) return result || 'active';
     return result;
   };
+
+  try {
+    resultsArray.getValueAtRowCol(size, size);
+  } catch (error) {
+    console.error(error);
+    getClassName = () => null;
+  }
 
   return (
     <>
@@ -107,12 +114,8 @@ const ResultsTable = (props) => {
   );
 };
 
-ResultsTable.defaultProps = {
-  size: 10,
-};
-
 ResultsTable.propTypes = {
-  size: PropTypes.number,
+  size: PropTypes.number.isRequired,
   resultsArray: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 

@@ -5,7 +5,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import shallowequal from 'shallowequal';
 import QuestionForm from '../QuestionForm';
-import { answerStatus } from '../model/results';
+import { resultStatus } from '../model/results';
 
 // range of [true, true, true, true] translates to [1, 2, 3, 4]
 // range of [true, true, false, true] translates to [1, 2, 4]
@@ -45,7 +45,7 @@ describe('QuestionForm', () => {
     userEvent.click(correctAnswerButton);
     expect(callback).toHaveBeenCalledTimes(1);
     const calledWith = callback.mock.calls[0];
-    expect(calledWith[0].status).toBe(answerStatus.success);
+    expect(calledWith[0].status).toBe(resultStatus.success);
     expect(calledWith[0].duration).toBeGreaterThan(0);
     expect(calledWith[1]).toBe(firstNumber);
     expect(calledWith[2]).toBe(secondNumber);
@@ -66,7 +66,7 @@ describe('QuestionForm', () => {
     userEvent.click(wrongAnswerButton);
     expect(callback).toHaveBeenCalledTimes(1);
     const calledWith = callback.mock.calls[0];
-    expect(calledWith[0].status).toBe(answerStatus.failure);
+    expect(calledWith[0].status).toBe(resultStatus.failure);
     expect(calledWith[0].duration).toBeGreaterThan(0);
     expect(calledWith[1]).toBe(firstNumber);
     expect(calledWith[2]).toBe(secondNumber);

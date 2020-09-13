@@ -1,15 +1,15 @@
-import { answerStatus, results } from '../model/results';
+import { resultStatus, results } from '../model/results';
 // import { } from '@testing-library/react';
 
-describe('answerStatus', () => {
+describe('resultStatus', () => {
   it('should not be modified without updating tests', () => {
-    expect(answerStatus)
+    expect(resultStatus)
       .toStrictEqual({ success: 1, failure: -1, pending: 0 });
   });
 });
 
-const defaultValue = { status: answerStatus.pending, duration: 0 };
-const correctInputValue = { status: answerStatus.success, duration: 1 };
+const defaultValue = { status: resultStatus.pending, duration: 0 };
+const correctInputValue = { status: resultStatus.success, duration: 1 };
 
 describe('results', () => {
   it('should generate object size * size with default values', () => {
@@ -19,6 +19,17 @@ describe('results', () => {
       .toStrictEqual(defaultValue);
     expect(resultsArray.getValueAtRowCol(1, 1))
       .toStrictEqual(defaultValue);
+  });
+  it('getValueAtRowCol should return modified value', () => {
+    const size = 2;
+    const resultsArray = results(size);
+    const newValue = { status: resultStatus.failure, duration: 17 };
+    const newValueResultsArray = resultsArray
+      .setValueAtRowCol(newValue, size, size);
+    expect(resultsArray.getValueAtRowCol(size, size))
+      .toStrictEqual(newValue);
+    expect(newValueResultsArray.getValueAtRowCol(size, size))
+      .toStrictEqual(newValue);
   });
   it('getValueAtRowCol throws on wrong parameters', () => {
     const size = 2;
@@ -67,8 +78,6 @@ describe('results', () => {
     const newResultsArray = resultsArray
       .setValueAtRowCol(correctInputValue, 1, 1);
     expect(resultsArray).not.toBe(newResultsArray);
-    // const setDurationValueAt = () => resultsArray
-    //   .setValueAtRowCol(correctInputValue, 3, 4);
   });
   it('should identify all first "size" changes as slowest', () => {
     const size = 5;
@@ -77,7 +86,7 @@ describe('results', () => {
     durations.map((thisDuration) => [
       thisDuration,
       resultsArray.setValueAtRowCol({
-        status: answerStatus.success,
+        status: resultStatus.success,
         duration: thisDuration,
       }, 1, 1),
     ])
@@ -99,7 +108,7 @@ describe('results', () => {
     let newResultsArray;
     durations.forEach((thisDuration) => {
       newResultsArray = resultsArray.setValueAtRowCol({
-        status: answerStatus.success,
+        status: resultStatus.success,
         duration: thisDuration,
       }, 1, 1);
     });
@@ -110,5 +119,3 @@ describe('results', () => {
     expect(newResultsArray.isSlowestValue(6)).toBe(true);
   });
 });
-
-// getValueAtRowCol, setValueAtRowCol, isSlowestValue,

@@ -4,7 +4,7 @@ import shallowequal from 'shallowequal';
 import Equation from './Equation';
 import happyFaceImg from './img/happyFace.png';
 import sadFaceImg from './img/sadFace.png';
-import { answerStatus } from './model/results';
+import { resultStatus } from './model/results';
 import SelectAnswer from './SelectAnswer';
 
 class QuestionForm extends React.Component {
@@ -41,7 +41,7 @@ class QuestionForm extends React.Component {
       const correctAnswer = xValue * yValue;
       if (answer === correctAnswer) {
         const answerState = {
-          status: answerStatus.success,
+          status: resultStatus.success,
           duration: Date.now() - startTime,
         };
         setResultValueAt(answerState, xValue, yValue);
@@ -53,7 +53,7 @@ class QuestionForm extends React.Component {
         };
       }
       const answerState = {
-        status: answerStatus.failure,
+        status: resultStatus.failure,
         duration: Date.now() - startTime,
       };
       setResultValueAt(answerState, xValue, yValue);

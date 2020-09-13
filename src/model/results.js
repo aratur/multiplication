@@ -1,11 +1,11 @@
-const answerStatus = {
+const resultStatus = {
   success: 1,
   failure: -1,
   pending: 0,
 };
 
 const results = (size, newResultsArray, newSlowestValues) => {
-  const defaultValue = { status: answerStatus.pending, duration: 0 };
+  const defaultValue = { status: resultStatus.pending, duration: 0 };
 
   const getNewResultsList = () => {
     const result = {};
@@ -85,4 +85,4 @@ const results = (size, newResultsArray, newSlowestValues) => {
   };
 };
 
-export { answerStatus, results };
+export { resultStatus, results };
