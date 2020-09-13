@@ -4,7 +4,7 @@ import { resultStatus } from './model/results';
 import TableCell from './TableCell';
 
 const ResultsTable = (props) => {
-  const { size, resultsArray } = props;
+  const { size, resultsData } = props;
   const [showCorrect, setShowCorrect] = useState(false);
   const [showIncorrect, setShowIncorrect] = useState(false);
   const [showSlowest, setShowSlowest] = useState(false);
@@ -13,22 +13,22 @@ const ResultsTable = (props) => {
   const styleWell = { padding: '10px' };
 
   const getClassName = (row, col) => {
-    const answerState = resultsArray.getValueAtRowCol(row, col);
+    const answerState = resultsData.getValueAtRowCol(row, col);
     let result = null;
     if (showCorrect
       && answerState.status === resultStatus.success) result = 'success';
     if (showIncorrect
       && answerState.status === resultStatus.failure) result = 'danger';
     if (showSlowest
-      && resultsArray.isSlowestValue(answerState.duration)) result = 'warning';
+      && resultsData.isSlowestValue(answerState.duration)) result = 'warning';
     if (row === col) return result || 'active';
     return result;
   };
 
   try {
-    resultsArray.getValueAtRowCol(size, size);
+    resultsData.getValueAtRowCol(size, size);
   } catch (error) {
-    // when resultsArray is smaller that table size
+    // when resultsData is smaller that table size
     return <div>Failed to render table with results</div>;
   }
 
@@ -114,7 +114,7 @@ const ResultsTable = (props) => {
 
 ResultsTable.propTypes = {
   size: PropTypes.number.isRequired,
-  resultsArray: PropTypes.objectOf(PropTypes.func).isRequired,
+  resultsData: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
 export default ResultsTable;

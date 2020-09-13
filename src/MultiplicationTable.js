@@ -10,7 +10,7 @@ class MultiplicationTable extends React.Component {
     Object.assign(this, { ...props });
     this.state = {
       rangeValues: Array(this.size).fill(true),
-      resultsArray: results(this.size),
+      resultsData: results(this.size),
     };
     this.setNewRangeValueAt = this.setNewRangeValueAt.bind(this);
     this.setResultValueAt = this.setResultValueAt.bind(this);
@@ -27,15 +27,15 @@ class MultiplicationTable extends React.Component {
 
   setResultValueAt(value, row, column) {
     this.setState((state) => {
-      const { resultsArray } = state;
-      // setValueAtRowCol returns a new instance of a resultsArray object
-      const newResultsArray = resultsArray.setValueAtRowCol(value, row, column);
-      return { resultsArray: newResultsArray };
+      const { resultsData } = state;
+      // setValueAtRowCol returns a new instance of a resultsData object
+      const newResultsData = resultsData.setValueAtRowCol(value, row, column);
+      return { resultsData: newResultsData };
     });
   }
 
   render() {
-    const { rangeValues, resultsArray } = this.state;
+    const { rangeValues, resultsData } = this.state;
     return (
       <div className="row">
         <QuestionForm
@@ -49,7 +49,7 @@ class MultiplicationTable extends React.Component {
           minimumNoOfSelectedValues={this.minimumNoOfSelectedValues}
         />
         <ResultsTable
-          resultsArray={resultsArray}
+          resultsData={resultsData}
           size={this.size}
         />
       </div>

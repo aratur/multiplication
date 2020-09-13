@@ -4,9 +4,9 @@ import userEvent from '@testing-library/user-event';
 import ResultsTable from '../ResultsTable';
 import { resultStatus, results } from '../model/results';
 
-const renderResultsTable = (resultsArray, size) => render(
+const renderResultsTable = (resultsData, size) => render(
   <ResultsTable
-    resultsArray={resultsArray}
+    resultsData={resultsData}
     size={size}
   />,
 );
@@ -65,7 +65,7 @@ describe('ResultsTable', () => {
       .toHaveLength(size * size + size);
     cellsHaveProperClassNames(size);
   });
-  it('render failed message when resultsArray is smaller that table size', () => {
+  it('render failed message when resultsData is smaller that table size', () => {
     const tableSize = 3;
     renderResultsTable(results(2), tableSize);
     expect(screen.getByText(/failed to render/i)).toBeInTheDocument();

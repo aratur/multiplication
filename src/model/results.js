@@ -4,7 +4,7 @@ const resultStatus = {
   pending: 0,
 };
 
-const results = (size, newResultsArray, newSlowestValues) => {
+const results = (size, newResultsData, newSlowestValues) => {
   const defaultValue = { status: resultStatus.pending, duration: 0 };
 
   const getNewResultsList = () => {
@@ -18,7 +18,7 @@ const results = (size, newResultsArray, newSlowestValues) => {
     }
     return result;
   };
-  const resultsArray = newResultsArray || getNewResultsList();
+  const resultsData = newResultsData || getNewResultsList();
   let slowestValues = newSlowestValues || undefined;
 
   const areRowAndColNumbers = (row, col) => {
@@ -34,7 +34,7 @@ const results = (size, newResultsArray, newSlowestValues) => {
   const getValueAtRowCol = (row, col) => {
     areRowAndColNumbers(row, col);
     isRowAndColValid(row, col);
-    return resultsArray[row][col];
+    return resultsData[row][col];
   };
 
   const isDurationGreaterThanZero = (duration) => {
@@ -72,9 +72,9 @@ const results = (size, newResultsArray, newSlowestValues) => {
 
   const setValueAtRowCol = (value, row, col) => {
     isInputCorrect(value, row, col);
-    resultsArray[row][col] = value;
+    resultsData[row][col] = value;
     setSlowestValue(value.duration);
-    return results(size, resultsArray, slowestValues);
+    return results(size, resultsData, slowestValues);
   };
 
   const isSlowestValue = (checkDuration) => (slowestValues || [])
