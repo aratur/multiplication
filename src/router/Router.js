@@ -1,3 +1,5 @@
+/* eslint "react/require-default-props": 0 */
+/* eslint "react/forbid-prop-types": 0 */
 import PropTypes from 'prop-types';
 
 // This code draws on the simple router created there; thanks (again) TJ!
@@ -15,6 +17,22 @@ import invariant from 'invariant';
 class Router extends Component {
   // You could also take advantage of class properties and store routes there
   // routes = {};
+  static normalizeRoute(pathToNormalize, parentComponent) {
+    // If there's just a /, it's an absolute route
+    if (pathToNormalize[0] === '/') {
+      return pathToNormalize;
+    }
+    // No parent, no need to join stuff together
+    if (!parentComponent) {
+      return pathToNormalize;
+    }
+    // Join the child to the parent route
+    return `${parentComponent.route}/${pathToNormalize}`;
+  }
+
+  static cleanPath(pathToClean) {
+    pathToClean.replace(/\/\//g, '/');
+  }
 
   constructor(props) {
     super(props);
@@ -26,7 +44,7 @@ class Router extends Component {
     this.addRoutes(props.children);
 
     // Set up the router for matching & routing
-    this.router = enroute(this.routes);
+    this.enrouteThisRoutes = enroute(this.routes);
   }
 
   addRoute(element, parent) {
@@ -38,20 +56,20 @@ class Router extends Component {
     invariant(typeof path === 'string', `Route ${path} is not a string`);
 
     // Set up Component to be rendered
-    const render = (params, renderProps) => {
-      const finalProps = { params, ...this.props, ...renderProps };
+    const customRender = (parameters, renderProps) => {
+      const finalProps = { parameters, ...this.props, ...renderProps };
 
       // Or, using the object spread operator (currently a candidate
       // proposal for future versions of JavaScript)
       // const finalProps = {
       //   ...this.props,
       //   ...renderProps,
-      //   params,
+      //   parameters,
       // };
 
-      const children = React.createElement(component, finalProps);
+      const elementsChildren = React.createElement(component, finalProps);
 
-      return parent ? parent.render(params, { children }) : children;
+      return parent ? parent.render(parameters, { elementsChildren }) : elementsChildren;
     };
 
     // Set up the route itself (/a/b/c)
@@ -59,38 +77,21 @@ class Router extends Component {
 
     // If there are children, add those routes, too
     if (children) {
-      this.addRoutes(children, { route, render });
+      this.addRoutes(children, { route, customRender });
     }
 
     // Set up the route on the routes property
-    this.routes[this.cleanPath(route)] = render;
+    this.routes[this.cleanPath(route)] = customRender;
   }
 
   addRoutes(routes, parent) {
     React.Children.forEach(routes, (route) => this.addRoute(route, parent));
   }
 
-  cleanPath(path) {
-    return path.replace(/\/\//g, '/');
-  }
-
-  normalizeRoute(path, parent) {
-    // If there's just a /, it's an absolute route
-    if (path[0] === '/') {
-      return path;
-    }
-    // No parent, no need to join stuff together
-    if (!parent) {
-      return path;
-    }
-    // Join the child to the parent route
-    return `${parent.route}/${path}`;
-  }
-
   render() {
     const { location } = this.props;
     invariant(location, '<Router/> needs a location to work');
-    return this.router(location);
+    return this.enrouteThisRoutes(location);
   }
 }
 
