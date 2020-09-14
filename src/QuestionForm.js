@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import shallowequal from 'shallowequal';
 import Equation from './Equation';
 import happyFaceImg from './img/happyFace.png';
 import sadFaceImg from './img/sadFace.png';
@@ -29,7 +28,7 @@ class QuestionForm extends React.Component {
   componentDidUpdate(prevProps) {
     const prevRange = prevProps.range;
     const { range } = this.props;
-    if (!shallowequal(prevRange, range)) {
+    if (prevRange !== range) {
       this.initializeValues();
     }
   }
@@ -39,6 +38,7 @@ class QuestionForm extends React.Component {
       const { xValue, yValue, startTime } = state;
       const { setResultValueAt } = this.props;
       const correctAnswer = xValue * yValue;
+
       if (answer === correctAnswer) {
         const answerState = {
           status: resultStatus.success,
@@ -52,6 +52,7 @@ class QuestionForm extends React.Component {
           isSad: false,
         };
       }
+
       const answerState = {
         status: resultStatus.failure,
         duration: Date.now() - startTime,
@@ -69,56 +70,16 @@ class QuestionForm extends React.Component {
     }, 2500);
   }
 
-  getNumRange() {
-    const { range } = this.props;
-    const numRange = [];
-    range.forEach((value, index) => {
-      if (value) { numRange.push(index + 1); }
-    });
-    return numRange;
-  }
-
-  getRandomIntInclusive() {
-    const numRange = this.getNumRange();
-    const min = 0;
-    const max = numRange.length - 1;
-    const randomIndex = Math.floor(Math.random() * (max - min + 1)) + min;
-    return numRange[randomIndex];
-  }
-
-  getNumberOfUniqueValues() {
-    const unique = [];
-    const liczby = this.getNumRange();
-    liczby.forEach((first) => liczby.forEach((second) => {
-      if (unique.indexOf(first * second) === -1) unique.push(first * second);
-    }));
-    return unique.length;
-  }
-
-  getPossibleAnswers(xValue, yValue) {
-    const { noOfAnswers } = this.props;
-    const results = [xValue * yValue];
-    const numberOfUniqueValues = this.getNumberOfUniqueValues();
-    while (results.length < noOfAnswers
-        && results.length < numberOfUniqueValues) {
-      const randomValue = this.getRandomIntInclusive() * this.getRandomIntInclusive();
-      if (results.findIndex((item) => item === randomValue) === -1) {
-        results.push(randomValue);
-      }
-    }
-    return results.sort((a, b) => a - b);
-  }
-
   initializeValues() {
-    this.setState((state, props) => {
-      const { range } = props;
-      const xValue = this.getRandomIntInclusive(range);
-      const yValue = this.getRandomIntInclusive(range);
+    this.setState(() => {
+      const { range, noOfAnswers } = this.props;
+      const xValue = range.getNewRandomValue();
+      const yValue = range.getNewRandomValue();
       return {
         xValue,
         yValue,
         startTime: Date.now(),
-        possibleAnswers: this.getPossibleAnswers(xValue, yValue),
+        possibleAnswers: range.getPossibleAnswers(xValue, yValue, noOfAnswers),
         correctAnswer: '?',
         isHappy: false,
         isSad: false,
@@ -181,7 +142,7 @@ class QuestionForm extends React.Component {
 }
 
 QuestionForm.propTypes = {
-  range: PropTypes.arrayOf(PropTypes.bool).isRequired,
+  range: PropTypes.objectOf(PropTypes.func).isRequired,
   noOfAnswers: PropTypes.number.isRequired,
   setResultValueAt: PropTypes.func.isRequired,
 };

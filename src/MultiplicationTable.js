@@ -3,13 +3,14 @@ import RangePicker from './RangePicker';
 import QuestionForm from './QuestionForm';
 import ResultsTable from './ResultsTable';
 import { results } from './model/results';
+import Range from './model/range';
 
 class MultiplicationTable extends React.Component {
   constructor(props) {
     super(props);
     Object.assign(this, { ...props });
     this.state = {
-      rangeValues: Array(this.size).fill(true),
+      range: Range(this.size),
       resultsData: results(this.size),
     };
     this.setNewRangeValueAt = this.setNewRangeValueAt.bind(this);
@@ -18,10 +19,8 @@ class MultiplicationTable extends React.Component {
 
   setNewRangeValueAt(value, at) {
     this.setState((state) => {
-      const { rangeValues } = state;
-      const newRangeValues = rangeValues.slice();
-      newRangeValues[at] = value;
-      return { rangeValues: newRangeValues };
+      const { range } = state;
+      return { range: range.setRangeValueAt(value, at) };
     });
   }
 
@@ -35,11 +34,12 @@ class MultiplicationTable extends React.Component {
   }
 
   render() {
-    const { rangeValues, resultsData } = this.state;
+    const { range, resultsData } = this.state;
+    const rangeValues = range.getState();
     return (
       <div className="row">
         <QuestionForm
-          range={rangeValues}
+          range={range}
           noOfAnswers={this.noOfAnswers}
           setResultValueAt={this.setResultValueAt}
         />

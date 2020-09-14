@@ -6,11 +6,12 @@ import userEvent from '@testing-library/user-event';
 import shallowequal from 'shallowequal';
 import QuestionForm from '../QuestionForm';
 import { resultStatus } from '../model/results';
+import Range from '../model/range';
 
 // range of [true, true, true, true] translates to [1, 2, 3, 4]
 // range of [true, true, false, true] translates to [1, 2, 4]
 const renderQuestionForm = (noOfAnswers = 5,
-  range = [true, true, true, true], setResultValueAt = () => {}) => render(
+  range = Range(4, [true, true, true, true]), setResultValueAt = () => {}) => render(
     <QuestionForm
       noOfAnswers={noOfAnswers}
       range={range}
@@ -35,7 +36,7 @@ describe('QuestionForm', () => {
   it('use callback function with correct answer', () => {
     const numberOfAnswers = 2;
     const callback = jest.fn();
-    renderQuestionForm(numberOfAnswers, [true, true, true], callback);
+    renderQuestionForm(numberOfAnswers, Range(3, [true, true, true]), callback);
     const [firstNumber, secondNumber] = screen
       .getAllByRole('option', { name: /[0-9]/i })
       .map((element) => Number(element.textContent));
@@ -53,7 +54,7 @@ describe('QuestionForm', () => {
   it('use callback function with wrong answer', () => {
     const numberOfAnswers = 2;
     const callback = jest.fn();
-    renderQuestionForm(numberOfAnswers, [true, true, true], callback);
+    renderQuestionForm(numberOfAnswers, Range(3, [true, true, true]), callback);
     const [firstNumber, secondNumber] = screen
       .getAllByRole('option', { name: /[0-9]/i })
       .map((element) => Number(element.textContent));
@@ -171,7 +172,7 @@ describe('QuestionForm', () => {
     const { rerender } = render(
       <QuestionForm
         noOfAnswers={noOfAnswers}
-        range={[true, true, true, true]}
+        range={Range(4, [true, true, true, true])}
         setResultValueAt={() => {}}
       />,
     );
@@ -179,7 +180,7 @@ describe('QuestionForm', () => {
     const possibleAnswers = getPossibleAnswers();
     rerender(<QuestionForm
       noOfAnswers={noOfAnswers}
-      range={[false, false, false, false, true, true, true, true]}
+      range={Range(8, [false, false, false, false, true, true, true, true])}
       setResultValueAt={() => {}}
     />);
     const newEquationResult = getEquationResult();
