@@ -1,5 +1,5 @@
-const Range = (size, oldState) => {
-  const state = oldState || Array(size).fill(true);
+const Range = (size, prevState) => {
+  const state = prevState || Array(size).fill(true);
   const getState = () => state.slice();
   const getNumRange = () => {
     const numRange = [];

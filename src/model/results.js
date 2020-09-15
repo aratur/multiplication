@@ -4,7 +4,7 @@ const resultStatus = {
   pending: 0,
 };
 
-const results = (size, newResultsData, newSlowestValues) => {
+const results = (size, prevResultsData, prevSlowestValues) => {
   const defaultValue = { status: resultStatus.pending, duration: 0 };
 
   const getNewResultsList = () => {
@@ -18,8 +18,8 @@ const results = (size, newResultsData, newSlowestValues) => {
     }
     return result;
   };
-  const resultsData = newResultsData || getNewResultsList();
-  let slowestValues = newSlowestValues || undefined;
+  const resultsData = prevResultsData || getNewResultsList();
+  let slowestValues = prevSlowestValues || undefined;
 
   const areRowAndColNumbers = (row, col) => {
     if (typeof row === 'number' && typeof col === 'number') return true;
