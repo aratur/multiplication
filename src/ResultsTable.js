@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { resultStatus } from './model/results';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  resultStatus, getResultValues,
+  getResultsSize, resetResults,
+} from './redux-store/resultsSlice';
 import TableCell from './TableCell';
 
-const ResultsTable = (props) => {
-  const { size, resultsData } = props;
+const ResultsTable = () => {
+  const size = useSelector(getResultsSize);
+  const values = useSelector(getResultValues);
+  const dispatch = useDispatch();
   const [showCorrect, setShowCorrect] = useState(false);
   const [showIncorrect, setShowIncorrect] = useState(false);
-  const [showSlowest, setShowSlowest] = useState(false);
 
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
 
   try {
-    resultsData.getValueAtRowCol(size, size);
+    if (typeof values[size][size] !== 'object') console.log(values, size, values[size][size]);
   } catch (error) {
-    // when resultsData is smaller that table size
     return <div>Failed to render table with results</div>;
   }
 
   const getClassName = (row, col) => {
-    const answerState = resultsData.getValueAtRowCol(row, col);
+    const answerState = values[row][col];
     let result = null;
     if (showCorrect
       && answerState.status === resultStatus.success) result = 'success';
     if (showIncorrect
       && answerState.status === resultStatus.failure) result = 'danger';
-    if (showSlowest
-      && resultsData.isSlowestValue(answerState.duration)) result = 'warning';
     if (row === col) return result || 'active';
     return result;
   };
@@ -37,8 +38,6 @@ const ResultsTable = (props) => {
       ? !showCorrect : false);
     setShowIncorrect(event.target.className === 'btn btn-danger'
       ? !showIncorrect : false);
-    setShowSlowest(event.target.className === 'btn btn-warning'
-      ? !showSlowest : false);
   };
 
   return (
@@ -61,14 +60,6 @@ const ResultsTable = (props) => {
             onClick={handleShowClick}
           >
             Błędne
-          </button>
-          <button
-            className="btn btn-warning"
-            type="button"
-            style={styleButtons}
-            onClick={handleShowClick}
-          >
-            Najwolniejsze
           </button>
         </div>
       </div>
@@ -105,13 +96,17 @@ const ResultsTable = (props) => {
             ))}
         </tbody>
       </table>
+      <button
+        type="button"
+        className="btn btn-primary btn-xs"
+        onClick={() => {
+          dispatch(resetResults());
+        }}
+      >
+        Usuń wyniki
+      </button>
     </>
   );
-};
-
-ResultsTable.propTypes = {
-  size: PropTypes.number.isRequired,
-  resultsData: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
 export default ResultsTable;

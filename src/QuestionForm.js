@@ -1,150 +1,110 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Equation from './Equation';
 import happyFaceImg from './img/happyFace.png';
 import sadFaceImg from './img/sadFace.png';
-import { resultStatus } from './model/results';
+import { resultStatus, setValueAtRowCol } from './redux-store/resultsSlice';
+import {
+  getPossibleAnswers, getXValue, getYValue,
+  generateNextQuestion,
+} from './redux-store/rangeSlice';
 import SelectAnswer from './SelectAnswer';
 
-class QuestionForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      xValue: 0,
-      yValue: 0,
-      correctAnswer: '?',
-      possibleAnswers: [],
-      isHappy: false,
-      isSad: false,
-    };
-    this.onAnswerSelected = this.onAnswerSelected.bind(this);
-    this.handleImageClick = this.handleImageClick.bind(this);
-  }
+const QuestionForm = () => {
+  const yValue = useSelector(getXValue);
+  const xValue = useSelector(getYValue);
+  const possibleAnswers = useSelector(getPossibleAnswers);
+  const [correctAnswer, setCorrectAnswer] = useState('?');
+  const [isHappy, setIsHappy] = useState(false);
+  const [isSad, setIsSad] = useState(false);
+  const [timeoutCallback, setTimeoutCallback] = useState(undefined);
+  const [startTime, setStartTime] = useState(Date.now());
 
-  componentDidMount() {
-    this.initializeValues();
-  }
+  const dispatch = useDispatch();
 
-  componentDidUpdate(prevProps) {
-    const prevRange = prevProps.range;
-    const { range } = this.props;
-    if (prevRange !== range) {
-      this.initializeValues();
-    }
-  }
+  const initializeValues = () => {
+    setStartTime(Date.now());
+    setCorrectAnswer('?');
+    setIsHappy(false);
+    setIsSad(false);
+    dispatch(generateNextQuestion());
+  };
 
-  onAnswerSelected(answer) {
-    this.setState((state) => {
-      const { xValue, yValue, startTime } = state;
-      const { setResultValueAt } = this.props;
-      const correctAnswer = xValue * yValue;
-
-      if (answer === correctAnswer) {
-        const answerState = {
-          status: resultStatus.success,
-          duration: Date.now() - startTime,
-        };
-        setResultValueAt(answerState, xValue, yValue);
-        return {
-          correctAnswer,
-          startTime: Date.now(),
-          isHappy: true,
-          isSad: false,
-        };
-      }
-
+  const onAnswerSelected = (answer) => {
+    const newCorrectAnswer = xValue * yValue;
+    if (answer === newCorrectAnswer) {
+      const answerState = {
+        status: resultStatus.success,
+        duration: Date.now() - startTime,
+      };
+      dispatch(setValueAtRowCol({ answerState, xValue, yValue }));
+      setCorrectAnswer(newCorrectAnswer);
+      setStartTime(Date.now());
+      if (!isHappy) setIsHappy(true);
+      if (isSad) setIsSad(false);
+    } else {
       const answerState = {
         status: resultStatus.failure,
         duration: Date.now() - startTime,
       };
-      setResultValueAt(answerState, xValue, yValue);
-      return {
-        correctAnswer,
-        startTime: Date.now(),
-        isHappy: false,
-        isSad: true,
-      };
-    });
-    this.timeoutCallback = setTimeout(() => {
-      this.initializeValues();
-    }, 2500);
-  }
+      dispatch(setValueAtRowCol({ answerState, xValue, yValue }));
+      setCorrectAnswer(newCorrectAnswer);
+      setStartTime(Date.now());
+      if (isHappy) setIsHappy(false);
+      if (!isSad) setIsSad(true);
+    }
+    setTimeoutCallback(setTimeout(() => {
+      initializeValues();
+    }, 2500));
+  };
 
-  initializeValues() {
-    this.setState(() => {
-      const { range, noOfAnswers } = this.props;
-      const xValue = range.getNewRandomValue();
-      const yValue = range.getNewRandomValue();
-      return {
-        xValue,
-        yValue,
-        startTime: Date.now(),
-        possibleAnswers: range.getPossibleAnswers(xValue, yValue, noOfAnswers),
-        correctAnswer: '?',
-        isHappy: false,
-        isSad: false,
-      };
-    });
-  }
+  const handleImageClick = () => {
+    clearTimeout(timeoutCallback);
+    initializeValues();
+  };
 
-  handleImageClick() {
-    clearTimeout(this.timeoutCallback);
-    this.initializeValues();
-  }
-
-  render() {
-    const {
-      xValue, yValue, possibleAnswers, correctAnswer, isHappy, isSad,
-    } = this.state;
-    return (
-      <>
-        <Equation
-          xValue={xValue}
-          yValue={yValue}
-          correctAnswer={correctAnswer}
+  return (
+    <>
+      <Equation
+        xValue={xValue}
+        yValue={yValue}
+        correctAnswer={correctAnswer}
+      />
+      <SelectAnswer
+        possibleAnswers={possibleAnswers}
+        correctAnswer={xValue * yValue}
+        onAnswerSelected={onAnswerSelected}
+      />
+      {isHappy && (
+      <div
+        onClick={handleImageClick}
+        onKeyPress={handleImageClick}
+        tabIndex="0"
+        role="button"
+      >
+        <img
+          src={happyFaceImg}
+          alt="Good job!"
+          height="150"
         />
-        <SelectAnswer
-          possibleAnswers={possibleAnswers}
-          correctAnswer={xValue * yValue}
-          onAnswerSelected={this.onAnswerSelected}
+      </div>
+      )}
+      {isSad && (
+      <div
+        onClick={handleImageClick}
+        onKeyPress={handleImageClick}
+        tabIndex="0"
+        role="button"
+      >
+        <img
+          src={sadFaceImg}
+          alt="Oh no!"
+          height="150"
         />
-        {isHappy && (
-          <div
-            onClick={this.handleImageClick}
-            onKeyPress={this.handleImageClick}
-            tabIndex="0"
-            role="button"
-          >
-            <img
-              src={happyFaceImg}
-              alt="Good job!"
-              height="150"
-            />
-          </div>
-        )}
-        {isSad && (
-          <div
-            onClick={this.handleImageClick}
-            onKeyPress={this.handleImageClick}
-            tabIndex="0"
-            role="button"
-          >
-            <img
-              src={sadFaceImg}
-              alt="Oh no!"
-              height="150"
-            />
-          </div>
-        )}
-      </>
-    );
-  }
-}
-
-QuestionForm.propTypes = {
-  range: PropTypes.objectOf(PropTypes.func).isRequired,
-  noOfAnswers: PropTypes.number.isRequired,
-  setResultValueAt: PropTypes.func.isRequired,
+      </div>
+      )}
+    </>
+  );
 };
 
 export default QuestionForm;

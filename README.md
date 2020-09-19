@@ -1,3 +1,10 @@
+Redux:
++ Handling optimistic updates
++ rendering on the server
++ fetching data before performing route transmission
++ hot reload
++ undo-redo functionality
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

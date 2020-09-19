@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { getRangeValues, setRangeValueAt } from './redux-store/rangeSlice';
 import WarningAlert from './WarningAlert';
 
 const RangePicker = (props) => {
   const styleButtonGroup = { marginTop: '5px', marginBottom: '5px' };
   const styleWell = { padding: '10px' };
-  const { rangeValues, minimumNoOfSelectedValues, setNewRangeValueAt } = props;
+  const { minimumNoOfSelectedValues } = props;
   const [warningVisible, setWarningVisibility] = useState(false);
+  const rangeValues = useSelector(getRangeValues);
+  const dispatch = useDispatch();
 
   const onRangeButtonClicked = (e) => {
-    const selectedRangeValueIndex = Number(e.target.textContent) - 1;
+    const at = Number(e.target.textContent) - 1;
     const newRangeValues = rangeValues.slice();
-    newRangeValues[selectedRangeValueIndex] = !newRangeValues[selectedRangeValueIndex];
+    newRangeValues[at] = !newRangeValues[at];
+    const newValue = newRangeValues[at];
     if (newRangeValues
       .reduce((reducer, value) => reducer + Number(value)) >= minimumNoOfSelectedValues) {
-      setNewRangeValueAt(newRangeValues[selectedRangeValueIndex], selectedRangeValueIndex);
+      dispatch(setRangeValueAt({ newValue, at }));
     } else {
       setWarningVisibility(true);
     }
@@ -62,8 +67,6 @@ const RangePicker = (props) => {
 };
 
 RangePicker.propTypes = {
-  setNewRangeValueAt: PropTypes.func.isRequired,
-  rangeValues: PropTypes.arrayOf(PropTypes.bool).isRequired,
   minimumNoOfSelectedValues: PropTypes.number,
 };
 
