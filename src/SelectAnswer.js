@@ -55,7 +55,7 @@ const SelectAnswer = (props) => {
             className={getButtonClassBasedOnAnswer(item)}
             style={getStyleBasedOnState(item)}
             onClick={handleAnswerSelected}
-            key={item}
+            key={String(item)}
           >
             {item}
           </button>

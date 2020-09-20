@@ -16,12 +16,6 @@ const ResultsTable = () => {
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
 
-  try {
-    if (typeof values[size][size] !== 'object') console.log(values, size, values[size][size]);
-  } catch (error) {
-    return <div>Failed to render table with results</div>;
-  }
-
   const getClassName = (row, col) => {
     const answerState = values[row][col];
     let result = null;

@@ -4,17 +4,18 @@ import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';
 import store from '../redux-store/store';
 import ResultsTable from '../ResultsTable';
-import { resultStatus } from '../redux-store/resultsSlice';
+import { resultStatus, setValueAtRowCol } from '../redux-store/resultsSlice';
 
 const renderResultsTable = () => render(
   <Provider store={store}><ResultsTable /></Provider>,
 );
 
+const tableSize = 10;
 const getSuccessButton = () => screen.getByRole('button', { name: /poprawne/i });
 const getIncorrectButton = () => screen.getByRole('button', { name: /błędne/i });
-const getSlowestButton = () => screen.getByRole('button', { name: /najwolniejsze/i });
+const getRemoveHistoryButton = () => screen.getByRole('button', { name: /usuń wyniki/i });
 
-const cellsHaveProperClassNames = (tableSize, answersRowCol, className) => {
+const cellsHaveProperClassNames = (answersRowCol, className) => {
   let row = 1;
   let col = 0;
   screen.getAllByRole('cell')
@@ -39,58 +40,66 @@ const cellsHaveProperClassNames = (tableSize, answersRowCol, className) => {
     });
 };
 
+const setStatusDurationAtRowCol = (status, duration, row, col) => {
+  const answerState = { status, duration };
+  const payload = { answerState, xValue: row, yValue: col };
+  store.dispatch(setValueAtRowCol(payload));
+};
+
+const dispatchStoreChanges = () => {
+  setStatusDurationAtRowCol(resultStatus.failure, 10, 1, 1);
+  setStatusDurationAtRowCol(resultStatus.success, 15, 2, 2);
+  setStatusDurationAtRowCol(resultStatus.failure, 16, 2, 3);
+  setStatusDurationAtRowCol(resultStatus.success, 10, 3, 3);
+};
+const correctAnswersRowCol = { 2: 2, 3: 3 };
+const incorrectAnswersRowCol = { 1: 1, 2: 3 };
+
 describe('ResultsTable', () => {
   it('should render table with all values', () => {
-    // const size = 10;
-    // renderResultsTable();
-    // expect(screen.getByRole('table')).toBeInTheDocument();
-    // expect(screen.getAllByRole('columnheader', { name: /[0-9]/ }))
-    //   .toHaveLength(size);
-    // expect(screen.getAllByRole('cell', { name: /[0-9]/ }))
-    //   .toHaveLength(size * size + size);
-    // cellsHaveProperClassNames(size);
+    renderResultsTable();
+    expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(screen.getAllByRole('columnheader', { name: /[0-9]/ }))
+      .toHaveLength(tableSize);
+    expect(screen.getAllByRole('cell', { name: /[0-9]/ }))
+      .toHaveLength(tableSize * tableSize + tableSize);
+    cellsHaveProperClassNames(tableSize);
   });
   it('show and hide correct answers', () => {
-    // const tableSize = 3;
-    // const correctAnswersRowCol = { 2: 2, 3: 3 };
-    // renderResultsTable();
-    // cellsHaveProperClassNames(tableSize);
-    // userEvent.click(getSuccessButton());
-    // cellsHaveProperClassNames(tableSize, correctAnswersRowCol, 'success');
-    // userEvent.click(getSuccessButton());
-    // cellsHaveProperClassNames(tableSize);
+    renderResultsTable();
+    dispatchStoreChanges();
+    cellsHaveProperClassNames();
+    userEvent.click(getSuccessButton());
+    cellsHaveProperClassNames(correctAnswersRowCol, 'success');
+    userEvent.click(getSuccessButton());
+    cellsHaveProperClassNames(tableSize);
   });
   it('show and hide incorrect answers', () => {
-    // const tableSize = 10;
-    // const incorrectAnswersRowCol = { 1: 1, 2: 3 };
-    // renderResultsTable();
-    // userEvent.click(getIncorrectButton());
-    // cellsHaveProperClassNames(tableSize, incorrectAnswersRowCol, 'danger');
-    // userEvent.click(getIncorrectButton());
-    // cellsHaveProperClassNames(tableSize);
+    renderResultsTable();
+    dispatchStoreChanges();
+    userEvent.click(getIncorrectButton());
+    cellsHaveProperClassNames(incorrectAnswersRowCol, 'danger');
+    userEvent.click(getIncorrectButton());
+    cellsHaveProperClassNames(tableSize);
   });
-  it('show and hide slowest answers', () => {
-    // const tableSize = 10;
-    // const slowestAnswersRowCol = { 1: 1, 2: 3, 3: 3 };
-    // renderResultsTable();
-    // userEvent.click(getSlowestButton());
-    // cellsHaveProperClassNames(tableSize, slowestAnswersRowCol, 'warning');
-    // userEvent.click(getSlowestButton());
-    // cellsHaveProperClassNames(tableSize);
+  it('show only either success or incorrect answers', () => {
+    renderResultsTable();
+    dispatchStoreChanges();
+    userEvent.click(getSuccessButton());
+    cellsHaveProperClassNames(correctAnswersRowCol, 'success');
+    userEvent.click(getIncorrectButton());
+    cellsHaveProperClassNames(incorrectAnswersRowCol, 'danger');
+    userEvent.click(getSuccessButton());
+    cellsHaveProperClassNames(correctAnswersRowCol, 'success');
   });
-  it('show only either success slowest or incorrect answers', () => {
-    // const tableSize = 10;
-    // const correctAnswersRowCol = { 2: 2, 3: 3 };
-    // const incorrectAnswersRowCol = { 1: 1, 2: 3 };
-    // const slowestAnswersRowCol = { 1: 1, 2: 3, 3: 3 };
-    // renderResultsTable();
-    // userEvent.click(getSuccessButton());
-    // cellsHaveProperClassNames(tableSize, correctAnswersRowCol, 'success');
-    // userEvent.click(getIncorrectButton());
-    // cellsHaveProperClassNames(tableSize, incorrectAnswersRowCol, 'danger');
-    // userEvent.click(getSlowestButton());
-    // cellsHaveProperClassNames(tableSize, slowestAnswersRowCol, 'warning');
-    // userEvent.click(getSuccessButton());
-    // cellsHaveProperClassNames(tableSize, correctAnswersRowCol, 'success');
+  it('clear saved results', () => {
+    renderResultsTable();
+    dispatchStoreChanges();
+    userEvent.click(getRemoveHistoryButton());
+    cellsHaveProperClassNames();
+    userEvent.click(getIncorrectButton());
+    cellsHaveProperClassNames();
+    userEvent.click(getSuccessButton());
+    cellsHaveProperClassNames();
   });
 });

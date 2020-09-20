@@ -40,8 +40,7 @@ const QuestionForm = () => {
       dispatch(setValueAtRowCol({ answerState, xValue, yValue }));
       setCorrectAnswer(newCorrectAnswer);
       setStartTime(Date.now());
-      if (!isHappy) setIsHappy(true);
-      if (isSad) setIsSad(false);
+      setIsHappy(true);
     } else {
       const answerState = {
         status: resultStatus.failure,
@@ -50,8 +49,7 @@ const QuestionForm = () => {
       dispatch(setValueAtRowCol({ answerState, xValue, yValue }));
       setCorrectAnswer(newCorrectAnswer);
       setStartTime(Date.now());
-      if (isHappy) setIsHappy(false);
-      if (!isSad) setIsSad(true);
+      setIsSad(true);
     }
     setTimeoutCallback(setTimeout(() => {
       initializeValues();

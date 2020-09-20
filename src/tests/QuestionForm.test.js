@@ -7,7 +7,6 @@ import userEvent from '@testing-library/user-event';
 import shallowequal from 'shallowequal';
 import store from '../redux-store/store';
 import QuestionForm from '../QuestionForm';
-import { resultStatus } from '../redux-store/resultsSlice';
 
 const renderQuestionForm = () => render(
   <Provider store={store}>
@@ -29,45 +28,6 @@ describe('QuestionForm', () => {
     renderQuestionForm();
     expect(screen.getAllByRole('button')).toHaveLength(numberOfAnswers);
   });
-  it('use callback function with correct answer', () => {
-    // const numberOfAnswers = 2;
-    // const callback = jest.fn();
-    // renderQuestionForm(numberOfAnswers, Range(3, [true, true, true]), callback);
-    // const [firstNumber, secondNumber] = screen
-    //   .getAllByRole('option', { name: /[0-9]/i })
-    //   .map((element) => Number(element.textContent));
-    // const equationResult = firstNumber * secondNumber;
-    // const correctAnswerButton = screen
-    //   .getByRole('button', { name: String(equationResult) });
-    // userEvent.click(correctAnswerButton);
-    // expect(callback).toHaveBeenCalledTimes(1);
-    // const calledWith = callback.mock.calls[0];
-    // expect(calledWith[0].status).toBe(resultStatus.success);
-    // expect(calledWith[0].duration).toBeGreaterThan(0);
-    // expect(calledWith[1]).toBe(firstNumber);
-    // expect(calledWith[2]).toBe(secondNumber);
-  });
-  it('use callback function with wrong answer', () => {
-    // const numberOfAnswers = 2;
-    // const callback = jest.fn();
-    // renderQuestionForm(numberOfAnswers, Range(3, [true, true, true]), callback);
-    // const [firstNumber, secondNumber] = screen
-    //   .getAllByRole('option', { name: /[0-9]/i })
-    //   .map((element) => Number(element.textContent));
-    // const equationResult = firstNumber * secondNumber;
-    // const possibleAnswers = getPossibleAnswers();
-    // const wrongAnswer = possibleAnswers
-    //   .find((value) => value !== equationResult);
-    // const wrongAnswerButton = screen
-    //   .getByRole('button', { name: String(wrongAnswer) });
-    // userEvent.click(wrongAnswerButton);
-    // expect(callback).toHaveBeenCalledTimes(1);
-    // const calledWith = callback.mock.calls[0];
-    // expect(calledWith[0].status).toBe(resultStatus.failure);
-    // expect(calledWith[0].duration).toBeGreaterThan(0);
-    // expect(calledWith[1]).toBe(firstNumber);
-    // expect(calledWith[2]).toBe(secondNumber);
-  });
   it('shows equation with all elements', () => {
     renderQuestionForm();
     const numberButtons = screen.getAllByRole('option');
@@ -77,7 +37,7 @@ describe('QuestionForm', () => {
     const imgMultiply = screen.getByRole('img', { name: 'multiply' });
     expect(imgMultiply).toBeInTheDocument();
   });
-  it('shows equation result in possible answers', () => {
+  it('shows correct result in possible answers', () => {
     renderQuestionForm();
     const equationResult = getEquationResult();
     const possibleAnswers = getPossibleAnswers();
@@ -104,7 +64,7 @@ describe('QuestionForm', () => {
     const findHappyImg = screen.queryByRole('img', { name: 'Good job!' });
     expect(findHappyImg).not.toBeInTheDocument();
   });
-  it('should disable/re-enable answer buttons after answering', () => {
+  it('should change visibility of irrelevant buttons after answering', () => {
     renderQuestionForm();
     const equationResult = getEquationResult();
     const correctAnswerButton = screen
@@ -126,7 +86,7 @@ describe('QuestionForm', () => {
       expect(buttonsVisibleAfterReset[i]).toBeEnabled();
     }
   });
-  it('failure after selecting wrong answer, hiding is possible', () => {
+  it('failure after selecting wrong answer', () => {
     renderQuestionForm();
     const equationResult = getEquationResult();
     const possibleAnswers = getPossibleAnswers();
@@ -150,9 +110,8 @@ describe('QuestionForm', () => {
       const correctAnswerButton = screen
         .getByRole('button', { name: String(equationResult) });
       userEvent.click(correctAnswerButton);
-      act(() => {
-        jest.advanceTimersByTime(2500);
-      });
+      // click the same button again to get to the next question
+      userEvent.click(correctAnswerButton);
       const newEquationResult = getEquationResult();
       const newPossibleAnswers = getPossibleAnswers();
       if (equationResult === newEquationResult
