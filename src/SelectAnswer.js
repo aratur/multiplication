@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const SelectAnswer = (props) => {
-  const { onAnswerSelected, possibleAnswers, correctAnswer } = props;
+  const {
+    onAnswerSelected, possibleAnswers, correctAnswer, handleNextQuestion,
+  } = props;
   const [wasAnswered, setWasAnswered] = useState(false);
   const [userAnswer, setUserAnswer] = useState(Infinity);
   const optionButtonStyle = {
@@ -22,11 +24,20 @@ const SelectAnswer = (props) => {
     return 'btn btn-info btn-lg';
   };
 
+  const getStyleBasedOnState = (item) => (
+    (wasAnswered && item !== userAnswer && item !== correctAnswer)
+      ? { ...optionButtonStyle, visibility: 'hidden' } : optionButtonStyle
+  );
+
   const handleAnswerSelected = (e) => {
-    const answer = Number(e.target.textContent);
-    setUserAnswer(answer);
-    setWasAnswered(true);
-    onAnswerSelected(answer);
+    if (!wasAnswered) {
+      const answer = Number(e.target.textContent);
+      setUserAnswer(answer);
+      setWasAnswered(true);
+      onAnswerSelected(answer);
+    } else {
+      handleNextQuestion();
+    }
   };
 
   useEffect(() => {
@@ -42,10 +53,9 @@ const SelectAnswer = (props) => {
           <button
             type="button"
             className={getButtonClassBasedOnAnswer(item)}
-            style={optionButtonStyle}
+            style={getStyleBasedOnState(item)}
             onClick={handleAnswerSelected}
             key={item}
-            disabled={wasAnswered}
           >
             {item}
           </button>
@@ -57,6 +67,7 @@ const SelectAnswer = (props) => {
 SelectAnswer.propTypes = {
   possibleAnswers: PropTypes.arrayOf(PropTypes.number).isRequired,
   onAnswerSelected: PropTypes.func.isRequired,
+  handleNextQuestion: PropTypes.func.isRequired,
   correctAnswer: PropTypes.number.isRequired,
 };
 

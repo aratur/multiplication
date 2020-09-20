@@ -2,11 +2,17 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import shallowequal from 'shallowequal';
+import { Provider } from 'react-redux';
+import store from '../redux-store/store';
 import MultiplicationTable from '../MultiplicationTable';
 
 jest.mock('../ResultsTable', () => () => <div>ResultsTable</div>);
 
-const renderMultiplicationTable = () => render(<MultiplicationTable />);
+const renderMultiplicationTable = () => render(
+  <Provider store={store}>
+    <MultiplicationTable />
+  </Provider>,
+);
 
 describe('MultiplicationTable', () => {
   it('should render all children', () => {

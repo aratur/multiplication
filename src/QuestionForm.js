@@ -58,7 +58,7 @@ const QuestionForm = () => {
     }, 2500));
   };
 
-  const handleImageClick = () => {
+  const handleNextQuestion = () => {
     clearTimeout(timeoutCallback);
     initializeValues();
   };
@@ -74,11 +74,12 @@ const QuestionForm = () => {
         possibleAnswers={possibleAnswers}
         correctAnswer={xValue * yValue}
         onAnswerSelected={onAnswerSelected}
+        handleNextQuestion={handleNextQuestion}
       />
       {isHappy && (
       <div
-        onClick={handleImageClick}
-        onKeyPress={handleImageClick}
+        onClick={handleNextQuestion}
+        onKeyPress={handleNextQuestion}
         tabIndex="0"
         role="button"
       >
@@ -91,8 +92,8 @@ const QuestionForm = () => {
       )}
       {isSad && (
       <div
-        onClick={handleImageClick}
-        onKeyPress={handleImageClick}
+        onClick={handleNextQuestion}
+        onKeyPress={handleNextQuestion}
         tabIndex="0"
         role="button"
       >

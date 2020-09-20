@@ -1,60 +1,58 @@
 /* eslint-env jest */
 import React from 'react';
+import { Provider } from 'react-redux';
 import {
-  render, fireEvent, screen,
+  render, screen,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import store from '../redux-store/store';
 import RangePicker from '../RangePicker';
 
-const renderRangePicker = (
-  values, minimumNoOfSelectedValues = 3, callback = () => {},
-) => render(
-  <RangePicker
-    rangeValues={values}
-    setNewRangeValueAt={callback}
-    minimumNoOfSelectedValues={minimumNoOfSelectedValues}
-  />,
+const renderRangePicker = (minimumNoOfSelectedValues = 3) => render(
+  <Provider store={store}>
+    <RangePicker minimumNoOfSelectedValues={minimumNoOfSelectedValues} />
+  </Provider>,
 );
+
+const buttonNo = (number) => screen.getByRole('checkbox', { name: String(number) });
 
 describe('RangePicker', () => {
   it('should render all selected values', () => {
-    const values = Array(10).fill(true);
-    const { getAllByRole } = renderRangePicker(values);
-    expect(getAllByRole('checkbox', { checked: true })).toHaveLength(10);
+    const rangeLength = 10;
+    const { getAllByRole } = renderRangePicker();
+    expect(getAllByRole('checkbox', { checked: true })).toHaveLength(rangeLength);
   });
 
-  it('should call parent setNewRangeValueAt after clicking on a button', () => {
-    const setNewRangeValueAt = jest.fn();
-    const values = Array(10).fill(true);
-    const { getByText } = renderRangePicker(values, 3, setNewRangeValueAt);
-    userEvent.click(screen.getByRole('checkbox', { name: '1' }));
-    expect(setNewRangeValueAt).toHaveBeenCalledWith(false, 0);
-    fireEvent.click(getByText('2'));
-    expect(setNewRangeValueAt).toHaveBeenCalledTimes(2);
+  it('should change selected range after clicking on a button', () => {
+    renderRangePicker();
+    userEvent.click(buttonNo(1));
+    expect(buttonNo(1)).toHaveClass('btn btn-info');
+    expect(buttonNo(1)).not.toBeChecked();
   });
 
   it('should display warning after to few options are selected', async () => {
-    const values = Array(10).fill(true);
-    const setNewRangeValueAt = jest.fn();
-    renderRangePicker(values, 10, setNewRangeValueAt);
-    userEvent.click(screen.getByRole('checkbox', { name: '1' }));
-    await screen.findByText('Nie tak szybko');
-    expect(setNewRangeValueAt).not.toHaveBeenCalled();
+    const minimumNoOfSelectedValues = 9;
+    renderRangePicker(minimumNoOfSelectedValues);
+    userEvent.click(buttonNo(7));
+    userEvent.click(buttonNo(3));
+    expect(await screen.findByText('Nie tak szybko')).toBeInTheDocument();
   });
 
   it('should hide warning after clicking X', async () => {
-    const values = Array(10).fill(true);
-    const setNewRangeValueAt = jest.fn();
-    renderRangePicker(values, 10, setNewRangeValueAt);
-    userEvent.click(screen.getByRole('checkbox', { name: '1' }));
-    await screen.findByText('Nie tak szybko');
+    const minimumNoOfSelectedValues = 9;
+    renderRangePicker(minimumNoOfSelectedValues);
+    userEvent.click(buttonNo(7));
+    userEvent.click(buttonNo(3));
+    expect(await screen.findByText('Nie tak szybko')).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: 'close alert' }));
     expect(screen.queryByText('Nie tak szybko')).not.toBeInTheDocument();
   });
 
-  it('should have proper class based on received array', () => {
-    const values = [true, false, false, true];
-    const { getAllByRole } = renderRangePicker(values);
+  it('should have proper class if checked or not checked', () => {
+    const { getAllByRole } = renderRangePicker();
+    userEvent.click(buttonNo(10));
+    userEvent.click(buttonNo(5));
+    userEvent.click(buttonNo(1));
     getAllByRole('checkbox').forEach((x) => {
       if (x.getAttribute('aria-checked') === 'true') {
         expect(x).toHaveClass('btn btn-success');
