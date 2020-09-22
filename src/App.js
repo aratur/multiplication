@@ -13,23 +13,25 @@ const App = () => (
   <Provider store={store}>
     <Router>
       <div className="container-fluid" align="center">
-        <div className="navbar navbar-default">
-          <div className="navbar-header">
-            <NavLink to="/" activeClassName="navbar-brand">10 x 10</NavLink>
+        <div className="col" style={{ width: '350px' }}>
+          <div className="navbar navbar-default">
+            <div className="navbar-header">
+              <NavLink to="/" activeClassName="navbar-brand">10 x 10</NavLink>
+            </div>
+            <ul className="nav navbar-nav">
+              <li>
+                <Link to="/">start</Link>
+              </li>
+              <li>
+                <Link to="/results">results</Link>
+              </li>
+              <li>
+                <Link to="/settings">settings</Link>
+              </li>
+            </ul>
           </div>
-          <ul className="nav navbar-nav">
-            <li>
-              <Link to="/">start</Link>
-            </li>
-            <li>
-              <Link to="/results">results</Link>
-            </li>
-            <li>
-              <Link to="/settings">settings</Link>
-            </li>
-          </ul>
         </div>
-        <div className="col">
+        <div className="col" style={{ width: '350px' }}>
           <Switch>
             <Route path="/results">
               <ResultsTable />
