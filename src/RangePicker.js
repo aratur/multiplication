@@ -34,6 +34,7 @@ const RangePicker = (props) => {
       <div className="well" style={styleWell}>
         <label htmlFor="range">
           Wybrany zakres liczb do nauki
+          <br />
           <div
             className="btn-group"
             role="group"
@@ -71,7 +72,7 @@ RangePicker.propTypes = {
 };
 
 RangePicker.defaultProps = {
-  minimumNoOfSelectedValues: 1,
+  minimumNoOfSelectedValues: 3,
 };
 
 export default RangePicker;
