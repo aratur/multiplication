@@ -2,48 +2,40 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import {
   BrowserRouter as Router,
-  Switch, Route, Link, NavLink,
+  Switch, Route,
 } from 'react-router-dom';
 import store from './redux-store/store';
-import RangePicker from './RangePicker';
+import Settings from './Settings';
 import QuestionForm from './QuestionForm';
 import ResultsTable from './ResultsTable';
+import Navbar from './Navbar';
+
+const styleRowMargin = { marginLeft: 0, marginRight: 0 };
 
 const App = () => (
   <Provider store={store}>
     <Router>
-      <div className="container-fluid" align="center">
-        <div className="col" style={{ width: '350px' }}>
-          <div className="navbar navbar-default">
-            <div className="navbar-header">
-              <NavLink to="/" activeClassName="navbar-brand">10 x 10</NavLink>
-            </div>
-            <ul className="nav navbar-nav">
-              <li>
-                <Link to="/">start</Link>
-              </li>
-              <li>
-                <Link to="/results">results</Link>
-              </li>
-              <li>
-                <Link to="/settings">settings</Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="col" style={{ width: '350px' }}>
+      <div className="row" style={styleRowMargin}>
+        <div className="col-sm-3" />
+        <div className="col-sm-6" align="center"><Navbar /></div>
+        <div className="col-sm-3" />
+      </div>
+      <div className="row" style={styleRowMargin}>
+        <div className="col-sm-3" />
+        <div className="col-sm-6" align="center">
           <Switch>
             <Route path="/results">
               <ResultsTable />
             </Route>
             <Route path="/settings">
-              <RangePicker />
+              <Settings />
             </Route>
             <Route path="/">
               <QuestionForm />
             </Route>
           </Switch>
         </div>
+        <div className="col-sm-3" />
       </div>
     </Router>
   </Provider>

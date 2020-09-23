@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { getRangeValues, setRangeValueAt } from './redux-store/rangeSlice';
 import WarningAlert from './WarningAlert';
 
-const RangePicker = (props) => {
+const Settings = (props) => {
   const styleButtonGroup = { marginTop: '5px', marginBottom: '5px' };
   const styleWell = { padding: '10px' };
   const { minimumNoOfSelectedValues } = props;
@@ -67,12 +67,12 @@ const RangePicker = (props) => {
   );
 };
 
-RangePicker.propTypes = {
+Settings.propTypes = {
   minimumNoOfSelectedValues: PropTypes.number,
 };
 
-RangePicker.defaultProps = {
+Settings.defaultProps = {
   minimumNoOfSelectedValues: 3,
 };
 
-export default RangePicker;
+export default Settings;
