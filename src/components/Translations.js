@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 class Translations extends Component {
   constructor(props) {
     super(props);
-    const { language } = props;
+    const { language, children } = props;
+    this.children = children;
     this.fetchTranslations('en.json');
     this.fetchTranslations('en.json');
     this.state = {
