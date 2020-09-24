@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Equation from './Equation';
-import happyFaceImg from './img/happyFace.png';
-import sadFaceImg from './img/sadFace.png';
-import { resultStatus, setValueAtRowCol } from './redux-store/resultsSlice';
+import happyFaceImg from '../img/smile.svg';
+import sadFaceImg from '../img/frown.svg';
+import { resultStatus, setValueAtRowCol } from '../redux-store/resultsSlice';
 import {
   getPossibleAnswers, getXValue, getYValue,
   generateNextQuestion,
-} from './redux-store/rangeSlice';
+} from '../redux-store/rangeSlice';
 import SelectAnswer from './SelectAnswer';
 
 const QuestionForm = () => {

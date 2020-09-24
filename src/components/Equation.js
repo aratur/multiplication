@@ -1,8 +1,8 @@
 /* eslint "react/button-has-type": "off" */
 import React from 'react';
 import PropTypes from 'prop-types';
-import multiply from './img/multiply.png';
-import equals from './img/equals.png';
+import multiply from '../img/multiply.png';
+import equals from '../img/equals.png';
 
 // without JSX
 const Equation = (props) => {

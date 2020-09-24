@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';
 import store from '../redux-store/store';
-import ResultsTable from '../ResultsTable';
+import ResultsTable from '../components/ResultsTable';
 import { resultStatus, setValueAtRowCol } from '../redux-store/resultsSlice';
 
 const renderResultsTable = () => render(

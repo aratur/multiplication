@@ -7,6 +7,7 @@ const SelectAnswer = (props) => {
   } = props;
   const [wasAnswered, setWasAnswered] = useState(false);
   const [userAnswer, setUserAnswer] = useState(Infinity);
+
   const optionButtonStyle = {
     margin: '5px',
     width: '55px',

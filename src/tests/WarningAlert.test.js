@@ -3,7 +3,7 @@ import React from 'react';
 import {
   render, act, fireEvent, screen,
 } from '@testing-library/react';
-import WarningAlert from '../WarningAlert';
+import WarningAlert from '../components/WarningAlert';
 
 const renderAlert = (visible, callback = () => {}) => render(
   <WarningAlert

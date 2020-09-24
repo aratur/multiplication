@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   resultStatus, getResultValues,
   getResultsSize, resetResults,
-} from './redux-store/resultsSlice';
+} from '../redux-store/resultsSlice';
 import TableCell from './TableCell';
 
 const ResultsTable = () => {
@@ -16,7 +16,7 @@ const ResultsTable = () => {
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
 
-  const getClassName = (row, col) => {
+  const getClassName = useCallback((row, col) => {
     const answerState = values[row][col];
     let result = null;
     if (showCorrect
@@ -25,7 +25,7 @@ const ResultsTable = () => {
       && answerState.status === resultStatus.failure) result = 'danger';
     if (row === col) return result || 'active';
     return result;
-  };
+  }, [showCorrect, showIncorrect, values]);
 
   const handleShowClick = (event) => {
     setShowCorrect(event.target.className === 'btn btn-success'
@@ -33,6 +33,21 @@ const ResultsTable = () => {
     setShowIncorrect(event.target.className === 'btn btn-danger'
       ? !showIncorrect : false);
   };
+
+  const memoizedTableBody = useMemo(() => Array(size).fill(0).map((_, rowIndex) => rowIndex + 1)
+    .map((row) => (
+      <tr key={`row${String(row)}`}>
+        {Array(size).fill(0).map((__, colIndex) => colIndex + 1)
+          .map((col) => (
+            <TableCell
+              row={row}
+              col={col}
+              getClassName={getClassName}
+              key={String(`cell${row}.${col}`)}
+            />
+          ))}
+      </tr>
+    )), [getClassName, size]);
 
   return (
     <>
@@ -74,20 +89,7 @@ const ResultsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {Array(size).fill(0).map((_, rowIndex) => rowIndex + 1)
-            .map((row) => (
-              <tr key={`row${String(row)}`}>
-                {Array(size).fill(0).map((__, colIndex) => colIndex + 1)
-                  .map((col) => (
-                    <TableCell
-                      row={row}
-                      col={col}
-                      getClassName={getClassName}
-                      key={String(`cell${row}.${col}`)}
-                    />
-                  ))}
-              </tr>
-            ))}
+          {memoizedTableBody}
         </tbody>
       </table>
       <button

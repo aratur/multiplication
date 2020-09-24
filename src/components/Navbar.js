@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import gear from './img/gear.svg';
-import table from './img/table.svg';
-import house from './img/house.svg';
+import gear from '../img/gear.svg';
+import table from '../img/table.svg';
+import house from '../img/house.svg';
 
 const Navbar = () => (
 

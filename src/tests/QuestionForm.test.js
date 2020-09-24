@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';
 import shallowequal from 'shallowequal';
 import store from '../redux-store/store';
-import QuestionForm from '../QuestionForm';
+import QuestionForm from '../components/QuestionForm';
 
 const renderQuestionForm = () => render(
   <Provider store={store}>

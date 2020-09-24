@@ -6,7 +6,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import store from '../redux-store/store';
-import Settings from '../Settings';
+import Settings from '../components/Settings';
 
 const renderSettings = (minimumNoOfSelectedValues = 3) => render(
   <Provider store={store}>

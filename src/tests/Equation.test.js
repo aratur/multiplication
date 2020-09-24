@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import pretty from 'pretty';
-import Equation from '../Equation';
+import Equation from '../components/Equation';
 
 describe('Equation', () => {
   it('should render correctly', () => {

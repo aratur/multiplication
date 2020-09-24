@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getRangeValues, setRangeValueAt } from './redux-store/rangeSlice';
+import { getRangeValues, setRangeValueAt } from '../redux-store/rangeSlice';
 import WarningAlert from './WarningAlert';
 
 const Settings = (props) => {

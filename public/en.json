@@ -1,0 +1,23 @@
+{
+  "equation": {
+    "label": "Read the equation"
+  },
+  "selectAnswer": {
+    "label":"Select the correct answer"
+  },
+  "navbar": {
+    "start":"Start",
+    "results":"Results",
+    "settings":"Settings"
+  },
+  "settings": {
+    "label": "Modify numbers range for studying"
+  },
+  "results": {
+    "buttonsLabel": "Select which type of results you want to see in the table",
+    "tableCaption": "Multiplication table",
+    "buttonCorrect": "Correct answers",
+    "buttonIncorrect": "Incorrect answers",
+    "buttonRemoveHistory": "Remove results"
+  }
+}

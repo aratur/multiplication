@@ -1,0 +1,23 @@
+{
+  "equation": {
+    "label": "Przeczytaj równanie"
+  },
+  "selectAnswer": {
+    "label":"Wybierz poprawny wynik"
+  },
+  "navbar": {
+    "start":"Start",
+    "results":"Wyniki",
+    "settings":"Ustawienia"
+  },
+  "settings": {
+    "label": "Wybrany zakres liczb do nauki"
+  },
+  "results": {
+    "buttonsLabel": "Wybierz, które wyniki chcesz zobaczyć w tabeli",
+    "tableCaption": "Tabliczka mnożenia",
+    "buttonCorrect": "Poprawne odpowiedzi",
+    "buttonIncorrect": "Błędne odpowiedzi",
+    "buttonRemoveHistory": "Usuń wyniki"
+  }
+}
