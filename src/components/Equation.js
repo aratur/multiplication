@@ -1,8 +1,10 @@
 /* eslint "react/button-has-type": "off" */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import multiply from '../img/multiply.png';
 import equals from '../img/equals.png';
+import { i18n, getTranslations } from '../redux-store/i18nSlice';
 
 // without JSX
 const Equation = (props) => {
@@ -26,13 +28,13 @@ const Equation = (props) => {
       padding: '12px',
     },
   };
-
+  const translations = useSelector(getTranslations);
   const { xValue, yValue, correctAnswer } = props;
 
   return React.createElement(
     'div', { className: 'well', style: { padding: '10px' } },
     React.createElement(
-      'label', { htmlFor: 'equation' }, 'Przeczytaj równanie',
+      'label', { htmlFor: 'equation' }, i18n(translations, 'equation.label'),
       React.createElement(
         'div', { id: 'equation' },
         React.createElement('button',

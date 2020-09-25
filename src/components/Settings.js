@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getRangeValues, setRangeValueAt } from '../redux-store/rangeSlice';
 import WarningAlert from './WarningAlert';
+import { i18n, getTranslations } from '../redux-store/i18nSlice';
 
 const Settings = (props) => {
   const styleButtonGroup = { marginTop: '5px', marginBottom: '5px' };
@@ -11,6 +12,7 @@ const Settings = (props) => {
   const [warningVisible, setWarningVisibility] = useState(false);
   const rangeValues = useSelector(getRangeValues);
   const dispatch = useDispatch();
+  const translations = useSelector(getTranslations);
 
   const onRangeButtonClicked = (e) => {
     const at = Number(e.target.textContent) - 1;
@@ -33,7 +35,7 @@ const Settings = (props) => {
     <>
       <div className="well" style={styleWell}>
         <label htmlFor="range">
-          Wybrany zakres liczb do nauki
+          {i18n(translations, 'settings.label')}
           <br />
           <div
             className="btn-group"
@@ -60,8 +62,8 @@ const Settings = (props) => {
       <WarningAlert
         warningVisible={warningVisible}
         warningCloseEventHandler={onHideWarningMessage}
-        warningHeader="Nie tak szybko"
-        warningMessage={`Zaznacz nie mniej liczb niż ${minimumNoOfSelectedValues}.`}
+        warningHeader={i18n(translations, 'settings.warningHeader')}
+        warningMessage={i18n(translations, 'settings.warningMessage', minimumNoOfSelectedValues)}
       />
     </>
   );

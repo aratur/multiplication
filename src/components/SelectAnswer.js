@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { i18n, getTranslations } from '../redux-store/i18nSlice';
 
 const SelectAnswer = (props) => {
   const {
@@ -7,6 +9,7 @@ const SelectAnswer = (props) => {
   } = props;
   const [wasAnswered, setWasAnswered] = useState(false);
   const [userAnswer, setUserAnswer] = useState(Infinity);
+  const translations = useSelector(getTranslations);
 
   const optionButtonStyle = {
     margin: '5px',
@@ -47,7 +50,7 @@ const SelectAnswer = (props) => {
 
   return (
     <div className="well" style={{ padding: '10px' }}>
-      <b>Wybierz poprawny wynik</b>
+      <b>{i18n(translations, 'selectAnswer.label')}</b>
       <br />
       {possibleAnswers
         .map((item) => (

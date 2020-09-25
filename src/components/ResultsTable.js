@@ -4,11 +4,13 @@ import {
   resultStatus, getResultValues,
   getResultsSize, resetResults,
 } from '../redux-store/resultsSlice';
+import { i18n, getTranslations } from '../redux-store/i18nSlice';
 import TableCell from './TableCell';
 
 const ResultsTable = () => {
   const size = useSelector(getResultsSize);
   const values = useSelector(getResultValues);
+  const translations = useSelector(getTranslations);
   const dispatch = useDispatch();
   const [showCorrect, setShowCorrect] = useState(false);
   const [showIncorrect, setShowIncorrect] = useState(false);
@@ -52,7 +54,7 @@ const ResultsTable = () => {
   return (
     <>
       <div className="well" style={styleWell}>
-        <b>Wybierz, które wyniki chcesz zobaczyć w tabeli</b>
+        <b>{i18n(translations, 'results.buttonsLabel')}</b>
         <div id="table-buttons-group">
           <button
             className="btn btn-success"
@@ -60,7 +62,7 @@ const ResultsTable = () => {
             style={styleButtons}
             onClick={handleShowClick}
           >
-            Poprawne
+            {i18n(translations, 'results.buttonCorrect')}
           </button>
           <button
             className="btn btn-danger"
@@ -68,12 +70,12 @@ const ResultsTable = () => {
             style={styleButtons}
             onClick={handleShowClick}
           >
-            Błędne
+            {i18n(translations, 'results.buttonIncorrect')}
           </button>
         </div>
       </div>
       <table className="table table-striped table-hover text-center">
-        <caption>Tabliczka mnożenia</caption>
+        <caption>{i18n(translations, 'results.tableCaption')}</caption>
         <thead>
           <tr>
             <th className="active text-center" key="X">X</th>
@@ -99,7 +101,7 @@ const ResultsTable = () => {
           dispatch(resetResults());
         }}
       >
-        Usuń wyniki
+        {i18n(translations, 'results.buttonRemoveHistory')}
       </button>
     </>
   );

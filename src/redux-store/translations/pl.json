@@ -11,7 +11,9 @@
     "settings":"Ustawienia"
   },
   "settings": {
-    "label": "Wybrany zakres liczb do nauki"
+    "label": "Wybrany zakres liczb do nauki",
+    "warningHeader": "Nie tak szybko",
+    "warningMessage": "Co najmniej {0} liczby muszą pozostać zaznaczone."
   },
   "results": {
     "buttonsLabel": "Wybierz, które wyniki chcesz zobaczyć w tabeli",

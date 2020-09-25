@@ -11,7 +11,9 @@
     "settings":"Settings"
   },
   "settings": {
-    "label": "Modify numbers range for studying"
+    "label": "Modify numbers range for studying",
+    "warningHeader": "Not so fast",
+    "warningMessage": "At least {0} numbers have to stay selected."
   },
   "results": {
     "buttonsLabel": "Select which type of results you want to see in the table",
