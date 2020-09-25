@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import gear from '../img/gear.svg';
 import table from '../img/table.svg';
@@ -13,6 +13,7 @@ import {
 const Navbar = () => {
   const translations = useSelector(getTranslations);
   const dispatch = useDispatch();
+  const styleAPadding = { padding: '5px' };
   const [isButtonOpen, setIsButtonOpen] = useState(false);
   const handleButtonOpen = (event) => {
     event.preventDefault();
@@ -27,31 +28,31 @@ const Navbar = () => {
   return (
     <ul className="nav nav-tabs" style={{ marginBottom: '15px' }}>
       <li>
-        <Link to="/">
+        <NavLink to="/" style={styleAPadding}>
           <h4>
             <img src={house} alt="start" width="25" />
             {' '}
             {i18n(translations, 'navbar.start')}
           </h4>
-        </Link>
+        </NavLink>
       </li>
       <li>
-        <Link to="/results">
+        <NavLink to="/results" style={styleAPadding}>
           <h4>
             <img src={table} alt="results" width="25" />
             {' '}
             {i18n(translations, 'navbar.results')}
           </h4>
-        </Link>
+        </NavLink>
       </li>
       <li>
-        <Link to="/settings">
+        <NavLink to="/settings" style={styleAPadding}>
           <h4>
             <img src={gear} alt="settings" width="25" />
             {' '}
             {i18n(translations, 'navbar.settings')}
           </h4>
-        </Link>
+        </NavLink>
       </li>
       <li className={isButtonOpen ? 'dropdown open' : 'dropdown'}>
         <a
@@ -59,6 +60,7 @@ const Navbar = () => {
           data-toggle="dropdown"
           href="#dropdown"
           onClick={handleButtonOpen}
+          style={styleAPadding}
         >
           <h4>
             <img src={flag} alt="language" width="25" />

@@ -17,13 +17,13 @@ const App = () => (
   <Provider store={store}>
     <Router>
       <div className="row" style={styleRowMargin}>
-        <div className="col-sm-3" />
-        <div className="col-sm-6" align="center" style={styleColPadding}><Navbar /></div>
-        <div className="col-sm-3" />
+        <div className="col-md-3 col-sm-2" />
+        <div className="col-md-6 col-sm-8" align="center" style={styleColPadding}><Navbar /></div>
+        <div className="col-md-3 col-sm-2" />
       </div>
       <div className="row" style={styleRowMargin}>
-        <div className="col-sm-3" />
-        <div className="col-sm-6" align="center" style={styleColPadding}>
+        <div className="col-md-3 col-sm-2" />
+        <div className="col-md-6 col-sm-8" align="center" style={styleColPadding}>
           <Switch>
             <Route path="/results">
               <ResultsTable />
@@ -36,7 +36,7 @@ const App = () => (
             </Route>
           </Switch>
         </div>
-        <div className="col-sm-3" />
+        <div className="col-md-3 col-sm-2" />
       </div>
     </Router>
   </Provider>
