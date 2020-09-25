@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import store from '../redux-store/store';
 import Settings from './Settings';
-import QuestionForm from './QuestionForm';
+import LandingPage from './LandingPage';
 import ResultsTable from './ResultsTable';
 import Navbar from './Navbar';
 import Translations from './Translations';
@@ -34,7 +34,7 @@ const App = () => (
                 <Settings />
               </Route>
               <Route path="/">
-                <QuestionForm />
+                <LandingPage />
               </Route>
             </Switch>
           </div>

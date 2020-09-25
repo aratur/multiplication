@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Equation from './Equation';
 import happyFaceImg from '../img/smile.svg';
@@ -10,7 +10,7 @@ import {
 } from '../redux-store/rangeSlice';
 import SelectAnswer from './SelectAnswer';
 
-const QuestionForm = () => {
+const LandingPage = () => {
   const yValue = useSelector(getXValue);
   const xValue = useSelector(getYValue);
   const possibleAnswers = useSelector(getPossibleAnswers);
@@ -29,6 +29,8 @@ const QuestionForm = () => {
     setIsSad(false);
     dispatch(generateNextQuestion());
   };
+
+  useEffect(() => clearTimeout(timeoutCallback), [timeoutCallback]);
 
   const onAnswerSelected = (answer) => {
     const newCorrectAnswer = xValue * yValue;
@@ -106,4 +108,4 @@ const QuestionForm = () => {
   );
 };
 
-export default QuestionForm;
+export default LandingPage;
