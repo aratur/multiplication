@@ -1,12 +1,8 @@
 /* eslint class-methods-use-this: 0 */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
-class Translations extends Component {
-  constructor(props) {
-    super(props);
-    const { language, children } = props;
-    this.children = children;
+class Translations {
+  constructor() {
+    const language = 'pl';
     this.fetchTranslations('pl');
     this.fetchTranslations('en');
     this.state = {
@@ -67,35 +63,9 @@ class Translations extends Component {
       .then((result) => {
         const languageTranslations = {};
         languageTranslations[language] = result;
-        this.setState(
-          languageTranslations,
-        );
+        window.dictionary = languageTranslations;
       });
   }
-
-  addTranslation(element) {
-    if (typeof element === 'object'
-      && typeof element.type === 'function') {
-      const { children } = element.props;
-      const newChildren = React.Children
-        .map(children, (child) => this.addTranslation(child));
-      return React
-        .cloneElement(element, { i18n: this.i18n, children: newChildren });
-    }
-    return element;
-  }
-
-  render() {
-    return React.Children
-      .map(this.children, (child) => this.addTranslation(child));
-  }
 }
-
-Translations.propTypes = {
-  language: PropTypes.oneOf(['pl', 'en']).isRequired,
-  children: PropTypes.oneOfType(
-    [PropTypes.string, PropTypes.func, PropTypes.object],
-  ).isRequired,
-};
 
 export default Translations;

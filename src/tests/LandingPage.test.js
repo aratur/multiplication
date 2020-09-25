@@ -6,11 +6,11 @@ import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';
 import shallowequal from 'shallowequal';
 import store from '../redux-store/store';
-import QuestionForm from '../components/QuestionForm';
+import LandingPage from '../components/LandingPage';
 
-const renderQuestionForm = () => render(
+const renderLandingPage = () => render(
   <Provider store={store}>
-    <QuestionForm />
+    <LandingPage />
   </Provider>,
 );
 
@@ -25,11 +25,11 @@ const getPossibleAnswers = () => screen
 describe('QuestionForm', () => {
   it('shows correct number of possible answers', () => {
     const numberOfAnswers = 5;
-    renderQuestionForm();
+    renderLandingPage();
     expect(screen.getAllByRole('button')).toHaveLength(numberOfAnswers);
   });
   it('shows equation with all elements', () => {
-    renderQuestionForm();
+    renderLandingPage();
     const numberButtons = screen.getAllByRole('option');
     expect(numberButtons).toHaveLength(3);
     const questionButton = screen.getByRole('option', { name: '?' });
@@ -38,7 +38,7 @@ describe('QuestionForm', () => {
     expect(imgMultiply).toBeInTheDocument();
   });
   it('shows correct result in possible answers', () => {
-    renderQuestionForm();
+    renderLandingPage();
     const equationResult = getEquationResult();
     const possibleAnswers = getPossibleAnswers();
     expect(possibleAnswers.indexOf(equationResult))
@@ -46,7 +46,7 @@ describe('QuestionForm', () => {
   });
   it('displays success image after selecting correct answer and auto-hides it', () => {
     jest.useFakeTimers();
-    renderQuestionForm();
+    renderLandingPage();
     const equationResult = getEquationResult();
     const correctAnswerButton = screen
       .getByRole('button', { name: String(equationResult) });
@@ -65,7 +65,7 @@ describe('QuestionForm', () => {
     expect(findHappyImg).not.toBeInTheDocument();
   });
   it('should change visibility of irrelevant buttons after answering', () => {
-    renderQuestionForm();
+    renderLandingPage();
     const equationResult = getEquationResult();
     const correctAnswerButton = screen
       .getByRole('button', { name: String(equationResult) });
@@ -87,7 +87,7 @@ describe('QuestionForm', () => {
     }
   });
   it('failure after selecting wrong answer', () => {
-    renderQuestionForm();
+    renderLandingPage();
     const equationResult = getEquationResult();
     const possibleAnswers = getPossibleAnswers();
     const wrongAnswer = possibleAnswers
@@ -103,7 +103,7 @@ describe('QuestionForm', () => {
   });
   it('displays load new question after selecting answer', () => {
     jest.useFakeTimers();
-    renderQuestionForm();
+    renderLandingPage();
     for (let i = 0; i < 10; i++) {
       const equationResult = getEquationResult();
       const possibleAnswers = getPossibleAnswers();

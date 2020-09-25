@@ -30,7 +30,10 @@ const LandingPage = () => {
     dispatch(generateNextQuestion());
   };
 
-  useEffect(() => clearTimeout(timeoutCallback), [timeoutCallback]);
+  useEffect(() => () => {
+    clearTimeout(timeoutCallback);
+  },
+  [timeoutCallback]);
 
   const onAnswerSelected = (answer) => {
     const newCorrectAnswer = xValue * yValue;
