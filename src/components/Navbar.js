@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import gear from '../img/gear.svg';
 import table from '../img/table.svg';
@@ -12,6 +12,7 @@ import {
 
 const Navbar = () => {
   const translations = useSelector(getTranslations);
+  const location = useLocation();
   const dispatch = useDispatch();
   const styleAPadding = { padding: '5px' };
   const [isButtonOpen, setIsButtonOpen] = useState(false);
@@ -25,9 +26,10 @@ const Navbar = () => {
     const language = event.target.textContent === '- PL -' ? 'pl' : 'en';
     dispatch(setCurrentLanguage({ language }));
   };
+  console.log(location);
   return (
     <ul className="nav nav-tabs" style={{ marginBottom: '15px' }}>
-      <li>
+      <li className={(location.pathname === '/') ? 'active' : undefined}>
         <NavLink to="/" style={styleAPadding}>
           <h4>
             <img src={house} alt="start" width="25" />
@@ -36,7 +38,7 @@ const Navbar = () => {
           </h4>
         </NavLink>
       </li>
-      <li>
+      <li className={(location.pathname === '/results') ? 'active' : undefined}>
         <NavLink to="/results" style={styleAPadding}>
           <h4>
             <img src={table} alt="results" width="25" />
@@ -45,7 +47,7 @@ const Navbar = () => {
           </h4>
         </NavLink>
       </li>
-      <li>
+      <li className={(location.pathname === '/settings') ? 'active' : undefined}>
         <NavLink to="/settings" style={styleAPadding}>
           <h4>
             <img src={gear} alt="settings" width="25" />

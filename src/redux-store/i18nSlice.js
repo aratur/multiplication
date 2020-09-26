@@ -6,12 +6,15 @@ import en from './translations/en.json';
 const defaultLanguage = 'pl';
 const supportedLanguages = ['pl', 'en'];
 
+const getInitialLanguage = () => localStorage.currentLanguage
+  || defaultLanguage;
+
 const i18nSlice = createSlice({
   name: 'i18n',
   initialState: {
     pl,
     en,
-    currentLanguage: defaultLanguage,
+    currentLanguage: getInitialLanguage(),
   },
   reducers: {
     setCurrentLanguage: (state, action) => {
@@ -19,6 +22,7 @@ const i18nSlice = createSlice({
       && supportedLanguages.indexOf(action.payload.language) > -1
       && state.currentLanguage !== action.payload.language) {
         state.currentLanguage = action.payload.language;
+        localStorage.currentLanguage = action.payload.language;
       }
     },
   },

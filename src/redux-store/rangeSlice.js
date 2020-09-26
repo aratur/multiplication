@@ -2,7 +2,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const size = 10;
-const initialRange = Array(size).fill(true);
+const getInitialRange = () => {
+  if (localStorage.range) {
+    return JSON.parse(localStorage.range);
+  }
+  return Array(size).fill(true);
+};
+const initialRange = getInitialRange();
 const noOfAnswers = 5;
 
 const getRangeNumbers = (rangeValues = initialRange) => {
@@ -85,6 +91,7 @@ export const rangeSlice = createSlice({
       const { newValue, at } = action.payload;
       state.rangeValues[at] = newValue;
       state.allPossibleAnswers = getAllPossibleAnswers(state.rangeValues);
+      localStorage.range = JSON.stringify(state.rangeValues);
       setNextQuestion(state);
     },
     generateNextQuestion: (state) => {
