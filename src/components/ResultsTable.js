@@ -17,6 +17,7 @@ const ResultsTable = () => {
 
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
+  const tableFontSize = { fontSize: '12px' };
 
   const getClassName = useCallback((row, col) => {
     const answerState = values[row][col];
@@ -76,7 +77,7 @@ const ResultsTable = () => {
       </div>
       <table className="table table-striped table-hover text-center">
         <caption>{i18n(translations, 'results.tableCaption')}</caption>
-        <thead>
+        <thead style={tableFontSize}>
           <tr>
             <th className="active text-center" key="X">X</th>
             {Array(size).fill(0)
@@ -90,7 +91,7 @@ const ResultsTable = () => {
               ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody style={tableFontSize}>
           {memoizedTableBody}
         </tbody>
       </table>

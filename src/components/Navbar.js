@@ -26,7 +26,6 @@ const Navbar = () => {
     const language = event.target.textContent === '- PL -' ? 'pl' : 'en';
     dispatch(setCurrentLanguage({ language }));
   };
-  console.log(location);
   return (
     <ul className="nav nav-tabs" style={{ marginBottom: '15px' }}>
       <li className={(location.pathname === '/') ? 'active' : undefined}>
@@ -66,7 +65,6 @@ const Navbar = () => {
         >
           <h4>
             <img src={flag} alt="language" width="25" />
-            {' '}
             <span className="caret" />
           </h4>
         </a>

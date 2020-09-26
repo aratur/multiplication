@@ -7,7 +7,7 @@ import { i18n, getTranslations } from '../redux-store/i18nSlice';
 
 const Settings = (props) => {
   const styleButtonGroup = { marginTop: '5px', marginBottom: '5px' };
-  const styleWell = { padding: '10px' };
+  const styleWell = { padding: '5px' };
   const { minimumNoOfSelectedValues } = props;
   const [warningVisible, setWarningVisibility] = useState(false);
   const rangeValues = useSelector(getRangeValues);
