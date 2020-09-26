@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import ReactGA from 'react-ga';
 import gear from '../img/gear.svg';
 import table from '../img/table.svg';
 import house from '../img/house.svg';
@@ -16,6 +17,9 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const styleAPadding = { padding: '5px' };
   const [isButtonOpen, setIsButtonOpen] = useState(false);
+  useEffect(() => {
+    ReactGA.pageview(location.pathname);
+  }, [location]);
   const handleButtonOpen = (event) => {
     event.preventDefault();
     setIsButtonOpen(!isButtonOpen);

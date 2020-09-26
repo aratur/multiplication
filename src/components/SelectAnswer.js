@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import ReactGA from 'react-ga';
 import { i18n, getTranslations } from '../redux-store/i18nSlice';
 
 const SelectAnswer = (props) => {
@@ -39,6 +40,10 @@ const SelectAnswer = (props) => {
       setUserAnswer(answer);
       setWasAnswered(true);
       onAnswerSelected(answer);
+      ReactGA.event({
+        category: 'Editing',
+        action: 'Answer the question',
+      });
     } else {
       handleNextQuestion();
     }

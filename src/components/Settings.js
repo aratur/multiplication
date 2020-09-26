@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import ReactGA from 'react-ga';
 import { getRangeValues, setRangeValueAt } from '../redux-store/rangeSlice';
 import WarningAlert from './WarningAlert';
 import { i18n, getTranslations } from '../redux-store/i18nSlice';
@@ -19,9 +20,15 @@ const Settings = (props) => {
     const newRangeValues = rangeValues.slice();
     newRangeValues[at] = !newRangeValues[at];
     const newValue = newRangeValues[at];
-    if (newRangeValues
-      .reduce((reducer, value) => reducer + Number(value)) >= minimumNoOfSelectedValues) {
+    const numberOfSelectedValues = newRangeValues
+      .reduce((reducer, value) => reducer + Number(value));
+    if (numberOfSelectedValues >= minimumNoOfSelectedValues) {
       dispatch(setRangeValueAt({ newValue, at }));
+      ReactGA.event({
+        category: 'Editing',
+        action: 'Range changed',
+        value: numberOfSelectedValues,
+      });
     } else {
       setWarningVisibility(true);
     }
