@@ -18,8 +18,8 @@ const Navbar = () => {
   const styleAPadding = { padding: '5px' };
   const [isButtonOpen, setIsButtonOpen] = useState(false);
   useEffect(() => {
-    ReactGA.pageview(location.pathname);
-  }, [location]);
+    ReactGA.ga('send', 'pageview', location.pathname);
+  }, [location.pathname]);
   const handleButtonOpen = (event) => {
     event.preventDefault();
     setIsButtonOpen(!isButtonOpen);

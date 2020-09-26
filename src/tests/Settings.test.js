@@ -5,14 +5,18 @@ import {
   render, screen,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import ReactGA from 'react-ga';
 import store from '../redux-store/store';
 import Settings from '../components/Settings';
 
-const renderSettings = (minimumNoOfSelectedValues = 3) => render(
-  <Provider store={store}>
-    <Settings minimumNoOfSelectedValues={minimumNoOfSelectedValues} />
-  </Provider>,
-);
+const renderSettings = (minimumNoOfSelectedValues = 3) => {
+  ReactGA.initialize('foo', { testMode: true });
+  return render(
+    <Provider store={store}>
+      <Settings minimumNoOfSelectedValues={minimumNoOfSelectedValues} />
+    </Provider>,
+  );
+};
 
 const buttonNo = (number) => screen.getByRole('checkbox', { name: String(number) });
 

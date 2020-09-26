@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const size = 10;
-const getInitialRange = () => {
+export const getInitialRange = () => {
   if (localStorage.range) {
     return JSON.parse(localStorage.range);
   }

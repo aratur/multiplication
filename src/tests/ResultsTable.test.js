@@ -10,6 +10,10 @@ const renderResultsTable = () => render(
   <Provider store={store}><ResultsTable /></Provider>,
 );
 
+beforeEach(() => {
+  renderResultsTable();
+});
+
 const tableSize = 10;
 const getSuccessButton = () => screen.getByRole('button', { name: /poprawne/i });
 const getIncorrectButton = () => screen.getByRole('button', { name: /błędne/i });
@@ -57,7 +61,6 @@ const incorrectAnswersRowCol = { 1: 1, 2: 3 };
 
 describe('ResultsTable', () => {
   it('should render table with all values', () => {
-    renderResultsTable();
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(screen.getAllByRole('columnheader', { name: /[0-9]/ }))
       .toHaveLength(tableSize);
@@ -66,7 +69,6 @@ describe('ResultsTable', () => {
     cellsHaveProperClassNames(tableSize);
   });
   it('show and hide correct answers', () => {
-    renderResultsTable();
     dispatchStoreChanges();
     cellsHaveProperClassNames();
     userEvent.click(getSuccessButton());
@@ -75,7 +77,6 @@ describe('ResultsTable', () => {
     cellsHaveProperClassNames(tableSize);
   });
   it('show and hide incorrect answers', () => {
-    renderResultsTable();
     dispatchStoreChanges();
     userEvent.click(getIncorrectButton());
     cellsHaveProperClassNames(incorrectAnswersRowCol, 'danger');
@@ -83,7 +84,6 @@ describe('ResultsTable', () => {
     cellsHaveProperClassNames(tableSize);
   });
   it('show only either success or incorrect answers', () => {
-    renderResultsTable();
     dispatchStoreChanges();
     userEvent.click(getSuccessButton());
     cellsHaveProperClassNames(correctAnswersRowCol, 'success');
@@ -93,7 +93,6 @@ describe('ResultsTable', () => {
     cellsHaveProperClassNames(correctAnswersRowCol, 'success');
   });
   it('clear saved results', () => {
-    renderResultsTable();
     dispatchStoreChanges();
     userEvent.click(getRemoveHistoryButton());
     cellsHaveProperClassNames();

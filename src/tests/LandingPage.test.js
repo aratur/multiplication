@@ -5,14 +5,22 @@ import {
 import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';
 import shallowequal from 'shallowequal';
+import ReactGA from 'react-ga';
 import store from '../redux-store/store';
 import LandingPage from '../components/LandingPage';
 
-const renderLandingPage = () => render(
-  <Provider store={store}>
-    <LandingPage />
-  </Provider>,
-);
+const renderLandingPage = () => {
+  ReactGA.initialize('foo', { testMode: true });
+  return render(
+    <Provider store={store}>
+      <LandingPage />
+    </Provider>,
+  );
+};
+
+beforeEach(() => {
+  renderLandingPage();
+});
 
 const getEquationResult = () => screen
   .getAllByRole('option', { name: /[0-9]/i })
@@ -25,11 +33,9 @@ const getPossibleAnswers = () => screen
 describe('QuestionForm', () => {
   it('shows correct number of possible answers', () => {
     const numberOfAnswers = 5;
-    renderLandingPage();
     expect(screen.getAllByRole('button')).toHaveLength(numberOfAnswers);
   });
   it('shows equation with all elements', () => {
-    renderLandingPage();
     const numberButtons = screen.getAllByRole('option');
     expect(numberButtons).toHaveLength(3);
     const questionButton = screen.getByRole('option', { name: '?' });
@@ -38,7 +44,6 @@ describe('QuestionForm', () => {
     expect(imgMultiply).toBeInTheDocument();
   });
   it('shows correct result in possible answers', () => {
-    renderLandingPage();
     const equationResult = getEquationResult();
     const possibleAnswers = getPossibleAnswers();
     expect(possibleAnswers.indexOf(equationResult))
@@ -46,7 +51,6 @@ describe('QuestionForm', () => {
   });
   it('displays success image after selecting correct answer and auto-hides it', () => {
     jest.useFakeTimers();
-    renderLandingPage();
     const equationResult = getEquationResult();
     const correctAnswerButton = screen
       .getByRole('button', { name: String(equationResult) });
@@ -65,7 +69,6 @@ describe('QuestionForm', () => {
     expect(findHappyImg).not.toBeInTheDocument();
   });
   it('should change visibility of irrelevant buttons after answering', () => {
-    renderLandingPage();
     const equationResult = getEquationResult();
     const correctAnswerButton = screen
       .getByRole('button', { name: String(equationResult) });
@@ -87,7 +90,6 @@ describe('QuestionForm', () => {
     }
   });
   it('failure after selecting wrong answer', () => {
-    renderLandingPage();
     const equationResult = getEquationResult();
     const possibleAnswers = getPossibleAnswers();
     const wrongAnswer = possibleAnswers
@@ -103,27 +105,17 @@ describe('QuestionForm', () => {
   });
   it('displays load new question after selecting answer', () => {
     jest.useFakeTimers();
-    renderLandingPage();
-    for (let i = 0; i < 10; i++) {
-      const equationResult = getEquationResult();
-      const possibleAnswers = getPossibleAnswers();
-      const correctAnswerButton = screen
-        .getByRole('button', { name: String(equationResult) });
-      userEvent.click(correctAnswerButton);
-      // click the same button again to get to the next question
-      userEvent.click(correctAnswerButton);
-      const newEquationResult = getEquationResult();
-      const newPossibleAnswers = getPossibleAnswers();
-      if (equationResult === newEquationResult
-        && shallowequal(possibleAnswers, newPossibleAnswers)) {
-        console.log(`i${i}`,
-          equationResult, newEquationResult,
-          possibleAnswers, newPossibleAnswers);
-      } else {
-        expect(equationResult === newEquationResult
+    const equationResult = getEquationResult();
+    const possibleAnswers = getPossibleAnswers();
+    const correctAnswerButton = screen
+      .getByRole('button', { name: String(equationResult) });
+    userEvent.click(correctAnswerButton);
+    // click the same button again to get to the next question
+    userEvent.click(correctAnswerButton);
+    const newEquationResult = getEquationResult();
+    const newPossibleAnswers = getPossibleAnswers();
+    expect(equationResult === newEquationResult
           && shallowequal(possibleAnswers, newPossibleAnswers))
-          .toBe(false);
-      }
-    }
+      .toBe(false);
   });
 });
