@@ -9,6 +9,7 @@ import Settings from './Settings';
 import LandingPage from './LandingPage';
 import ResultsTable from './ResultsTable';
 import Navbar from './Navbar';
+import Gems from './Gems';
 
 const styleRowMargin = { marginLeft: 0, marginRight: 0 };
 const styleColPadding = { paddingLeft: '5px', paddingRight: '5px' };
@@ -21,6 +22,7 @@ const App = () => (
         <div className="col-md-6 col-sm-8" align="center" style={styleColPadding}><Navbar /></div>
         <div className="col-md-3 col-sm-2" />
       </div>
+      <Gems />
       <div className="row" style={styleRowMargin}>
         <div className="col-md-3 col-sm-2" />
         <div className="col-md-6 col-sm-8" align="center" style={styleColPadding}>

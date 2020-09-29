@@ -80,4 +80,17 @@ describe('Store - results', () => {
     const newObject = getNewResultsList(10);
     expect(newObject).toStrictEqual(testObject);
   });
+  it('should increment stars count and clear results after the table is solved', () => {
+    const defaultSize = 10;
+    const iterate = Array(defaultSize).fill(1).map((value, index) => index + 1);
+    iterate.forEach((a) => {
+      iterate.forEach((b) => {
+        expect(store.getState().results.gems).toBe(0);
+        setStatusDurationAtRowCol(
+          resultStatus.success, 100, a, b,
+        );
+      });
+    });
+    expect(store.getState().results.gems).toBe(1);
+  });
 });

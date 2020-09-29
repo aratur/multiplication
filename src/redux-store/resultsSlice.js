@@ -1,6 +1,8 @@
 /* eslint "no-param-reassign": 0 */
 import { createSlice } from '@reduxjs/toolkit';
 
+const defaultSize = 10;
+
 export const resultStatus = {
   success: 1,
   failure: -1,
@@ -44,6 +46,20 @@ const isStatusCorrect = (status) => {
   throw new Error('status can\'t be undefined.');
 };
 
+const isSolved = (values) => {
+  const iterate = Array(defaultSize).fill(1).map((value, index) => index + 1);
+  let isSolvedResult = true;
+  iterate.forEach((a) => {
+    iterate.forEach((b) => {
+      // console.log(values[a][b].status, a, b);
+      if (values[a][b].status !== resultStatus.success) {
+        isSolvedResult = false;
+      }
+    });
+  });
+  return isSolvedResult;
+};
+
 const isInputCorrect = (size, { status, duration }, row, col) => areRowAndColNumbers(row, col)
     && isRowAndColValid(size, row, col)
     && isStatusCorrect(status)
@@ -52,22 +68,29 @@ const isInputCorrect = (size, { status, duration }, row, col) => areRowAndColNum
 export const resultsSlice = createSlice({
   name: 'results',
   initialState: {
-    values: getNewResultsList(10),
+    values: getNewResultsList(defaultSize),
+    gems: 0,
   },
   reducers: {
     setValueAtRowCol: (state, action) => {
       const { answerState, xValue, yValue } = action.payload;
       isInputCorrect(Object.keys(state.values).length, answerState, xValue, yValue);
       state.values[xValue][yValue] = answerState;
+      if (isSolved(state.values)) {
+        state.gems += 1;
+        localStorage.removeItem('multiplicationResults');
+        state.values = getNewResultsList(defaultSize);
+      }
       localStorage.multiplicationResults = JSON.stringify(state.values);
     },
     resetResults: (state) => {
       localStorage.removeItem('multiplicationResults');
-      state.values = getNewResultsList(10);
+      state.values = getNewResultsList(defaultSize);
     },
   },
 });
 
+export const getNoOfGems = (state) => state.results.gems;
 export const getResultValues = (state) => state.results.values;
 export const getResultsSize = (state) => Object.keys(state.results.values).length;
 export const { setValueAtRowCol, resetResults } = resultsSlice.actions;

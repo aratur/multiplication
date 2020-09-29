@@ -22,7 +22,7 @@
     "buttonIncorrect": "Błędne odpowiedzi",
     "buttonRemoveHistory": "Usuń wyniki",
     "removeHistory": {
-      "bodyText": "Czy jesteś pewien, że chcesz usunąć wyniki?",
+      "bodyText": "Czy chcesz usunąć wyniki?",
       "headerText": "Usówanie wyników",
       "yesButtonText": "Tak",
       "noButtonText": "Nie"
