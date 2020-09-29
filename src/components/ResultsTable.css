@@ -1,0 +1,19 @@
+table {
+  font-size: 0.8rem;
+}
+
+@media (min-width: 576px) {
+  table {font-size: 1rem;} /*1rem = 16px*/
+}
+
+@media (min-width: 768px) {
+  table {font-size: 1.1rem;} /*1rem = 16px*/
+}
+
+@media (min-width: 992px) {
+  table {font-size: 1.2rem;} /*1rem = 16px*/
+}
+
+@media (min-width: 1200px) {
+  table {font-size: 1.3rem;} /*1rem = 16px*/
+}

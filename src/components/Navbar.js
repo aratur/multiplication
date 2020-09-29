@@ -10,6 +10,7 @@ import {
   i18n, getTranslations,
   setCurrentLanguage,
 } from '../redux-store/i18nSlice';
+import './NavBar.css';
 
 const Navbar = () => {
   const translations = useSelector(getTranslations);

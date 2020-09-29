@@ -6,6 +6,7 @@ import {
 } from '../redux-store/resultsSlice';
 import { i18n, getTranslations } from '../redux-store/i18nSlice';
 import TableCell from './TableCell';
+import './ResultsTable.css';
 
 const ResultsTable = () => {
   const size = useSelector(getResultsSize);
@@ -17,7 +18,6 @@ const ResultsTable = () => {
 
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
-  const tableFontSize = { fontSize: '12px' };
 
   const getClassName = useCallback((row, col) => {
     const answerState = values[row][col];
@@ -78,7 +78,7 @@ const ResultsTable = () => {
       </div>
       <table className="table table-striped table-hover text-center">
         <caption>{i18n(translations, 'results.tableCaption')}</caption>
-        <thead style={tableFontSize}>
+        <thead>
           <tr>
             <th className="active text-center" key="X">X</th>
             {Array(size).fill(0)
@@ -92,7 +92,7 @@ const ResultsTable = () => {
               ))}
           </tr>
         </thead>
-        <tbody style={tableFontSize}>
+        <tbody>
           {memoizedTableBody}
         </tbody>
       </table>
