@@ -20,6 +20,12 @@
     "tableCaption": "Multiplication table",
     "buttonCorrect": "Correct answers",
     "buttonIncorrect": "Incorrect answers",
-    "buttonRemoveHistory": "Remove results"
+    "buttonRemoveHistory": "Remove results",
+    "removeHistory": {
+      "bodyText": "Do you want to remove all results?",
+      "headerText": "Removing results",
+      "yesButtonText": "Yes",
+      "noButtonText": "No"
+    }
   }
 }

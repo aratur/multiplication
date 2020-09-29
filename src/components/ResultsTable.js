@@ -7,6 +7,7 @@ import {
 import { i18n, getTranslations } from '../redux-store/i18nSlice';
 import TableCell from './TableCell';
 import './ResultsTable.css';
+import ModalYesOrNo from './ModalYesOrNo';
 
 const ResultsTable = () => {
   const size = useSelector(getResultsSize);
@@ -15,6 +16,7 @@ const ResultsTable = () => {
   const dispatch = useDispatch();
   const [showCorrect, setShowCorrect] = useState(true);
   const [showIncorrect, setShowIncorrect] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
@@ -52,6 +54,17 @@ const ResultsTable = () => {
           ))}
       </tr>
     )), [getClassName, size]);
+
+  const handleModalClicked = (event) => {
+    if (event.target.value === 'yes') {
+      dispatch(resetResults());
+    }
+    setIsModalVisible(false);
+  };
+
+  const handleRemoveResults = () => {
+    setIsModalVisible(true);
+  };
 
   return (
     <>
@@ -99,12 +112,18 @@ const ResultsTable = () => {
       <button
         type="button"
         className="btn btn-primary btn-xs"
-        onClick={() => {
-          dispatch(resetResults());
-        }}
+        onClick={handleRemoveResults}
       >
         {i18n(translations, 'results.buttonRemoveHistory')}
       </button>
+      <ModalYesOrNo
+        handleModalClicked={handleModalClicked}
+        bodyText={i18n(translations, 'results.removeHistory.bodyText')}
+        headerText={i18n(translations, 'results.removeHistory.headerText')}
+        yesButtonText={i18n(translations, 'results.removeHistory.yesButtonText')}
+        noButtonText={i18n(translations, 'results.removeHistory.noButtonText')}
+        isModalVisible={isModalVisible}
+      />
     </>
   );
 };

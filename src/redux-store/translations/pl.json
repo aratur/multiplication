@@ -20,6 +20,12 @@
     "tableCaption": "Tabliczka mnożenia",
     "buttonCorrect": "Poprawne odpowiedzi",
     "buttonIncorrect": "Błędne odpowiedzi",
-    "buttonRemoveHistory": "Usuń wyniki"
+    "buttonRemoveHistory": "Usuń wyniki",
+    "removeHistory": {
+      "bodyText": "Czy jesteś pewien, że chcesz usunąć wyniki?",
+      "headerText": "Usówanie wyników",
+      "yesButtonText": "Tak",
+      "noButtonText": "Nie"
+    }
   }
 }

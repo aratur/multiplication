@@ -92,13 +92,22 @@ describe('ResultsTable', () => {
     userEvent.click(getSuccessButton());
     cellsHaveProperClassNames(correctAnswersRowCol, 'success');
   });
-  it('clear saved results', () => {
+  it('is possible to clear saved results', () => {
     dispatchStoreChanges();
     userEvent.click(getRemoveHistoryButton());
+    userEvent.click(screen.getByRole('button', { name: 'Tak' }));
     cellsHaveProperClassNames();
     userEvent.click(getIncorrectButton());
     cellsHaveProperClassNames();
     userEvent.click(getSuccessButton());
     cellsHaveProperClassNames();
+  });
+  it('it is possible to cancel removing history', () => {
+    dispatchStoreChanges();
+    userEvent.click(getRemoveHistoryButton());
+    userEvent.click(screen.getByRole('button', { name: 'Nie' }));
+    cellsHaveProperClassNames(correctAnswersRowCol, 'success');
+    userEvent.click(getIncorrectButton());
+    cellsHaveProperClassNames(incorrectAnswersRowCol, 'danger');
   });
 });
