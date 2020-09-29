@@ -3,10 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import Equation from './Equation';
 import happyFaceImg from '../img/smile.svg';
 import sadFaceImg from '../img/frown.svg';
-import { resultStatus, setValueAtRowCol } from '../redux-store/resultsSlice';
+import {
+  resultStatus,
+  setValueAtRowCol, getResultValues,
+} from '../redux-store/resultsSlice';
 import {
   getPossibleAnswers, getXValue, getYValue,
-  generateNextQuestion,
+  generateNextQuestion, addPossibleAnswer, setInitialState,
 } from '../redux-store/rangeSlice';
 import SelectAnswer from './SelectAnswer';
 
@@ -14,20 +17,25 @@ const LandingPage = () => {
   const yValue = useSelector(getXValue);
   const xValue = useSelector(getYValue);
   const possibleAnswers = useSelector(getPossibleAnswers);
+  const dispatch = useDispatch();
+  const resultValues = useSelector(getResultValues);
+
+  if (typeof yValue === 'undefined'
+    && typeof xValue === 'undefined') {
+    dispatch(setInitialState(resultValues));
+  }
   const [correctAnswer, setCorrectAnswer] = useState('?');
   const [isHappy, setIsHappy] = useState(false);
   const [isSad, setIsSad] = useState(false);
   const [timeoutCallback, setTimeoutCallback] = useState(undefined);
   const [startTime, setStartTime] = useState(Date.now());
 
-  const dispatch = useDispatch();
-
   const initializeValues = () => {
     setStartTime(Date.now());
     setCorrectAnswer('?');
     setIsHappy(false);
     setIsSad(false);
-    dispatch(generateNextQuestion());
+    dispatch(generateNextQuestion(resultValues));
   };
 
   useEffect(() => () => {
@@ -51,7 +59,9 @@ const LandingPage = () => {
         status: resultStatus.failure,
         duration: Date.now() - startTime,
       };
+      // set answer and add it to the results matrix
       dispatch(setValueAtRowCol({ answerState, xValue, yValue }));
+      dispatch(addPossibleAnswer({ xValue, yValue }));
       setCorrectAnswer(newCorrectAnswer);
       setStartTime(Date.now());
       setIsSad(true);
@@ -69,8 +79,8 @@ const LandingPage = () => {
   return (
     <>
       <Equation
-        xValue={xValue}
-        yValue={yValue}
+        xValue={xValue || 0}
+        yValue={yValue || 0}
         correctAnswer={correctAnswer}
       />
       <SelectAnswer

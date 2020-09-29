@@ -1,5 +1,6 @@
 /* eslint "no-param-reassign": 0 */
 import { createSlice } from '@reduxjs/toolkit';
+import { resultStatus } from './resultsSlice';
 
 const size = 10;
 export const getInitialRange = () => {
@@ -11,7 +12,7 @@ export const getInitialRange = () => {
 const initialRange = getInitialRange();
 const noOfAnswers = 5;
 
-const getRangeNumbers = (rangeValues = initialRange) => {
+export const getRangeNumbers = (rangeValues = initialRange) => {
   const numRange = [];
   rangeValues.forEach((value, index) => {
     if (value) { numRange.push(index + 1); }
@@ -19,21 +20,40 @@ const getRangeNumbers = (rangeValues = initialRange) => {
   return numRange;
 };
 
-const getAllPossibleAnswers = (rangeValues) => {
+const areThereSomeNotAnsweredQuestions = (resultValues) => {
+  let result = false;
+  Object.keys(resultValues).forEach((a) => {
+    Object.keys(resultValues[a]).forEach((b) => {
+      if (resultValues[a][b].status !== resultStatus.success) result = true;
+    });
+  });
+  return result;
+};
+
+const getAllPossibleAnswers = (rangeValues, resultValues) => {
   const rangeNumbers = getRangeNumbers(rangeValues);
   const allPossibleAnswers = [];
+  const areThereNotAnswered = areThereSomeNotAnsweredQuestions(resultValues);
   rangeNumbers.forEach((first) => rangeNumbers.forEach((second) => {
-    allPossibleAnswers.push({
-      xValue: first,
-      yValue: second,
-      orderBy: Math.random(),
-    });
+    // skip answers which were already answered correctly
+    if (!areThereNotAnswered
+      || (
+        typeof resultValues[second] !== 'undefined'
+        && typeof resultValues[second][first] !== 'undefined'
+        && resultValues[second][first].status !== resultStatus.success
+      )
+    ) {
+      allPossibleAnswers.push({
+        xValue: first,
+        yValue: second,
+        orderBy: Math.random(),
+      });
+      //      console.log(areThereNotAnswered, resultValues[second][first], second, first);
+    }
   }));
   allPossibleAnswers.sort((a, b) => a.orderBy - b.orderBy);
   return allPossibleAnswers;
 };
-
-const initialAllPossibleValues = getAllPossibleAnswers(initialRange);
 
 const getNumberOfPossibleUniqueValues = (rangeValues) => {
   const rangeNumbers = getRangeNumbers(rangeValues);
@@ -43,8 +63,6 @@ const getNumberOfPossibleUniqueValues = (rangeValues) => {
   }));
   return unique.length;
 };
-
-const { xValue: initialXValue, yValue: initialYValue } = initialAllPossibleValues.pop();
 
 export const getNewRandomValue = (rangeValues) => {
   const rangeNumbers = getRangeNumbers(rangeValues);
@@ -67,11 +85,15 @@ export const getNewPossibleAnswers = (rangeValues, xValue, yValue) => {
   return results.sort((a, b) => a - b);
 };
 
-const setNextQuestion = (state) => {
-  const { xValue, yValue } = state.allPossibleAnswers.pop();
-  if (state.allPossibleAnswers.length === 0) {
-    state.allPossibleAnswers = getAllPossibleAnswers(state.rangeValues);
+const setNextQuestion = (state, resultValues) => {
+  if ((typeof state.xValue === 'undefined'
+    && typeof state.yValue === 'undefined')
+    || state.allPossibleAnswers.length === 0
+  ) {
+    state.allPossibleAnswers = getAllPossibleAnswers(state.rangeValues, resultValues);
   }
+  // if (state.allPossibleAnswers.length < 10) console.log(state.allPossibleAnswers);
+  const { xValue, yValue } = state.allPossibleAnswers.pop();
   state.xValue = xValue;
   state.yValue = yValue;
   state.possibleAnswers = getNewPossibleAnswers(state.rangeValues, xValue, yValue);
@@ -81,21 +103,41 @@ export const rangeSlice = createSlice({
   name: 'range',
   initialState: {
     rangeValues: initialRange,
-    allPossibleAnswers: initialAllPossibleValues,
-    xValue: initialXValue,
-    yValue: initialYValue,
-    possibleAnswers: getNewPossibleAnswers(initialRange, initialXValue, initialYValue),
+    allPossibleAnswers: [],
+    xValue: undefined,
+    yValue: undefined,
+    possibleAnswers: [],
   },
   reducers: {
     setRangeValueAt: (state, action) => {
       const { newValue, at } = action.payload;
       state.rangeValues[at] = newValue;
-      state.allPossibleAnswers = getAllPossibleAnswers(state.rangeValues);
+      state.allPossibleAnswers = [];
       localStorage.range = JSON.stringify(state.rangeValues);
-      setNextQuestion(state);
     },
-    generateNextQuestion: (state) => {
-      setNextQuestion(state);
+    generateNextQuestion: (state, action) => {
+      setNextQuestion(state, action.payload);
+    },
+    setInitialState: (state, action) => {
+      state.xValue = undefined;
+      state.yValue = undefined;
+      setNextQuestion(state, action.payload);
+    },
+    addPossibleAnswer: (state, action) => {
+      // add answer to all possible answers at 3 position from the end
+      // this can be invoked by question component to allow repeating
+      // incorrect answers in the near future
+      if (action.payload) {
+        const { xValue, yValue } = action.payload;
+        if (typeof xValue === 'number'
+          && typeof yValue === 'number') {
+          if (state.allPossibleAnswers.length > 3) {
+            state.allPossibleAnswers.splice(
+              state.allPossibleAnswers.length - 2, 0, { xValue, yValue, orderBy: 0 },
+            );
+          } else state.allPossibleAnswers.push({ xValue, yValue, orderBy: 0 });
+        }
+      }
     },
   },
 });
@@ -104,5 +146,10 @@ export const getRangeValues = (state) => state.range.rangeValues;
 export const getPossibleAnswers = (state) => state.range.possibleAnswers;
 export const getXValue = (state) => state.range.xValue;
 export const getYValue = (state) => state.range.yValue;
-export const { setRangeValueAt, generateNextQuestion } = rangeSlice.actions;
+export const {
+  setRangeValueAt,
+  generateNextQuestion,
+  addPossibleAnswer,
+  setInitialState,
+} = rangeSlice.actions;
 export default rangeSlice.reducer;

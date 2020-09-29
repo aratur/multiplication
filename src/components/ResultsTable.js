@@ -12,7 +12,7 @@ const ResultsTable = () => {
   const values = useSelector(getResultValues);
   const translations = useSelector(getTranslations);
   const dispatch = useDispatch();
-  const [showCorrect, setShowCorrect] = useState(false);
+  const [showCorrect, setShowCorrect] = useState(true);
   const [showIncorrect, setShowIncorrect] = useState(false);
 
   const styleButtons = { margin: '5px' };
@@ -37,7 +37,8 @@ const ResultsTable = () => {
       ? !showIncorrect : false);
   };
 
-  const memoizedTableBody = useMemo(() => Array(size).fill(0).map((_, rowIndex) => rowIndex + 1)
+  const memoizedTableBody = useMemo(() => Array(size).fill(0)
+    .map((_, rowIndex) => rowIndex + 1)
     .map((row) => (
       <tr key={`row${String(row)}`}>
         {Array(size).fill(0).map((__, colIndex) => colIndex + 1)

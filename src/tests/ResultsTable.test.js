@@ -70,11 +70,11 @@ describe('ResultsTable', () => {
   });
   it('show and hide correct answers', () => {
     dispatchStoreChanges();
+    cellsHaveProperClassNames(correctAnswersRowCol, 'success');
+    userEvent.click(getSuccessButton());
     cellsHaveProperClassNames();
     userEvent.click(getSuccessButton());
     cellsHaveProperClassNames(correctAnswersRowCol, 'success');
-    userEvent.click(getSuccessButton());
-    cellsHaveProperClassNames(tableSize);
   });
   it('show and hide incorrect answers', () => {
     dispatchStoreChanges();
@@ -85,8 +85,8 @@ describe('ResultsTable', () => {
   });
   it('show only either success or incorrect answers', () => {
     dispatchStoreChanges();
-    userEvent.click(getSuccessButton());
     cellsHaveProperClassNames(correctAnswersRowCol, 'success');
+    userEvent.click(getSuccessButton());
     userEvent.click(getIncorrectButton());
     cellsHaveProperClassNames(incorrectAnswersRowCol, 'danger');
     userEvent.click(getSuccessButton());
