@@ -20,8 +20,8 @@ export const getRangeNumbers = (rangeValues = initialRange) => {
   return numRange;
 };
 
-const areThereSomeNotAnsweredQuestions = (resultValues) => {
-  const iterate = Array(size).fill(1).map((value, index) => index + 1);
+const areThereSomeNotAnsweredQuestions = (rangeNumbers, resultValues) => {
+  const iterate = rangeNumbers;
   return (iterate
     .findIndex((a) => iterate
       .findIndex((b) => resultValues[a][b].status !== resultStatus.success) > -1) > -1);
@@ -30,7 +30,7 @@ const areThereSomeNotAnsweredQuestions = (resultValues) => {
 const getAllPossibleAnswers = (rangeValues, resultValues) => {
   const rangeNumbers = getRangeNumbers(rangeValues);
   const allPossibleAnswers = [];
-  const areThereNotAnswered = areThereSomeNotAnsweredQuestions(resultValues);
+  const areThereNotAnswered = areThereSomeNotAnsweredQuestions(rangeNumbers, resultValues);
   rangeNumbers.forEach((first) => rangeNumbers.forEach((second) => {
     // skip answers which were already answered correctly
     if (!areThereNotAnswered
@@ -108,6 +108,8 @@ export const rangeSlice = createSlice({
       const { newValue, at } = action.payload;
       state.rangeValues[at] = newValue;
       state.allPossibleAnswers = [];
+      state.xValue = undefined;
+      state.yValue = undefined;
       localStorage.range = JSON.stringify(state.rangeValues);
     },
     generateNextQuestion: (state, action) => {
