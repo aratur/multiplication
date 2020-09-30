@@ -75,7 +75,7 @@ export const resultsSlice = createSlice({
     setValueAtRowCol: (state, action) => {
       const { answerState, xValue, yValue } = action.payload;
       isInputCorrect(Object.keys(state.values).length, answerState, xValue, yValue);
-      state.values[xValue][yValue] = answerState;
+      state.values[yValue][xValue] = answerState;
       if (isSolved(state.values)) {
         state.gems += 1;
         localStorage.removeItem('multiplicationResults');

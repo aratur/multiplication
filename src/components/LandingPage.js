@@ -14,8 +14,8 @@ import {
 import SelectAnswer from './SelectAnswer';
 
 const LandingPage = () => {
-  const yValue = useSelector(getXValue);
-  const xValue = useSelector(getYValue);
+  const xValue = useSelector(getXValue);
+  const yValue = useSelector(getYValue);
   const possibleAnswers = useSelector(getPossibleAnswers);
   const dispatch = useDispatch();
   const resultValues = useSelector(getResultValues);
