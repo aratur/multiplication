@@ -21,13 +21,10 @@ export const getRangeNumbers = (rangeValues = initialRange) => {
 };
 
 const areThereSomeNotAnsweredQuestions = (resultValues) => {
-  let result = false;
-  Object.keys(resultValues).forEach((a) => {
-    Object.keys(resultValues[a]).forEach((b) => {
-      if (resultValues[a][b].status !== resultStatus.success) result = true;
-    });
-  });
-  return result;
+  const iterate = Array(size).fill(1).map((value, index) => index + 1);
+  return (iterate
+    .findIndex((a) => iterate
+      .findIndex((b) => resultValues[a][b].status !== resultStatus.success) > -1) > -1);
 };
 
 const getAllPossibleAnswers = (rangeValues, resultValues) => {
@@ -48,7 +45,6 @@ const getAllPossibleAnswers = (rangeValues, resultValues) => {
         yValue: second,
         orderBy: Math.random(),
       });
-      //      console.log(areThereNotAnswered, resultValues[second][first], second, first);
     }
   }));
   allPossibleAnswers.sort((a, b) => a.orderBy - b.orderBy);
@@ -92,7 +88,6 @@ const setNextQuestion = (state, resultValues) => {
   ) {
     state.allPossibleAnswers = getAllPossibleAnswers(state.rangeValues, resultValues);
   }
-  // if (state.allPossibleAnswers.length < 10) console.log(state.allPossibleAnswers);
   const { xValue, yValue } = state.allPossibleAnswers.pop();
   state.xValue = xValue;
   state.yValue = yValue;

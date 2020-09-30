@@ -57,7 +57,7 @@ const dispatchStoreChanges = () => {
   setStatusDurationAtRowCol(resultStatus.success, 10, 3, 3);
 };
 const correctAnswersRowCol = { 2: 2, 3: 3 };
-const incorrectAnswersRowCol = { 1: 1, 2: 3 };
+const incorrectAnswersRowCol = { 1: 1, 3: 2 };
 
 describe('ResultsTable', () => {
   it('should render table with all values', () => {

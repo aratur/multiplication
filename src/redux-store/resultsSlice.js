@@ -48,16 +48,9 @@ const isStatusCorrect = (status) => {
 
 const isSolved = (values) => {
   const iterate = Array(defaultSize).fill(1).map((value, index) => index + 1);
-  let isSolvedResult = true;
-  iterate.forEach((a) => {
-    iterate.forEach((b) => {
-      // console.log(values[a][b].status, a, b);
-      if (values[a][b].status !== resultStatus.success) {
-        isSolvedResult = false;
-      }
-    });
-  });
-  return isSolvedResult;
+  return (iterate
+    .findIndex((a) => iterate
+      .findIndex((b) => values[a][b].status !== resultStatus.success) > -1) === -1);
 };
 
 const isInputCorrect = (size, { status, duration }, row, col) => areRowAndColNumbers(row, col)
