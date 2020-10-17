@@ -11,6 +11,13 @@ export const resultStatus = {
 
 const defaultValue = { status: resultStatus.pending, duration: 0 };
 
+const getInitialGems = () => {
+  if (localStorage.gems) {
+    return JSON.parse(localStorage.gems);
+  }
+  return 0;
+};
+
 export const getNewResultsList = (size) => {
   if (localStorage.multiplicationResults) {
     return JSON.parse(localStorage.multiplicationResults);
@@ -62,7 +69,7 @@ export const resultsSlice = createSlice({
   name: 'results',
   initialState: {
     values: getNewResultsList(defaultSize),
-    gems: 0,
+    gems: getInitialGems(),
   },
   reducers: {
     setValueAtRowCol: (state, action) => {
@@ -71,6 +78,7 @@ export const resultsSlice = createSlice({
       state.values[yValue][xValue] = answerState;
       if (isSolved(state.values)) {
         state.gems += 1;
+        localStorage.gems = JSON.stringify(state.gems);
         localStorage.removeItem('multiplicationResults');
         state.values = getNewResultsList(defaultSize);
       }
