@@ -45,25 +45,25 @@ describe('Navbar', () => {
   });
 
   it('should change current language', () => {
-    expect(screen.getByText('Ustawienia')).toBeInTheDocument();
+    expect(screen.getByText('Settings')).toBeInTheDocument();
     userEvent.click(getLanguageButton());
     const enLink = screen.getByRole('link', { name: '- EN -' });
-    userEvent.click(enLink);
-    expect(screen.getByText('Settings')).toBeInTheDocument();
     const plLink = screen.getByRole('link', { name: '- PL -' });
     userEvent.click(plLink);
     expect(screen.getByText('Ustawienia')).toBeInTheDocument();
+    userEvent.click(enLink);
+    expect(screen.getByText('Settings')).toBeInTheDocument();
   });
   it('should have active class on start tab', () => {
     userEvent.click(screen.getByRole('link', { name: 'start Start' }));
     expect(getActiveElement()).toHaveTextContent('Start');
   });
   it('should have active class on results tab', async () => {
-    userEvent.click(screen.getByRole('link', { name: 'results Wyniki' }));
-    expect(getActiveElement()).toHaveTextContent('Wyniki');
+    userEvent.click(screen.getByRole('link', { name: 'results Results' }));
+    expect(getActiveElement()).toHaveTextContent('Results');
   });
   it('should have active class on settings tab', () => {
-    userEvent.click(screen.getByRole('link', { name: 'settings Ustawienia' }));
-    expect(getActiveElement()).toHaveTextContent('Ustawienia');
+    userEvent.click(screen.getByRole('link', { name: 'settings Settings' }));
+    expect(getActiveElement()).toHaveTextContent('Settings');
   });
 });

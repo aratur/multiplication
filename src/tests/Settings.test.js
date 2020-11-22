@@ -39,7 +39,7 @@ describe('Settings', () => {
     renderSettings(minimumNoOfSelectedValues);
     userEvent.click(buttonNo(7));
     userEvent.click(buttonNo(3));
-    expect(await screen.findByText('Nie tak szybko')).toBeInTheDocument();
+    expect(await screen.findByText('Not so fast')).toBeInTheDocument();
   });
 
   it('should hide warning after clicking X', async () => {
@@ -47,9 +47,9 @@ describe('Settings', () => {
     renderSettings(minimumNoOfSelectedValues);
     userEvent.click(buttonNo(7));
     userEvent.click(buttonNo(3));
-    expect(await screen.findByText('Nie tak szybko')).toBeInTheDocument();
+    expect(await screen.findByText('Not so fast')).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: 'close alert' }));
-    expect(screen.queryByText('Nie tak szybko')).not.toBeInTheDocument();
+    expect(screen.queryByText('Not so fast')).not.toBeInTheDocument();
   });
 
   it('should have proper class if checked or not checked', () => {

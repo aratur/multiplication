@@ -15,9 +15,9 @@ beforeEach(() => {
 });
 
 const tableSize = 10;
-const getSuccessButton = () => screen.getByRole('button', { name: /poprawne/i });
-const getIncorrectButton = () => screen.getByRole('button', { name: /błędne/i });
-const getRemoveHistoryButton = () => screen.getByRole('button', { name: /usuń wyniki/i });
+const getSuccessButton = () => screen.getByRole('button', { name: 'Correct answers' });
+const getIncorrectButton = () => screen.getByRole('button', { name: 'Incorrect answers' });
+const getRemoveHistoryButton = () => screen.getByRole('button', { name: 'Remove results' });
 
 const cellsHaveProperClassNames = (answersRowCol, className) => {
   let row = 1;
@@ -95,7 +95,7 @@ describe('ResultsTable', () => {
   it('is possible to clear saved results', () => {
     dispatchStoreChanges();
     userEvent.click(getRemoveHistoryButton());
-    userEvent.click(screen.getByRole('button', { name: 'Tak' }));
+    userEvent.click(screen.getByRole('button', { name: 'Yes' }));
     cellsHaveProperClassNames();
     userEvent.click(getIncorrectButton());
     cellsHaveProperClassNames();
@@ -105,7 +105,7 @@ describe('ResultsTable', () => {
   it('it is possible to cancel removing history', () => {
     dispatchStoreChanges();
     userEvent.click(getRemoveHistoryButton());
-    userEvent.click(screen.getByRole('button', { name: 'Nie' }));
+    userEvent.click(screen.getByRole('button', { name: 'No' }));
     cellsHaveProperClassNames(correctAnswersRowCol, 'success');
     userEvent.click(getIncorrectButton());
     cellsHaveProperClassNames(incorrectAnswersRowCol, 'danger');

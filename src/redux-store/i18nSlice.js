@@ -3,7 +3,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import pl from './translations/pl.json';
 import en from './translations/en.json';
 
-const defaultLanguage = 'pl';
+// const defaultLanguage = 'pl';
+const defaultLanguage = (() => {
+  const browserLanguage = window.navigator.language;
+  if (browserLanguage === 'pl' || browserLanguage.substr(0, 2) === 'en') {
+    return browserLanguage;
+  }
+  return 'pl';
+})();
 const supportedLanguages = ['pl', 'en'];
 
 const getInitialLanguage = () => localStorage.currentLanguage
