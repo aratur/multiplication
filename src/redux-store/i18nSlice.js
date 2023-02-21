@@ -13,8 +13,8 @@ const defaultLanguage = (() => {
 })();
 const supportedLanguages = ['pl', 'en'];
 
-const getInitialLanguage = () => localStorage.currentLanguage
-  || defaultLanguage;
+const getInitialLanguage = () =>
+  localStorage.currentLanguage || defaultLanguage;
 
 const i18nSlice = createSlice({
   name: 'i18n',
@@ -25,9 +25,11 @@ const i18nSlice = createSlice({
   },
   reducers: {
     setCurrentLanguage: (state, action) => {
-      if (action.payload.language
-      && supportedLanguages.indexOf(action.payload.language) > -1
-      && state.currentLanguage !== action.payload.language) {
+      if (
+        action.payload.language &&
+        supportedLanguages.indexOf(action.payload.language) > -1 &&
+        state.currentLanguage !== action.payload.language
+      ) {
         state.currentLanguage = action.payload.language;
         localStorage.currentLanguage = action.payload.language;
       }
@@ -43,7 +45,8 @@ function getKeysFromStatement(dictionaryEntry) {
   while (dictionaryEntry.indexOf('{', start) > -1) {
     start = dictionaryEntry.indexOf('{', start) + 1;
     end = dictionaryEntry.indexOf('}', start);
-    const key = end > start ? dictionaryEntry.substring(start, end) : 'undefined';
+    const key =
+      end > start ? dictionaryEntry.substring(start, end) : 'undefined';
     if (Number(key) || key === '0') keys.push(Number(key));
   }
   return keys;
@@ -53,16 +56,19 @@ export function i18n(translations, statement, ...parameters) {
   const values = [...parameters];
 
   if (typeof translations === 'undefined') {
-    console.warn('Could not translate the entry because of empty translations\' dictionary ');
+    // console.warn('Could not translate the entry because of empty translations\' dictionary ');
     return null;
   }
 
-  let dictionaryEntry = statement.indexOf('.') === -1 ? translations[statement]
-    : statement.split('.')
-      .reduce((result, step) => result[step], translations);
+  let dictionaryEntry =
+    statement.indexOf('.') === -1
+      ? translations[statement]
+      : statement
+          .split('.')
+          .reduce((result, step) => result[step], translations);
   if (typeof dictionaryEntry === 'undefined') {
-    console
-      .warn(`Could not retrieve an entry on path "${statement}" in dictionary`);
+    // console
+    //   .warn(`Could not retrieve an entry on path "${statement}" in dictionary`);
     return null;
   }
 
@@ -78,10 +84,8 @@ export function i18n(translations, statement, ...parameters) {
 }
 
 // selectors
-export const getTranslations = (state) => (
-  state.i18n.currentLanguage === 'pl'
-    ? state.i18n.pl : state.i18n.en
-);
+export const getTranslations = (state) =>
+  state.i18n.currentLanguage === 'pl' ? state.i18n.pl : state.i18n.en;
 // actions
 export const { setCurrentLanguage } = i18nSlice.actions;
 // reducer

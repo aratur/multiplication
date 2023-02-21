@@ -5,11 +5,16 @@ import happyFaceImg from '../img/smile.svg';
 import sadFaceImg from '../img/frown.svg';
 import {
   resultStatus,
-  setValueAtRowCol, getResultValues,
+  setValueAtRowCol,
+  getResultValues,
 } from '../redux-store/resultsSlice';
 import {
-  getPossibleAnswers, getXValue, getYValue,
-  generateNextQuestion, addPossibleAnswer, setInitialState,
+  getPossibleAnswers,
+  getXValue,
+  getYValue,
+  generateNextQuestion,
+  addPossibleAnswer,
+  setInitialState,
 } from '../redux-store/rangeSlice';
 import SelectAnswer from './SelectAnswer';
 
@@ -20,8 +25,7 @@ const LandingPage = () => {
   const dispatch = useDispatch();
   const resultValues = useSelector(getResultValues);
 
-  if (typeof yValue === 'undefined'
-    && typeof xValue === 'undefined') {
+  if (typeof yValue === 'undefined' && typeof xValue === 'undefined') {
     dispatch(setInitialState(resultValues));
   }
   const [correctAnswer, setCorrectAnswer] = useState('?');
@@ -38,10 +42,12 @@ const LandingPage = () => {
     dispatch(generateNextQuestion(resultValues));
   };
 
-  useEffect(() => () => {
-    clearTimeout(timeoutCallback);
-  },
-  [timeoutCallback]);
+  useEffect(
+    () => () => {
+      clearTimeout(timeoutCallback);
+    },
+    [timeoutCallback]
+  );
 
   const onAnswerSelected = (answer) => {
     const newCorrectAnswer = xValue * yValue;
@@ -66,9 +72,11 @@ const LandingPage = () => {
       setStartTime(Date.now());
       setIsSad(true);
     }
-    setTimeoutCallback(setTimeout(() => {
-      initializeValues();
-    }, 2500));
+    setTimeoutCallback(
+      setTimeout(() => {
+        initializeValues();
+      }, 2500)
+    );
   };
 
   const handleNextQuestion = () => {
@@ -90,32 +98,24 @@ const LandingPage = () => {
         handleNextQuestion={handleNextQuestion}
       />
       {isHappy && (
-      <div
-        onClick={handleNextQuestion}
-        onKeyPress={handleNextQuestion}
-        tabIndex="0"
-        role="button"
-      >
-        <img
-          src={happyFaceImg}
-          alt="Good job!"
-          height="150"
-        />
-      </div>
+        <div
+          onClick={handleNextQuestion}
+          onKeyPress={handleNextQuestion}
+          tabIndex="0"
+          role="button"
+        >
+          <img src={happyFaceImg} alt="Good job!" height="150" />
+        </div>
       )}
       {isSad && (
-      <div
-        onClick={handleNextQuestion}
-        onKeyPress={handleNextQuestion}
-        tabIndex="0"
-        role="button"
-      >
-        <img
-          src={sadFaceImg}
-          alt="Oh no!"
-          height="150"
-        />
-      </div>
+        <div
+          onClick={handleNextQuestion}
+          onKeyPress={handleNextQuestion}
+          tabIndex="0"
+          role="button"
+        >
+          <img src={sadFaceImg} alt="Oh no!" height="150" />
+        </div>
       )}
     </>
   );

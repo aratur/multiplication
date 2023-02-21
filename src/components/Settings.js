@@ -25,8 +25,9 @@ const Settings = (props) => {
     const newRangeValues = rangeValues.slice();
     newRangeValues[at] = !newRangeValues[at];
     const newValue = newRangeValues[at];
-    const numberOfSelectedValues = newRangeValues
-      .reduce((reducer, value) => reducer + Number(value));
+    const numberOfSelectedValues = newRangeValues.reduce(
+      (reducer, value) => reducer + Number(value)
+    );
     if (numberOfSelectedValues >= minimumNoOfSelectedValues) {
       dispatch(setRangeValueAt({ newValue, at }));
       ReactGA.event({
@@ -63,7 +64,7 @@ const Settings = (props) => {
                 name={`range option ${index + 1}`}
                 className={value ? 'btn btn-success' : 'btn btn-info'}
                 onClick={onRangeButtonClicked}
-                key={String(index)}
+                key={String(`${index}-${value}`)}
               >
                 {index + 1}
               </button>
@@ -75,7 +76,11 @@ const Settings = (props) => {
         warningVisible={warningVisible}
         warningCloseEventHandler={onHideWarningMessage}
         warningHeader={i18n(translations, 'settings.warningHeader')}
-        warningMessage={i18n(translations, 'settings.warningMessage', minimumNoOfSelectedValues)}
+        warningMessage={i18n(
+          translations,
+          'settings.warningMessage',
+          minimumNoOfSelectedValues
+        )}
       />
     </>
   );

@@ -1,8 +1,10 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  resultStatus, getResultValues,
-  getResultsSize, resetResults,
+  resultStatus,
+  getResultValues,
+  getResultsSize,
+  resetResults,
 } from '../redux-store/resultsSlice';
 import { i18n, getTranslations } from '../redux-store/i18nSlice';
 import TableCell from './TableCell';
@@ -21,39 +23,53 @@ const ResultsTable = () => {
   const styleButtons = { margin: '5px' };
   const styleWell = { padding: '10px' };
 
-  const getClassName = useCallback((row, col) => {
-    const answerState = values[row][col];
-    let result = null;
-    if (showCorrect
-      && answerState.status === resultStatus.success) result = 'success';
-    if (showIncorrect
-      && answerState.status === resultStatus.failure) result = 'danger';
-    if (row === col) return result || 'active';
-    return result;
-  }, [showCorrect, showIncorrect, values]);
+  const getClassName = useCallback(
+    (row, col) => {
+      const answerState = values[row][col];
+      let result = null;
+      if (showCorrect && answerState.status === resultStatus.success) {
+        result = 'success';
+      }
+      if (showIncorrect && answerState.status === resultStatus.failure) {
+        result = 'danger';
+      }
+      if (row === col) return result || 'active';
+      return result;
+    },
+    [showCorrect, showIncorrect, values]
+  );
 
   const handleShowClick = (event) => {
-    setShowCorrect(event.target.className === 'btn btn-success'
-      ? !showCorrect : false);
-    setShowIncorrect(event.target.className === 'btn btn-danger'
-      ? !showIncorrect : false);
+    setShowCorrect(
+      event.target.className === 'btn btn-success' ? !showCorrect : false
+    );
+    setShowIncorrect(
+      event.target.className === 'btn btn-danger' ? !showIncorrect : false
+    );
   };
 
-  const memoizedTableBody = useMemo(() => Array(size).fill(0)
-    .map((_, rowIndex) => rowIndex + 1)
-    .map((row) => (
-      <tr key={`row${String(row)}`}>
-        {Array(size).fill(0).map((__, colIndex) => colIndex + 1)
-          .map((col) => (
-            <TableCell
-              row={row}
-              col={col}
-              getClassName={getClassName}
-              key={String(`cell${row}.${col}`)}
-            />
-          ))}
-      </tr>
-    )), [getClassName, size]);
+  const memoizedTableBody = useMemo(
+    () =>
+      Array(size)
+        .fill(0)
+        .map((_, rowIndex) => rowIndex + 1)
+        .map((row) => (
+          <tr key={`row${String(row)}`}>
+            {Array(size)
+              .fill(0)
+              .map((__, colIndex) => colIndex + 1)
+              .map((col) => (
+                <TableCell
+                  row={row}
+                  col={col}
+                  getClassName={getClassName}
+                  key={String(`cell${row}.${col}`)}
+                />
+              ))}
+          </tr>
+        )),
+    [getClassName, size]
+  );
 
   const handleModalClicked = (event) => {
     if (event.target.value === 'yes') {
@@ -68,7 +84,7 @@ const ResultsTable = () => {
 
   return (
     <>
-      <div className="well" style={styleWell}>
+      <div className="well text-center" style={styleWell}>
         <b>{i18n(translations, 'results.buttonsLabel')}</b>
         <div id="table-buttons-group">
           <button
@@ -93,8 +109,11 @@ const ResultsTable = () => {
         <caption>{i18n(translations, 'results.tableCaption')}</caption>
         <thead>
           <tr>
-            <th className="active text-center" key="X">X</th>
-            {Array(size).fill(0)
+            <th className="active text-center" key="X">
+              X
+            </th>
+            {Array(size)
+              .fill(0)
               .map((_, index) => (
                 <th
                   className="info text-center"
@@ -105,9 +124,7 @@ const ResultsTable = () => {
               ))}
           </tr>
         </thead>
-        <tbody>
-          {memoizedTableBody}
-        </tbody>
+        <tbody>{memoizedTableBody}</tbody>
       </table>
       <button
         type="button"
@@ -120,7 +137,10 @@ const ResultsTable = () => {
         handleModalClicked={handleModalClicked}
         bodyText={i18n(translations, 'results.removeHistory.bodyText')}
         headerText={i18n(translations, 'results.removeHistory.headerText')}
-        yesButtonText={i18n(translations, 'results.removeHistory.yesButtonText')}
+        yesButtonText={i18n(
+          translations,
+          'results.removeHistory.yesButtonText'
+        )}
         noButtonText={i18n(translations, 'results.removeHistory.noButtonText')}
         isModalVisible={isModalVisible}
       />

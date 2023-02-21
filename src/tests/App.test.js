@@ -1,5 +1,7 @@
+/* eslint-disable react/display-name */
+/* eslint-disable react/function-component-definition */
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import ReactGA from 'react-ga';
 import App from '../components/App';
 
@@ -10,13 +12,12 @@ ReactGA.initialize('foo', { testMode: true });
 
 describe('App', () => {
   it('should initialize Google Analytics', () => {
-    expect(ReactGA.testModeAPI.calls).toEqual([
-      ['create', 'foo', 'auto']]);
+    expect(ReactGA.testModeAPI.calls).toEqual([['create', 'foo', 'auto']]);
   });
 
   it('renders learn react link', () => {
-    const { getByText } = render(<App />);
-    const header = getByText(/start/i);
+    render(<App />);
+    const header = screen.getByText(/start/i);
     expect(header).toBeInTheDocument();
   });
 });

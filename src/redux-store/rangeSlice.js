@@ -15,38 +15,49 @@ const noOfAnswers = 5;
 export const getRangeNumbers = (rangeValues = initialRange) => {
   const numRange = [];
   rangeValues.forEach((value, index) => {
-    if (value) { numRange.push(index + 1); }
+    if (value) {
+      numRange.push(index + 1);
+    }
   });
   return numRange;
 };
 
 const areThereSomeNotAnsweredQuestions = (rangeNumbers, resultValues) => {
   const iterate = rangeNumbers;
-  return (iterate
-    .findIndex((a) => iterate
-      .findIndex((b) => resultValues[a][b].status !== resultStatus.success) > -1) > -1);
+  return (
+    iterate.findIndex(
+      (a) =>
+        iterate.findIndex(
+          (b) => resultValues[a][b].status !== resultStatus.success
+        ) > -1
+    ) > -1
+  );
 };
 
 const getAllPossibleAnswers = (rangeValues, resultValues) => {
   const rangeNumbers = getRangeNumbers(rangeValues);
   const allPossibleAnswers = [];
-  const areThereNotAnswered = areThereSomeNotAnsweredQuestions(rangeNumbers, resultValues);
-  rangeNumbers.forEach((first) => rangeNumbers.forEach((second) => {
-    // skip answers which were already answered correctly
-    if (!areThereNotAnswered
-      || (
-        typeof resultValues[second] !== 'undefined'
-        && typeof resultValues[second][first] !== 'undefined'
-        && resultValues[second][first].status !== resultStatus.success
-      )
-    ) {
-      allPossibleAnswers.push({
-        xValue: first,
-        yValue: second,
-        orderBy: Math.random(),
-      });
-    }
-  }));
+  const areThereNotAnswered = areThereSomeNotAnsweredQuestions(
+    rangeNumbers,
+    resultValues
+  );
+  rangeNumbers.forEach((first) =>
+    rangeNumbers.forEach((second) => {
+      // skip answers which were already answered correctly
+      if (
+        !areThereNotAnswered ||
+        (typeof resultValues[second] !== 'undefined' &&
+          typeof resultValues[second][first] !== 'undefined' &&
+          resultValues[second][first].status !== resultStatus.success)
+      ) {
+        allPossibleAnswers.push({
+          xValue: first,
+          yValue: second,
+          orderBy: Math.random(),
+        });
+      }
+    })
+  );
   allPossibleAnswers.sort((a, b) => a.orderBy - b.orderBy);
   return allPossibleAnswers;
 };
@@ -54,9 +65,11 @@ const getAllPossibleAnswers = (rangeValues, resultValues) => {
 const getNumberOfPossibleUniqueValues = (rangeValues) => {
   const rangeNumbers = getRangeNumbers(rangeValues);
   const unique = [];
-  rangeNumbers.forEach((first) => rangeNumbers.forEach((second) => {
-    if (unique.indexOf(first * second) === -1) unique.push(first * second);
-  }));
+  rangeNumbers.forEach((first) =>
+    rangeNumbers.forEach((second) => {
+      if (unique.indexOf(first * second) === -1) unique.push(first * second);
+    })
+  );
   return unique.length;
 };
 
@@ -71,9 +84,12 @@ export const getNewRandomValue = (rangeValues) => {
 export const getNewPossibleAnswers = (rangeValues, xValue, yValue) => {
   const results = [xValue * yValue];
   const numberOfUniqueValues = getNumberOfPossibleUniqueValues();
-  while (results.length < noOfAnswers
-      && results.length < numberOfUniqueValues) {
-    const randomValue = getNewRandomValue(rangeValues) * getNewRandomValue(rangeValues);
+  while (
+    results.length < noOfAnswers &&
+    results.length < numberOfUniqueValues
+  ) {
+    const randomValue =
+      getNewRandomValue(rangeValues) * getNewRandomValue(rangeValues);
     if (results.findIndex((item) => item === randomValue) === -1) {
       results.push(randomValue);
     }
@@ -82,16 +98,24 @@ export const getNewPossibleAnswers = (rangeValues, xValue, yValue) => {
 };
 
 const setNextQuestion = (state, resultValues) => {
-  if ((typeof state.xValue === 'undefined'
-    && typeof state.yValue === 'undefined')
-    || state.allPossibleAnswers.length === 0
+  if (
+    (typeof state.xValue === 'undefined' &&
+      typeof state.yValue === 'undefined') ||
+    state.allPossibleAnswers.length === 0
   ) {
-    state.allPossibleAnswers = getAllPossibleAnswers(state.rangeValues, resultValues);
+    state.allPossibleAnswers = getAllPossibleAnswers(
+      state.rangeValues,
+      resultValues
+    );
   }
   const { xValue, yValue } = state.allPossibleAnswers.pop();
   state.xValue = xValue;
   state.yValue = yValue;
-  state.possibleAnswers = getNewPossibleAnswers(state.rangeValues, xValue, yValue);
+  state.possibleAnswers = getNewPossibleAnswers(
+    state.rangeValues,
+    xValue,
+    yValue
+  );
 };
 
 export const rangeSlice = createSlice({
@@ -126,11 +150,12 @@ export const rangeSlice = createSlice({
       // incorrect answers in the near future
       if (action.payload) {
         const { xValue, yValue } = action.payload;
-        if (typeof xValue === 'number'
-          && typeof yValue === 'number') {
+        if (typeof xValue === 'number' && typeof yValue === 'number') {
           if (state.allPossibleAnswers.length > 3) {
             state.allPossibleAnswers.splice(
-              state.allPossibleAnswers.length - 2, 0, { xValue, yValue, orderBy: 0 },
+              state.allPossibleAnswers.length - 2,
+              0,
+              { xValue, yValue, orderBy: 0 }
             );
           } else state.allPossibleAnswers.push({ xValue, yValue, orderBy: 0 });
         }

@@ -3,24 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@reduxjs/toolkit": "^1.4.0",
+    "@reduxjs/toolkit": "^1.9.2",
     "enroute": "^1.0.1",
-    "invariant": "^2.2.4",
     "lodash.range": "^3.2.0",
-    "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-ga": "^3.1.2",
-    "react-redux": "^7.2.1",
-    "react-router-dom": "^5.2.0",
-    "shallowequal": "^1.1.0",
-    "typescript": "^4.0.2"
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-ga": "^3.3.1",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.8.1",
+    "shallowequal": "^1.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
-    "test-cover": "react-scripts test --coverage --watchAll --env=jest-environment-jsdom-sixteen",
+    "test": "react-scripts test",
+    "test-cover": "react-scripts test --coverage --watchAll",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -46,19 +44,21 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/dom": "^7.24.1",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.0.2",
-    "@testing-library/user-event": "^12.1.4",
-    "eslint-config-airbnb": "^18.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jest-dom": "^3.2.2",
-    "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-react": "^7.20.6",
-    "eslint-plugin-react-hooks": "^4.1.0",
-    "eslint-plugin-testing-library": "^3.8.0",
-    "jest-environment-jsdom-sixteen": "^1.0.3",
+    "@testing-library/dom": "^9.0.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest-dom": "^4.0.3",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-testing-library": "^5.10.2",
     "pretty": "^2.0.0",
-    "react-scripts": "3.4.0"
+    "react-scripts": "5.0.1",
+    "eslint": "^8.34.0",
+    "invariant": "^2.2.4",
+    "jest-environment-jsdom": "^29.4.3"
   }
 }

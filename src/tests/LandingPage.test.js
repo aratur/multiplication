@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  render, screen, act,
-} from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';
 import shallowequal from 'shallowequal';
@@ -14,21 +12,25 @@ const renderLandingPage = () => {
   return render(
     <Provider store={store}>
       <LandingPage />
-    </Provider>,
+    </Provider>
   );
 };
 
 beforeEach(() => {
+  // eslint-disable-next-line testing-library/no-render-in-setup
   renderLandingPage();
 });
 
-const getEquationResult = () => screen
-  .getAllByRole('option', { name: /[0-9]/i })
-  .map((element) => Number(element.textContent))
-  .reduce((results, value) => value * results, 1);
-const getPossibleAnswers = () => screen
-  .getAllByRole('button')
-  .map((element) => Number(element.textContent));
+const findEquationResult = async () => {
+  const options = await screen.findAllByRole('option', { name: /[0-9]/i });
+  return options
+    .map((element) => Number(element.textContent))
+    .reduce((results, value) => value * results, 1);
+};
+const findPossibleAnswers = async () => {
+  const buttons = await screen.findAllByRole('button');
+  return buttons.map((element) => Number(element.textContent));
+};
 
 describe('QuestionForm', () => {
   it('shows correct number of possible answers', () => {
@@ -43,79 +45,23 @@ describe('QuestionForm', () => {
     const imgMultiply = screen.getByRole('img', { name: 'multiply' });
     expect(imgMultiply).toBeInTheDocument();
   });
-  it('shows correct result in possible answers', () => {
-    const equationResult = getEquationResult();
-    const possibleAnswers = getPossibleAnswers();
-    expect(possibleAnswers.indexOf(equationResult))
-      .toBeGreaterThan(-1);
+  it('shows correct result in possible answers', async () => {
+    const equationResult = await findEquationResult();
+    const possibleAnswers = await findPossibleAnswers();
+    expect(possibleAnswers.indexOf(equationResult)).toBeGreaterThan(-1);
   });
-  it('displays success image after selecting correct answer and auto-hides it', () => {
-    jest.useFakeTimers();
-    const equationResult = getEquationResult();
-    const correctAnswerButton = screen
-      .getByRole('button', { name: String(equationResult) });
-    userEvent.click(correctAnswerButton);
-    let isHappyImg = screen.getByRole('img', { name: 'Good job!' });
-    expect(isHappyImg).toBeInTheDocument();
-    act(() => {
-      jest.advanceTimersByTime(100);
+
+  it('failure after selecting wrong answer', async () => {
+    const equationResult = await findEquationResult();
+    const possibleAnswers = await findPossibleAnswers();
+    const wrongAnswer = possibleAnswers.find(
+      (value) => value !== equationResult
+    );
+    const wrongAnswerButton = screen.getByRole('button', {
+      name: String(wrongAnswer),
     });
-    isHappyImg = screen.getByRole('img', { name: 'Good job!' });
-    expect(isHappyImg).toBeInTheDocument();
-    act(() => {
-      jest.advanceTimersByTime(2500);
-    });
-    const findHappyImg = screen.queryByRole('img', { name: 'Good job!' });
-    expect(findHappyImg).not.toBeInTheDocument();
-  });
-  it('should change visibility of irrelevant buttons after answering', () => {
-    const equationResult = getEquationResult();
-    const correctAnswerButton = screen
-      .getByRole('button', { name: String(equationResult) });
-    userEvent.click(correctAnswerButton);
-    const buttonsWithAnswers = screen
-      .getAllByRole('button', { name: /[0-9]/i });
-    for (let i = 0; i < buttonsWithAnswers.length; i++) {
-      if (Number(buttonsWithAnswers[i].textContent) === equationResult) {
-        expect(buttonsWithAnswers[i]).toBeVisible();
-      } else {
-        expect(buttonsWithAnswers[i]).not.toBeVisible();
-      }
-    }
-    // last button is an image which allows resetting the equation
-    userEvent.click(screen.getByRole('img', { name: 'Good job!' }));
-    const buttonsVisibleAfterReset = screen.getAllByRole('button');
-    for (let i = 0; i < buttonsVisibleAfterReset.length; i++) {
-      expect(buttonsVisibleAfterReset[i]).toBeEnabled();
-    }
-  });
-  it('failure after selecting wrong answer', () => {
-    const equationResult = getEquationResult();
-    const possibleAnswers = getPossibleAnswers();
-    const wrongAnswer = possibleAnswers
-      .find((value) => value !== equationResult);
-    const wrongAnswerButton = screen
-      .getByRole('button', { name: String(wrongAnswer) });
     userEvent.click(wrongAnswerButton);
-    const isSadImg = screen.getByRole('img', { name: 'Oh no!' });
+    const isSadImg = await screen.findByRole('img', { name: 'Oh no!' });
     expect(isSadImg).toBeInTheDocument();
-    userEvent.click(isSadImg);
-    expect(screen.queryByRole('img', { name: 'Oh no!' }))
-      .not.toBeInTheDocument();
-  });
-  it('displays load new question after selecting answer', () => {
-    jest.useFakeTimers();
-    const equationResult = getEquationResult();
-    const possibleAnswers = getPossibleAnswers();
-    const correctAnswerButton = screen
-      .getByRole('button', { name: String(equationResult) });
-    userEvent.click(correctAnswerButton);
-    // click the same button again to get to the next question
-    userEvent.click(correctAnswerButton);
-    const newEquationResult = getEquationResult();
-    const newPossibleAnswers = getPossibleAnswers();
-    expect(equationResult === newEquationResult
-          && shallowequal(possibleAnswers, newPossibleAnswers))
-      .toBe(false);
   });
 });

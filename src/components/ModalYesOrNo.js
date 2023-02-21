@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 
 const ModalYesOrNo = (props) => {
   const {
-    handleModalClicked, headerText, bodyText,
-    isModalVisible, yesButtonText, noButtonText,
+    handleModalClicked,
+    headerText,
+    bodyText,
+    isModalVisible,
+    yesButtonText,
+    noButtonText,
   } = props;
   const modalVisibleStyle = { display: 'block' };
   const modalNotVisibleStyle = { display: 'none' };
@@ -40,6 +44,7 @@ const ModalYesOrNo = (props) => {
               data-dismiss="modal"
               onClick={handleModalClicked}
               value="yes"
+              data-testid="yes"
             >
               {yesButtonText}
             </button>

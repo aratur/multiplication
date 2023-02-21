@@ -5,11 +5,12 @@ module.exports = {
     jest: true,
   },
   extends: [
+    'airbnb',
+    'react-app',
+    'react-app/jest',
+    'plugin:jest-dom/recommended',
     'plugin:react/recommended',
     'plugin:testing-library/react',
-    'plugin:testing-library/recommended',
-    'plugin:jest-dom/recommended',
-    'airbnb',
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -18,14 +19,22 @@ module.exports = {
     ecmaVersion: 11,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    'testing-library',
-    'jest-dom',
-  ],
+  plugins: ['react', 'testing-library', 'jest-dom'],
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'no-console': 'off',
-    'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
+    'comma-dangle': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'no-confusing-arrow': 'off',
+    'operator-linebreak': 'off',
+    'function-paren-newline': 'off',
+    indent: 'off',
+    'react/jsx-one-expression-per-line': 'off',
+    'testing-library/prefer-screen-queries': 'off',
+    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
+    'react/function-component-definition': [
+      2,
+      { namedComponents: 'arrow-function' },
+    ],
   },
 };

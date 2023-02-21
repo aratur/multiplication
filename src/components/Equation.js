@@ -32,30 +32,52 @@ const Equation = (props) => {
   const { xValue, yValue, correctAnswer } = props;
 
   return React.createElement(
-    'div', { className: 'well', style: { padding: '10px' } },
+    'div',
+    { className: 'well text-center', style: { padding: '10px' } },
     React.createElement(
-      'label', { htmlFor: 'equation' }, i18n(translations, 'equation.label'),
+      'label',
+      {
+        htmlFor: 'equation',
+      },
+      i18n(translations, 'equation.label'),
       React.createElement(
-        'div', { id: 'equation' },
-        React.createElement('button',
-          { name: `number ${xValue}`, ...numberProps }, xValue),
-        React.createElement('img',
-          { src: multiply, alt: 'multiply', ...signProps }),
-        React.createElement('button',
-          { name: `by ${yValue}`, ...numberProps }, yValue),
-        React.createElement('img',
-          { src: equals, alt: 'equals', ...signProps }),
-        React.createElement('button',
-          { name: `answer ${correctAnswer}`, ...numberProps }, correctAnswer),
-      ),
-    ),
+        'div',
+        { id: 'equation' },
+        React.createElement(
+          'button',
+          { name: `number ${xValue}`, ...numberProps },
+          xValue
+        ),
+        React.createElement('img', {
+          src: multiply,
+          alt: 'multiply',
+          ...signProps,
+        }),
+        React.createElement(
+          'button',
+          { name: `by ${yValue}`, ...numberProps },
+          yValue
+        ),
+        React.createElement('img', {
+          src: equals,
+          alt: 'equals',
+          ...signProps,
+        }),
+        React.createElement(
+          'button',
+          { name: `answer ${correctAnswer}`, ...numberProps },
+          correctAnswer
+        )
+      )
+    )
   );
 };
 
 Equation.propTypes = {
   xValue: PropTypes.number.isRequired,
   yValue: PropTypes.number.isRequired,
-  correctAnswer: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  correctAnswer: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    .isRequired,
 };
 
 export default Equation;

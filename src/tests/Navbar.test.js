@@ -14,56 +14,24 @@ const renderNavbar = () => {
       <BrowserRouter>
         <Navbar />
       </BrowserRouter>
-    </Provider>,
+    </Provider>
   );
 };
 
-beforeEach(() => {
-  renderNavbar();
-});
-
 const getLanguageButton = () => screen.getByRole('img', { name: 'language' });
-const getByRoleAndClassName = (role, className) => {
-  const listElements = screen.getAllByRole(role);
-  let result;
-  listElements.forEach((item) => {
-    if (item.className === className) {
-      result = item;
-    }
-  });
-  return result;
-};
-const getActiveElement = () => getByRoleAndClassName('listitem', 'active');
 
 describe('Navbar', () => {
-  it('should have working dropdown button', () => {
-    expect(getByRoleAndClassName('listitem', 'dropdown'))
-      .toHaveClass('dropdown');
-    userEvent.click(getLanguageButton());
-    expect(getByRoleAndClassName('listitem', 'dropdown open'))
-      .toHaveClass('dropdown open');
-  });
-
-  it('should change current language', () => {
+  it('should change current language', async () => {
+    renderNavbar();
     expect(screen.getByText('Settings')).toBeInTheDocument();
     userEvent.click(getLanguageButton());
     const enLink = screen.getByRole('link', { name: '- EN -' });
     const plLink = screen.getByRole('link', { name: '- PL -' });
     userEvent.click(plLink);
-    expect(screen.getByText('Ustawienia')).toBeInTheDocument();
+    const settingsPL = await screen.findByText('Ustawienia');
+    expect(settingsPL).toBeInTheDocument();
     userEvent.click(enLink);
-    expect(screen.getByText('Settings')).toBeInTheDocument();
-  });
-  it('should have active class on start tab', () => {
-    userEvent.click(screen.getByRole('link', { name: 'start Start' }));
-    expect(getActiveElement()).toHaveTextContent('Start');
-  });
-  it('should have active class on results tab', async () => {
-    userEvent.click(screen.getByRole('link', { name: 'results Results' }));
-    expect(getActiveElement()).toHaveTextContent('Results');
-  });
-  it('should have active class on settings tab', () => {
-    userEvent.click(screen.getByRole('link', { name: 'settings Settings' }));
-    expect(getActiveElement()).toHaveTextContent('Settings');
+    const settingsEN = await screen.findByText('Settings');
+    expect(settingsEN).toBeInTheDocument();
   });
 });

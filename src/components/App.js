@@ -1,9 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Switch, Route,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import store from '../redux-store/store';
 import Settings from './Settings';
 import LandingPage from './LandingPage';
@@ -19,24 +16,20 @@ const App = () => (
     <Router>
       <div className="row" style={styleRowMargin}>
         <div className="col-md-3 col-sm-2" />
-        <div className="col-md-6 col-sm-8" align="center" style={styleColPadding}><Navbar /></div>
+        <div className="col-md-6 col-sm-8" style={styleColPadding}>
+          <Navbar />
+        </div>
         <div className="col-md-3 col-sm-2" />
       </div>
       <Gems />
       <div className="row" style={styleRowMargin}>
         <div className="col-md-3 col-sm-2" />
-        <div className="col-md-6 col-sm-8" align="center" style={styleColPadding}>
-          <Switch>
-            <Route path="/results">
-              <ResultsTable />
-            </Route>
-            <Route path="/settings">
-              <Settings />
-            </Route>
-            <Route path="/">
-              <LandingPage />
-            </Route>
-          </Switch>
+        <div className="col-md-6 col-sm-8 text-center" style={styleColPadding}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/results" element={<ResultsTable />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
         </div>
         <div className="col-md-3 col-sm-2" />
       </div>
