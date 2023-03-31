@@ -13,16 +13,14 @@ const Gems = () => {
     <div className="row" style={styleRowMargin}>
       <div className="col-md-3 col-sm-2" />
       <div className="col-md-6 col-sm-8" style={styleColPadding}>
-        {Array(gemsNo)
-          .fill(1)
-          .map((_, index) => (
-            <img
-              src={gem}
-              alt="gem"
-              key={`gem.${String(index)}`}
-              style={gemStyle}
-            />
-          ))}
+        {[...Array(gemsNo)].map((_, index) => (
+          <img
+            src={gem}
+            alt="gem"
+            key={`gem.${String(index)}`}
+            style={gemStyle}
+          />
+        ))}
       </div>
       <div className="col-md-3 col-sm-2" />
     </div>

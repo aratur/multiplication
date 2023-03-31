@@ -15,7 +15,7 @@ const getInitialGems = () => {
   if (localStorage.gems) {
     return JSON.parse(localStorage.gems);
   }
-  return 0;
+  return 3;
 };
 
 export const getNewResultsList = (size) => {

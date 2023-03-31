@@ -9,10 +9,9 @@ import { i18n, getTranslations } from '../../redux-store/i18nSlice';
 const Equation = (props) => {
   const numberProps = {
     style: {
-      margin: '5px',
-      width: '55px',
-      height: '55px',
-      padding: '0px',
+      marginTop: '5px',
+      width: '50px',
+      height: '50px',
     },
     type: 'button',
     tabIndex: '-1',
@@ -21,11 +20,12 @@ const Equation = (props) => {
   };
   const signProps = {
     style: {
-      margin: '5px',
-      width: '55px',
-      height: '55px',
-      padding: '12px',
+      marginTop: '5px',
+      width: '50px',
+      height: '50px',
+      padding: '10px',
     },
+    className: 'img-rounded',
   };
   const translations = useSelector(getTranslations);
   const { xValue, yValue, correctAnswer } = props;
