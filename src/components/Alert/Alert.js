@@ -20,7 +20,7 @@ const Alert = (props) => {
   }, [isVisible, onCloseClicked]);
 
   return isVisible ? (
-    <div className="alert alert-dismissable alert-info">
+    <section role="alert" className="alert alert-dismissable alert-info">
       <button
         type="button"
         aria-label="close alert"
@@ -31,7 +31,7 @@ const Alert = (props) => {
       </button>
       <h4>{header}</h4>
       <p>{message}</p>
-    </div>
+    </section>
   ) : null;
 };
 

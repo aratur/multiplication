@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ModalYesOrNo = (props) => {
+const Confirmation = (props) => {
   const {
-    handleModalClicked,
+    handleConfirmed,
+    handleRejected,
     headerText,
     bodyText,
     isModalVisible,
@@ -12,10 +13,10 @@ const ModalYesOrNo = (props) => {
   } = props;
 
   return (
-    <div
+    <section
       id="previewModal"
-      className={isModalVisible ? 'modal in' : 'modal'}
-      style={isModalVisible ? { display: 'block' } : { display: 'none' }}
+      role="dialog"
+      className={['modal', isModalVisible && 'show'].join(' ')}
     >
       <div className="modal-dialog">
         <div className="modal-content">
@@ -23,8 +24,7 @@ const ModalYesOrNo = (props) => {
             <button
               type="button"
               className="close"
-              onClick={handleModalClicked}
-              data-dismiss="modal"
+              onClick={handleRejected}
               aria-hidden="true"
               value="close"
             >
@@ -39,8 +39,7 @@ const ModalYesOrNo = (props) => {
             <button
               type="button"
               className="btn btn-default"
-              data-dismiss="modal"
-              onClick={handleModalClicked}
+              onClick={handleConfirmed}
               value="yes"
               data-testid="yes"
             >
@@ -49,7 +48,7 @@ const ModalYesOrNo = (props) => {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={handleModalClicked}
+              onClick={handleRejected}
               value="no"
             >
               {noButtonText}
@@ -57,12 +56,13 @@ const ModalYesOrNo = (props) => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
-ModalYesOrNo.propTypes = {
-  handleModalClicked: PropTypes.func.isRequired,
+Confirmation.propTypes = {
+  handleConfirmed: PropTypes.func.isRequired,
+  handleRejected: PropTypes.func.isRequired,
   bodyText: PropTypes.string.isRequired,
   headerText: PropTypes.string.isRequired,
   yesButtonText: PropTypes.string.isRequired,
@@ -70,4 +70,4 @@ ModalYesOrNo.propTypes = {
   isModalVisible: PropTypes.bool.isRequired,
 };
 
-export default ModalYesOrNo;
+export default Confirmation;

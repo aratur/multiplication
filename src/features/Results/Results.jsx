@@ -9,7 +9,7 @@ import {
 import { i18n, getTranslations } from '../../redux-store/i18nSlice';
 import TableCell from './TableCell/TableCell';
 import './Results.css';
-import ModalYesOrNo from '../../components/Confirmation/Confirmation';
+import Confirmation from '../../components/Confirmation/Confirmation';
 
 const Results = () => {
   const size = useSelector(getResultsSize);
@@ -71,10 +71,11 @@ const Results = () => {
     [getClassName, size]
   );
 
-  const handleModalClicked = (event) => {
-    if (event.target.value === 'yes') {
-      dispatch(resetResults());
-    }
+  const handleConfirmed = () => {
+    dispatch(resetResults());
+  };
+
+  const handleRejected = () => {
     setIsModalVisible(false);
   };
 
@@ -133,8 +134,9 @@ const Results = () => {
       >
         {i18n(translations, 'results.buttonRemoveHistory')}
       </button>
-      <ModalYesOrNo
-        handleModalClicked={handleModalClicked}
+      <Confirmation
+        handleRejected={handleRejected}
+        handleConfirmed={handleConfirmed}
         bodyText={i18n(translations, 'results.removeHistory.bodyText')}
         headerText={i18n(translations, 'results.removeHistory.headerText')}
         yesButtonText={i18n(

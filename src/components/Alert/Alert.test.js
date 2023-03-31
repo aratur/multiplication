@@ -4,17 +4,16 @@ import { render, act, fireEvent, screen } from '@testing-library/react';
 
 import WarningAlert from './Alert';
 
-const renderAlert = (visible, callback = () => {}) =>
-  render(
-    <WarningAlert
-      isVisible={visible}
-      onCloseClicked={callback}
-      header="Header text"
-      message="Message text"
-    />
-  );
-
 describe('WarningAlert', () => {
+  const renderAlert = (visible, callback = () => {}) =>
+    render(
+      <WarningAlert
+        isVisible={visible}
+        onCloseClicked={callback}
+        header="Header text"
+        message="Message text"
+      />
+    );
   test('should render correctly when visible', async () => {
     const { getByRole, getByText } = renderAlert(true);
     expect(getByText('Header text')).toBeInTheDocument();
