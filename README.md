@@ -29,7 +29,7 @@ Features:
 ### Screenshot
 
 Solution screenshot
-![](src/img/preview/preview.png)
+![](preview/preview.png)
 
 ### Links
 

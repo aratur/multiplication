@@ -6,7 +6,7 @@ import en from './translations/en.json';
 // const defaultLanguage = 'pl';
 const defaultLanguage = (() => {
   const browserLanguage = window.navigator.language;
-  if (browserLanguage === 'pl' || browserLanguage.substr(0, 2) === 'en') {
+  if (browserLanguage === 'pl' || browserLanguage.substring(0, 2) === 'en') {
     return browserLanguage;
   }
   return 'pl';
@@ -56,7 +56,9 @@ export function i18n(translations, statement, ...parameters) {
   const values = [...parameters];
 
   if (typeof translations === 'undefined') {
-    // console.warn('Could not translate the entry because of empty translations\' dictionary ');
+    console.warn(
+      "Could not translate the entry because of empty translations' dictionary "
+    );
     return null;
   }
 
@@ -67,8 +69,9 @@ export function i18n(translations, statement, ...parameters) {
           .split('.')
           .reduce((result, step) => result[step], translations);
   if (typeof dictionaryEntry === 'undefined') {
-    // console
-    //   .warn(`Could not retrieve an entry on path "${statement}" in dictionary`);
+    console.warn(
+      `Could not retrieve an entry on path "${statement}" in dictionary`
+    );
     return null;
   }
 

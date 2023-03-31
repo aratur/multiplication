@@ -3,16 +3,16 @@
     "label": "Przeczytaj równanie"
   },
   "selectAnswer": {
-    "label":"Wybierz poprawny wynik"
+    "label": "Wybierz poprawny wynik"
   },
   "navbar": {
-    "start":"Start",
-    "results":"Wyniki",
-    "settings":"Ustawienia"
+    "start": "Start",
+    "results": "Wyniki",
+    "settings": "Ustawienia"
   },
   "settings": {
     "label": "Wybrany zakres liczb do nauki",
-    "warningHeader": "Nie tak szybko",
+    "warningHeader": "Uwaga",
     "warningMessage": "Co najmniej {0} liczby muszą pozostać zaznaczone."
   },
   "results": {

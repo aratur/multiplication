@@ -40,7 +40,9 @@ const areRowAndColNumbers = (row, col) => {
 
 const isRowAndColValid = (size, row, col) => {
   if (row > 0 && row <= size && col > 0 && col <= size) return true;
-  throw new Error(`row (${row}) & col (${col}) must be between 1 and size (${size}).`);
+  throw new Error(
+    `row (${row}) & col (${col}) must be between 1 and size (${size}).`
+  );
 };
 
 const isDurationGreaterThanZero = (duration) => {
@@ -50,20 +52,27 @@ const isDurationGreaterThanZero = (duration) => {
 
 const isStatusCorrect = (status) => {
   if (typeof status !== 'undefined') return true;
-  throw new Error('status can\'t be undefined.');
+  throw new Error("status can't be undefined.");
 };
 
 const isSolved = (values) => {
-  const iterate = Array(defaultSize).fill(1).map((value, index) => index + 1);
-  return (iterate
-    .findIndex((a) => iterate
-      .findIndex((b) => values[a][b].status !== resultStatus.success) > -1) === -1);
+  const iterate = Array(defaultSize)
+    .fill(1)
+    .map((value, index) => index + 1);
+  return (
+    iterate.findIndex(
+      (a) =>
+        iterate.findIndex((b) => values[a][b].status !== resultStatus.success) >
+        -1
+    ) === -1
+  );
 };
 
-const isInputCorrect = (size, { status, duration }, row, col) => areRowAndColNumbers(row, col)
-    && isRowAndColValid(size, row, col)
-    && isStatusCorrect(status)
-    && isDurationGreaterThanZero(duration);
+const isInputCorrect = (size, { status, duration }, row, col) =>
+  areRowAndColNumbers(row, col) &&
+  isRowAndColValid(size, row, col) &&
+  isStatusCorrect(status) &&
+  isDurationGreaterThanZero(duration);
 
 export const resultsSlice = createSlice({
   name: 'results',
@@ -74,7 +83,12 @@ export const resultsSlice = createSlice({
   reducers: {
     setValueAtRowCol: (state, action) => {
       const { answerState, xValue, yValue } = action.payload;
-      isInputCorrect(Object.keys(state.values).length, answerState, xValue, yValue);
+      isInputCorrect(
+        Object.keys(state.values).length,
+        answerState,
+        xValue,
+        yValue
+      );
       state.values[yValue][xValue] = answerState;
       if (isSolved(state.values)) {
         state.gems += 1;
@@ -93,6 +107,7 @@ export const resultsSlice = createSlice({
 
 export const getNoOfGems = (state) => state.results.gems;
 export const getResultValues = (state) => state.results.values;
-export const getResultsSize = (state) => Object.keys(state.results.values).length;
+export const getResultsSize = (state) =>
+  Object.keys(state.results.values).length;
 export const { setValueAtRowCol, resetResults } = resultsSlice.actions;
 export default resultsSlice.reducer;
