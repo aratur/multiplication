@@ -11,6 +11,6 @@ describe('Equation', () => {
         <Equation xValue={2} yValue={2} correctAnswer={22} />
       </Provider>
     );
-    logDOM();
+    // logDOM();
   });
 });

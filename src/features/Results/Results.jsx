@@ -1,111 +1,36 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  resultStatus,
-  getResultValues,
-  getResultsSize,
-  resetResults,
-} from '../../redux-store/resultsSlice';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { i18n, getTranslations } from '../../redux-store/i18nSlice';
-import TableCell from './TableCell/TableCell';
+import TableCell from './TableCell';
 import './Results.css';
-import Confirmation from '../../components/Confirmation/Confirmation';
+import { SIZE } from '../../redux-store/constants';
+import RemoveResults from './RemoveResults';
+import FilterResults from './FilterResults';
 
 const Results = () => {
-  const size = useSelector(getResultsSize);
-  const values = useSelector(getResultValues);
   const translations = useSelector(getTranslations);
-  const dispatch = useDispatch();
-  const [showCorrect, setShowCorrect] = useState(true);
-  const [showIncorrect, setShowIncorrect] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const styleButtons = { margin: '5px' };
-  const styleWell = { padding: '10px' };
+  const th = [...Array(SIZE)].map((_, index) => (
+    <th className="info text-center" key={`headerRow${String(index + 1)}`}>
+      {index + 1}
+    </th>
+  ));
 
-  const getClassName = useCallback(
-    (row, col) => {
-      const answerState = values[row][col];
-      let result = null;
-      if (showCorrect && answerState.status === resultStatus.success) {
-        result = 'success';
-      }
-      if (showIncorrect && answerState.status === resultStatus.failure) {
-        result = 'danger';
-      }
-      if (row === col) return result || 'active';
-      return result;
-    },
-    [showCorrect, showIncorrect, values]
-  );
-
-  const handleShowClick = (event) => {
-    setShowCorrect(
-      event.target.className === 'btn btn-success' ? !showCorrect : false
-    );
-    setShowIncorrect(
-      event.target.className === 'btn btn-danger' ? !showIncorrect : false
-    );
-  };
-
-  const memoizedTableBody = useMemo(
-    () =>
-      Array(size)
-        .fill(0)
-        .map((_, rowIndex) => rowIndex + 1)
-        .map((row) => (
-          <tr key={`row${String(row)}`}>
-            {Array(size)
-              .fill(0)
-              .map((__, colIndex) => colIndex + 1)
-              .map((col) => (
-                <TableCell
-                  row={row}
-                  col={col}
-                  getClassName={getClassName}
-                  key={String(`cell${row}.${col}`)}
-                />
-              ))}
-          </tr>
-        )),
-    [getClassName, size]
-  );
-
-  const handleConfirmed = () => {
-    dispatch(resetResults());
-  };
-
-  const handleRejected = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleRemoveResults = () => {
-    setIsModalVisible(true);
-  };
+  const tableBody = [...Array(SIZE)]
+    .map((_, rowIndex) => rowIndex + 1)
+    .map((row) => (
+      <tr key={`row${String(row)}`}>
+        {[...Array(SIZE)]
+          .map((__, colIndex) => colIndex + 1)
+          .map((col) => (
+            <TableCell row={row} col={col} key={String(`cell_${row}.${col}`)} />
+          ))}
+      </tr>
+    ));
 
   return (
     <>
-      <div className="well text-center" style={styleWell}>
-        <b>{i18n(translations, 'results.buttonsLabel')}</b>
-        <div id="table-buttons-group">
-          <button
-            className="btn btn-success"
-            type="button"
-            style={styleButtons}
-            onClick={handleShowClick}
-          >
-            {i18n(translations, 'results.buttonCorrect')}
-          </button>
-          <button
-            className="btn btn-danger"
-            type="button"
-            style={styleButtons}
-            onClick={handleShowClick}
-          >
-            {i18n(translations, 'results.buttonIncorrect')}
-          </button>
-        </div>
-      </div>
+      <FilterResults />
       <table className="table table-striped table-hover text-center">
         <caption>{i18n(translations, 'results.tableCaption')}</caption>
         <thead>
@@ -113,39 +38,12 @@ const Results = () => {
             <th className="active text-center" key="X">
               X
             </th>
-            {Array(size)
-              .fill(0)
-              .map((_, index) => (
-                <th
-                  className="info text-center"
-                  key={`headerRow${String(index + 1)}`}
-                >
-                  {index + 1}
-                </th>
-              ))}
+            {th}
           </tr>
         </thead>
-        <tbody>{memoizedTableBody}</tbody>
+        <tbody>{tableBody}</tbody>
       </table>
-      <button
-        type="button"
-        className="btn btn-primary btn-xs"
-        onClick={handleRemoveResults}
-      >
-        {i18n(translations, 'results.buttonRemoveHistory')}
-      </button>
-      <Confirmation
-        handleRejected={handleRejected}
-        handleConfirmed={handleConfirmed}
-        bodyText={i18n(translations, 'results.removeHistory.bodyText')}
-        headerText={i18n(translations, 'results.removeHistory.headerText')}
-        yesButtonText={i18n(
-          translations,
-          'results.removeHistory.yesButtonText'
-        )}
-        noButtonText={i18n(translations, 'results.removeHistory.noButtonText')}
-        isModalVisible={isModalVisible}
-      />
+      <RemoveResults />
     </>
   );
 };

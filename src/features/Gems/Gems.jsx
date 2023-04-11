@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getNoOfGems } from '../../redux-store/resultsSlice';
+import { getGems } from '../../redux-store/questionSlice';
 import gem from '../../assets/gems/gem.svg';
 
 const Gems = () => {
-  const gemsNo = useSelector(getNoOfGems);
+  const gemsNo = useSelector(getGems);
   const gemStyle = { padding: '10px', width: '55px' };
   const styleRowMargin = { marginLeft: 0, marginRight: 0 };
   const styleColPadding = { paddingLeft: '5px', paddingRight: '5px' };

@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import resultsReducer from './resultsSlice';
-import rangeReducer from './rangeSlice';
 import i18nReducer from './i18nSlice';
+import questionReducer from './questionSlice';
 
 export default configureStore({
   reducer: {
-    results: resultsReducer,
-    range: rangeReducer,
+    question: questionReducer,
     i18n: i18nReducer,
   },
 });

@@ -20,6 +20,7 @@
     "tableCaption": "Tabliczka mnożenia",
     "buttonCorrect": "Poprawne odpowiedzi",
     "buttonIncorrect": "Błędne odpowiedzi",
+    "buttonAll": "Wszystkie odpowiedzi",
     "buttonRemoveHistory": "Usuń wyniki",
     "removeHistory": {
       "bodyText": "Czy chcesz usunąć wyniki?",

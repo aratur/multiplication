@@ -1,85 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import ReactGA from 'react-ga';
 import { i18n, getTranslations } from '../../redux-store/i18nSlice';
+import { SIZE } from '../../redux-store/constants';
+import shuffle from '../../redux-store/shuffle';
+import AnswerButton from './AnswerButton';
+import { range, getXValue, getYValue } from '../../redux-store/questionSlice';
+
+const noOfAnswers = 5;
 
 const SelectAnswer = (props) => {
-  const {
-    onAnswerSelected,
-    possibleAnswers,
-    correctAnswer,
-    handleNextQuestion,
-  } = props;
-  const [wasAnswered, setWasAnswered] = useState(false);
-  const [userAnswer, setUserAnswer] = useState(Infinity);
   const translations = useSelector(getTranslations);
+  const xValue = useSelector(getXValue);
+  const yValue = useSelector(getYValue);
+  const correctAnswer = xValue * yValue;
 
-  const optionButtonStyle = {
-    margin: '5px',
-    width: '55px',
-    height: '55px',
-    padding: '0px',
-  };
+  const getAnswers = useCallback(
+    (size) => {
+      const randomXValues = shuffle(range);
+      const randomYValues = shuffle(range);
+      const randomResults = randomXValues.map(
+        (v, index) => v * randomYValues[index]
+      );
 
-  const getButtonClassBasedOnAnswer = (item) => {
-    if (!wasAnswered) return 'btn btn-info btn-lg';
-    if (userAnswer !== correctAnswer) {
-      if (item === userAnswer) return 'btn btn-primary btn-lg';
-      if (item === correctAnswer) return 'btn btn-success btn-lg';
-    }
-    if (item === correctAnswer) return 'btn btn-success btn-lg';
-    return 'btn btn-info btn-lg';
-  };
+      const result = [correctAnswer].concat(
+        randomResults.filter((v) => v !== correctAnswer)
+      );
+      result.splice(noOfAnswers);
 
-  const getStyleBasedOnState = (item) =>
-    wasAnswered && item !== userAnswer && item !== correctAnswer
-      ? { ...optionButtonStyle, visibility: 'hidden' }
-      : optionButtonStyle;
+      return shuffle(result);
+    },
+    [correctAnswer]
+  );
 
-  const handleAnswerSelected = (e) => {
-    if (!wasAnswered) {
-      const answer = Number(e.target.textContent);
-      setUserAnswer(answer);
-      setWasAnswered(true);
-      onAnswerSelected(answer);
-      ReactGA.event({
-        category: 'Editing',
-        action: 'Answer the question',
-      });
-    } else {
-      handleNextQuestion();
-    }
-  };
+  const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
-    setWasAnswered(false);
-  }, [possibleAnswers]);
+    setAnswers(getAnswers(SIZE));
+  }, [getAnswers]);
 
   return (
     <div className="well text-center" style={{ padding: '10px' }}>
       <b>{i18n(translations, 'selectAnswer.label')}</b>
       <br />
-      {possibleAnswers.map((item) => (
-        <button
-          type="button"
-          className={getButtonClassBasedOnAnswer(item)}
-          style={getStyleBasedOnState(item)}
-          onClick={handleAnswerSelected}
-          key={String(`${item}.${correctAnswer}`)}
-        >
-          {item}
-        </button>
-      ))}
+      {answers &&
+        answers.map((answer) => (
+          <AnswerButton
+            key={String(`${answer}`)}
+            answer={answer}
+            correctAnswer={correctAnswer}
+          />
+        ))}
     </div>
   );
-};
-
-SelectAnswer.propTypes = {
-  possibleAnswers: PropTypes.arrayOf(PropTypes.number).isRequired,
-  onAnswerSelected: PropTypes.func.isRequired,
-  handleNextQuestion: PropTypes.func.isRequired,
-  correctAnswer: PropTypes.number.isRequired,
 };
 
 export default SelectAnswer;

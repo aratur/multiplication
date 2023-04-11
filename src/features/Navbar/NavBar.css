@@ -3,9 +3,13 @@ h4 {
 }
 
 @media (min-width: 576px) {
-  h4 {font-size: 17px;}
+  h4 {
+    font-size: 17px;
+  }
 }
 
 @media (min-width: 768px) {
-  h4 {font-size: 18px;}
+  h4 {
+    font-size: 18px;
+  }
 }

@@ -1,12 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import multiply from '../../assets/multiply.png';
 import equals from '../../assets/equals.png';
 import { i18n, getTranslations } from '../../redux-store/i18nSlice';
+import {
+  getXValue,
+  getYValue,
+  getAnswer,
+  getStatus,
+  setNext,
+} from '../../redux-store/questionSlice';
 
 // without JSX
-const Equation = (props) => {
+const Equation = () => {
   const numberProps = {
     style: {
       marginTop: '5px',
@@ -28,7 +34,18 @@ const Equation = (props) => {
     className: 'img-rounded',
   };
   const translations = useSelector(getTranslations);
-  const { xValue, yValue, correctAnswer } = props;
+  const dispatch = useDispatch();
+  const xValue = useSelector(getXValue);
+  const yValue = useSelector(getYValue);
+  const answer = useSelector(getAnswer);
+  const status = useSelector(getStatus);
+  const correctAnswer = answer === -1 ? '?' : xValue * yValue;
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(setNext());
+    }
+  }, [dispatch, status]);
 
   return React.createElement(
     'div',
@@ -70,13 +87,6 @@ const Equation = (props) => {
       )
     )
   );
-};
-
-Equation.propTypes = {
-  xValue: PropTypes.number.isRequired,
-  yValue: PropTypes.number.isRequired,
-  correctAnswer: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-    .isRequired,
 };
 
 export default Equation;

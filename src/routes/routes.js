@@ -6,7 +6,6 @@ import Loader from '../components/Loader/Loader';
 import Multiplication from '../pages/Multiplication';
 
 const ResultsTableLazy = lazy(() => import('../features/Results/Results'));
-const SettingsLazy = lazy(() => import('../features/Settings/Settings'));
 
 const routes = createBrowserRouter([
   {
@@ -22,14 +21,6 @@ const routes = createBrowserRouter([
         element: (
           <Suspense fallback={<Loader />}>
             <ResultsTableLazy />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/settings',
-        element: (
-          <Suspense fallback={<Loader />}>
-            <SettingsLazy />
           </Suspense>
         ),
       },
