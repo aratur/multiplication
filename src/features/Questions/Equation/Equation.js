@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import multiply from '../../assets/multiply.png';
-import equals from '../../assets/equals.png';
-import { i18n, getTranslations } from '../../redux-store/i18nSlice';
+import multiply from '../../../assets/multiply.png';
+import equals from '../../../assets/equals.png';
+import { i18n, getTranslations } from '../../../redux-store/i18nSlice';
 import {
   getXValue,
   getYValue,
   getAnswer,
   getStatus,
   setNext,
-} from '../../redux-store/questionSlice';
+} from '../../../redux-store/questionSlice';
 
 // without JSX
 const Equation = () => {

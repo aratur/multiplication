@@ -6,7 +6,7 @@ import {
   getStatus,
   setAnswer,
   setNext,
-} from '../../redux-store/questionSlice';
+} from '../../../redux-store/questionSlice';
 
 const AnswerButton = ({ answer, correctAnswer }) => {
   const dispatch = useDispatch();

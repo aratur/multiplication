@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getGems } from '../../redux-store/questionSlice';
-import gem from '../../assets/gems/gem.svg';
+import { getGems } from '../../../redux-store/questionSlice';
+import gem from '../../../assets/gems/gem.svg';
 
 const Gems = () => {
   const gemsNo = useSelector(getGems);

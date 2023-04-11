@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { i18n, getTranslations } from '../../redux-store/i18nSlice';
-import { SIZE } from '../../redux-store/constants';
-import shuffle from '../../redux-store/shuffle';
+import { i18n, getTranslations } from '../../../redux-store/i18nSlice';
+import { SIZE } from '../../../redux-store/constants';
+import shuffle from '../../../redux-store/shuffle';
 import AnswerButton from './AnswerButton';
-import { range, getXValue, getYValue } from '../../redux-store/questionSlice';
+import {
+  range,
+  getXValue,
+  getYValue,
+} from '../../../redux-store/questionSlice';
 
-const noOfAnswers = 5;
+const noOfAnswers = 4;
 
 const SelectAnswer = (props) => {
   const translations = useSelector(getTranslations);

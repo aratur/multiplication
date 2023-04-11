@@ -5,10 +5,10 @@ import {
   getYValue,
   getAnswer,
   setNext,
-} from '../../redux-store/questionSlice';
+} from '../../../redux-store/questionSlice';
 
-import happyFaceImg from '../../assets/smile.svg';
-import sadFaceImg from '../../assets/frown.svg';
+import happyFaceImg from '../../../assets/smile.svg';
+import sadFaceImg from '../../../assets/frown.svg';
 
 const HappySad = () => {
   const dispatch = useDispatch();
