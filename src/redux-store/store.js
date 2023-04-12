@@ -20,7 +20,7 @@ const questionsConfig = {
   storage,
   version: 1,
   whitelist: ['pending', 'correct', 'incorrect', 'gems'],
-  migrate: createMigrate(migrations, { debug: true }),
+  migrate: createMigrate(migrations, { debug: false }),
 };
 
 const store = configureStore({

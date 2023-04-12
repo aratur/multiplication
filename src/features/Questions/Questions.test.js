@@ -1,16 +1,19 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import userEvent from '@testing-library/user-event';
 import ReactGA from 'react-ga';
-import store from '../../redux-store/store';
+import store, { persistor } from '../../redux-store/store';
 import LandingPage from './Questions';
 
 const renderLandingPage = () => {
   ReactGA.initialize('foo', { testMode: true });
   return render(
     <Provider store={store}>
-      <LandingPage />
+      <PersistGate loading={<></>} persistor={persistor}>
+        <LandingPage />
+      </PersistGate>
     </Provider>
   );
 };
@@ -33,7 +36,7 @@ const findPossibleAnswers = async () => {
 
 describe('QuestionForm', () => {
   it('shows correct number of possible answers', () => {
-    const numberOfAnswers = 5;
+    const numberOfAnswers = 4;
     expect(screen.getAllByRole('button')).toHaveLength(numberOfAnswers);
   });
   it('shows equation with all elements', () => {

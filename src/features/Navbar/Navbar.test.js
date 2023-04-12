@@ -3,17 +3,20 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
 import ReactGA from 'react-ga';
 import Navbar from './Navbar';
-import store from '../../redux-store/store';
+import store, { persistor } from '../../redux-store/store';
 
 const renderNavbar = () => {
   ReactGA.initialize('foo', { testMode: true });
   return render(
     <Provider store={store}>
-      <BrowserRouter>
-        <Navbar />
-      </BrowserRouter>
+      <PersistGate loading={<></>} persistor={persistor}>
+        <BrowserRouter>
+          <Navbar />
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   );
 };
