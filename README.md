@@ -1,6 +1,6 @@
 # Multiplication table learning app
 
-This is a practice project that implements an application used to help memorize multiplication table.
+This an application used by kids to memorize multiplication table. Makes use of Redux Toolkit to manage global state, and a dedicated slice with internationalization methods. UI built with Bootstrap v3.
 
 ## Table of contents
 
