@@ -22,6 +22,7 @@ const HappySad = () => {
     return (
       <button
         type="button"
+        data-testid="happy-sad"
         onClick={() => dispatch(setNext())}
         tabIndex="0"
         style={{ backgroundColor: 'transparent', border: 'none' }}

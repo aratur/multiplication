@@ -1,5 +1,6 @@
 /* eslint "no-param-reassign": 0 */
 import { createSlice } from '@reduxjs/toolkit';
+import cloneDeep from 'lodash.clonedeep';
 import { SIZE } from './constants';
 import shuffle from './shuffle';
 
@@ -7,6 +8,7 @@ export const range = [...Array(SIZE)].map((_, index) => index + 1);
 
 // initialize an array of questions to ask
 const allQuestions = range.map((x) => range.map((y) => [x, y])).flat(1);
+const getShuffledQuestions = () => cloneDeep(shuffle(allQuestions));
 
 const initialState = {
   status: 'idle', // 'idle', 'pending', 'answered'
@@ -14,7 +16,7 @@ const initialState = {
   answer: -1,
   xValue: 0,
   yValue: 0,
-  pending: shuffle(allQuestions),
+  pending: cloneDeep(shuffle(allQuestions)),
   correct: [],
   incorrect: [],
   gems: 0,
@@ -26,8 +28,10 @@ const questionSlice = createSlice({
   reducers: {
     setNext: (state) => {
       if (state.pending.length === 0) {
-        state.pending = shuffle(allQuestions);
+        state.pending = getShuffledQuestions();
         state.gems += 1;
+        state.incorrect = [];
+        state.correct = [];
       }
       const next = state.pending.pop();
       state.status = 'pending';
@@ -44,12 +48,11 @@ const questionSlice = createSlice({
         state.correct.push([xValue, yValue]);
       } else {
         state.incorrect.push([xValue, yValue]);
-        state.pending.shift([xValue, yValue]);
+        state.pending.unshift([xValue, yValue]);
       }
     },
     reset: (state) => ({
       ...initialState,
-      gems: state.gems,
     }),
     showCorrect: (state) => {
       state.filter = 'correct';

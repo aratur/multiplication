@@ -46,6 +46,7 @@ const AnswerButton = ({ answer, correctAnswer }) => {
   return (
     <button
       type="button"
+      data-testid="answer-button"
       className={getButtonClassBasedOnAnswer(answer)}
       style={getStyleBasedOnState(answer)}
       onClick={handleAnswerSelected}

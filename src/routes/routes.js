@@ -7,7 +7,7 @@ import Multiplication from '../pages/Multiplication';
 
 const ResultsTableLazy = lazy(() => import('../features/Results/Results'));
 
-const routes = createBrowserRouter([
+export const routesDefinition = [
   {
     path: '/',
     element: <Multiplication />,
@@ -26,6 +26,8 @@ const routes = createBrowserRouter([
       },
     ],
   },
-]);
+];
+
+const routes = createBrowserRouter(routesDefinition);
 
 export default routes;

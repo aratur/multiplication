@@ -11,6 +11,9 @@ const migrations = {
     ({
       gems: state.gems,
     }),
+  2: (state) => ({
+    // clear out gems state
+  }),
 };
 
 export default migrations;

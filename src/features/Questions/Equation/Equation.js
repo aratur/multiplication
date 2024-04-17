@@ -61,7 +61,12 @@ const Equation = () => {
         { id: 'equation' },
         React.createElement(
           'button',
-          { name: `number ${xValue}`, type: 'button', ...numberProps },
+          {
+            name: `number ${xValue}`,
+            'data-testid': 'question-left',
+            type: 'button',
+            ...numberProps,
+          },
           xValue
         ),
         React.createElement('img', {
@@ -71,7 +76,12 @@ const Equation = () => {
         }),
         React.createElement(
           'button',
-          { name: `by ${yValue}`, type: 'button', ...numberProps },
+          {
+            name: `by ${yValue}`,
+            'data-testid': 'question-right',
+            type: 'button',
+            ...numberProps,
+          },
           yValue
         ),
         React.createElement('img', {
